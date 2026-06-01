@@ -498,8 +498,12 @@ async function loadSignals() {
   if (!tbody) return;
 
   try {
-    const res     = await fetch('/signals/');
-    const signals = await res.json();
+    const res  = await fetch('/signals/');
+    const json = await res.json();
+
+    // Support both old array format and new {signals, user_tier} format
+    const signals   = json.signals || json;
+    const user_tier = json.user_tier || window.USER_TIER || 'guest';
 
     if (!signals.length) {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">No signals posted yet. Check back soon.</td></tr>';
@@ -523,14 +527,23 @@ async function loadSignals() {
                      : s.pair.includes('NAS') || s.pair.includes('US30') ? 'asset-dot asset-blue'
                      : 'asset-dot';
 
+      // Premium gating
+      const locked = '<span class="premium-lock">🔒 Premium</span>';
+      const entry  = s.gated ? locked : (s.entry_price ?? '—');
+      const sl     = s.gated ? locked : `<span class="text-red">${s.stop_loss ?? '—'}</span>`;
+      const tp1    = s.gated ? locked : `<span class="text-green">${s.take_profit_1 ?? '—'}</span>`;
+      const tp2    = s.gated ? locked : `<span class="text-green">${s.take_profit_2 ?? '—'}</span>`;
+
+      const premiumBadge = s.is_premium ? '<span class="signal-premium-badge">👑</span>' : '';
+
       return `
-        <tr>
-          <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}</td>
+        <tr ${s.gated ? 'class="signal-gated"' : ''}>
+          <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}${premiumBadge}</td>
           <td>${actionBadge}</td>
-          <td class="mono">${s.entry_price ?? '—'}</td>
-          <td class="mono text-red">${s.stop_loss ?? '—'}</td>
-          <td class="mono text-green">${s.take_profit_1 ?? '—'}</td>
-          <td class="mono text-green">${s.take_profit_2 ?? '—'}</td>
+          <td class="mono">${entry}</td>
+          <td class="mono">${sl}</td>
+          <td class="mono">${tp1}</td>
+          <td class="mono">${tp2}</td>
           <td>${statusBadge}</td>
         </tr>
       `;

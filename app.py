@@ -1,7 +1,7 @@
 # ============================================================
 # 27pips — app.py  |  Main Flask application entry point
 # ============================================================
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, request
 from database import init_db
 from blueprints.auth.routes      import auth_bp
 from blueprints.education.routes import education_bp
@@ -10,6 +10,7 @@ from blueprints.signals.routes   import signals_bp
 from blueprints.tracker.routes   import tracker_bp
 from blueprints.admin.routes     import admin_bp
 from blueprints.analytics.routes import analytics_bp
+from blueprints.upgrade.routes   import upgrade_bp
 
 def create_app():
     app = Flask(__name__)
@@ -25,14 +26,22 @@ def create_app():
     app.register_blueprint(tracker_bp,    url_prefix='/tracker')
     app.register_blueprint(admin_bp,      url_prefix='/admin')
     app.register_blueprint(analytics_bp,  url_prefix='/api/analytics')
+    app.register_blueprint(upgrade_bp,    url_prefix='/upgrade')
 
     @app.route('/')
     def home():
         from database import get_db
         from datetime import datetime, timezone
-        user = None
+        user      = None
+        user_tier = 'guest'
         if 'user_id' in session:
-            user = {'username': session['username']}
+            db  = get_db()
+            row = db.execute('SELECT username, tier FROM users WHERE id=?', (session['user_id'],)).fetchone()
+            db.close()
+            if row:
+                user      = {'username': row['username']}
+                user_tier = row['tier']
+
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         db    = get_db()
         row   = db.execute(
@@ -41,7 +50,9 @@ def create_app():
         ).fetchone()
         db.close()
         signal_count = row['cnt'] if row else 0
-        return render_template('index.html', user=user, signal_count=signal_count)
+        upgraded     = request.args.get('upgraded') == '1'
+        return render_template('index.html', user=user, signal_count=signal_count,
+                               user_tier=user_tier, upgraded=upgraded)
 
     return app
 

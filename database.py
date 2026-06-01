@@ -22,8 +22,14 @@ def init_db():
         email TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
         account_balance REAL DEFAULT 0.0,
+        tier TEXT NOT NULL DEFAULT 'free',
         account_creation_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )''')
+    # Add tier column to existing users table if missing (migration)
+    try:
+        c.execute("ALTER TABLE users ADD COLUMN tier TEXT NOT NULL DEFAULT 'free'")
+    except Exception:
+        pass  # column already exists
 
     # ── Journal ────────────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS journal (
@@ -63,9 +69,15 @@ def init_db():
         take_profit_2 REAL,
         status TEXT NOT NULL DEFAULT 'Pending'
                CHECK(status IN ('Pending','Active','TP Hit','Stopped Out')),
+        is_premium INTEGER NOT NULL DEFAULT 0,
         notes TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )''')
+    # Add is_premium to existing signals table if missing
+    try:
+        c.execute("ALTER TABLE signals ADD COLUMN is_premium INTEGER NOT NULL DEFAULT 0")
+    except Exception:
+        pass
 
     # ── Courses ────────────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS courses (

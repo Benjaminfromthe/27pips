@@ -64,6 +64,7 @@ def add_signal():
     tp2    = d.get('take_profit_2', '')
     status = d.get('status', 'Pending')
     notes  = d.get('notes', '')
+    is_premium = 1 if d.get('is_premium') == '1' else 0
 
     if not pair or not action or not entry:
         return jsonify({'success': False, 'message': 'pair, action, entry_price required.'}), 400
@@ -75,9 +76,9 @@ def add_signal():
     db = get_db()
     db.execute(
         '''INSERT INTO signals
-           (pair, action, entry_price, stop_loss, take_profit_1, take_profit_2, status, notes)
-           VALUES (?,?,?,?,?,?,?,?)''',
-        (pair, action, to_f(entry), to_f(sl), to_f(tp1), to_f(tp2), status, notes)
+           (pair, action, entry_price, stop_loss, take_profit_1, take_profit_2, status, is_premium, notes)
+           VALUES (?,?,?,?,?,?,?,?,?)''',
+        (pair, action, to_f(entry), to_f(sl), to_f(tp1), to_f(tp2), status, is_premium, notes)
     )
     db.commit()
     db.close()

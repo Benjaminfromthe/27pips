@@ -101,6 +101,14 @@
   </div>
 </div>
 
+<!-- UPGRADE SUCCESS FLASH BANNER -->
+{% if upgraded %}
+<div id="upgradeBanner" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a;padding:14px;text-align:center;font-weight:800;font-size:0.95rem;position:sticky;top:64px;z-index:90">
+  🎉 Welcome to 27pips Premium! All institutional signals are now unlocked.
+  <button onclick="document.getElementById('upgradeBanner').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;margin-left:12px;color:#0f172a">✕</button>
+</div>
+{% endif %}
+
 <!-- ============================================================
      HERO SECTION
 ============================================================ -->
@@ -243,6 +251,21 @@
       <p class="text-muted">🔒 Full signal history and alerts available for members</p>
       <button class="btn-primary" onclick="openModal()">Get Full Access</button>
     </div>
+
+    <!-- Premium upsell banner for free/guest users -->
+    {% if user_tier != 'premium' %}
+    <div class="premium-upsell">
+      <div class="premium-upsell-inner">
+        <span style="font-size:1.8rem">👑</span>
+        <div>
+          <p class="premium-upsell-title">🚀 Unlock VIP Setups</p>
+          <p class="premium-upsell-sub">Upgrade to Premium to see exact Entry, SL, and TP coordinates for high-probability institutional trades.</p>
+        </div>
+        <a href="/upgrade" class="btn-upgrade-pill">Upgrade Now →</a>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </section>
 
@@ -678,5 +701,9 @@
 </footer>
 
 <script src="/static/js/main.js"></script>
+<script>
+  // Inject server-side user tier into JS context
+  window.USER_TIER = "{{ user_tier }}";
+</script>
 </body>
 </html>

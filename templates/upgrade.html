@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>27pips Premium — Unlock Institutional Signals</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    .premium-hero{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);padding:80px 0 60px;text-align:center;position:relative;overflow:hidden}
+    .premium-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.12),transparent 70%);pointer-events:none}
+    .crown{font-size:4rem;margin-bottom:16px;display:block}
+    .premium-title{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:#f1f5f9;margin-bottom:12px}
+    .premium-title span{background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .premium-sub{color:#94a3b8;font-size:1.05rem;max-width:520px;margin:0 auto 32px}
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
+    .tier-card{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:32px}
+    .tier-card.featured{border-color:#f59e0b;background:rgba(245,158,11,0.05);position:relative}
+    .tier-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a;padding:4px 18px;border-radius:20px;font-size:0.75rem;font-weight:800;white-space:nowrap}
+    .tier-name{font-size:0.85rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+    .tier-price{font-size:2.5rem;font-weight:900;color:#f1f5f9;margin-bottom:4px}
+    .tier-price span{font-size:1rem;color:#94a3b8;font-weight:400}
+    .tier-features{list-style:none;margin:20px 0 28px;display:flex;flex-direction:column;gap:10px}
+    .tier-features li{font-size:0.88rem;color:#94a3b8;display:flex;align-items:center;gap:8px}
+    .tier-features li.yes{color:#f1f5f9}
+    .btn-upgrade{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0f172a;border:none;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;font-family:inherit;transition:all 0.2s}
+    .btn-upgrade:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,0.4)}
+    .already-premium{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:24px;text-align:center;max-width:500px;margin:0 auto}
+    @media(max-width:600px){.compare-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
+    <div class="header-actions">
+      {% if user %}
+        <div class="user-dropdown" id="userDropdown">
+          <button class="btn-user" onclick="toggleUserMenu()">
+            <span class="user-avatar">{{ user.username[0].upper() }}</span>{{ user.username }} ▾
+          </button>
+          <div class="user-menu" id="userMenu">
+            <a href="/" class="user-menu-item">🏠 Dashboard</a>
+            <hr class="user-menu-divider" />
+            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
+          </div>
+        </div>
+      {% else %}
+        <button class="btn-login" onclick="openModal('login')">Member Login</button>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="premium-hero">
+  <div class="container">
+    <span class="crown">👑</span>
+    <h1 class="premium-title">Unlock <span>27pips Premium</span></h1>
+    <p class="premium-sub">Get access to institutional-grade trade setups with exact Entry, Stop Loss, and Take Profit levels used by professional traders.</p>
+  </div>
+</div>
+
+<!-- COMPARISON -->
+<section style="background:#0f172a;padding:60px 0">
+  <div class="container">
+
+    {% if tier == 'premium' %}
+    <div class="already-premium">
+      <div style="font-size:2.5rem;margin-bottom:12px">🎉</div>
+      <h2 style="color:#10b981;margin-bottom:8px">You're already Premium!</h2>
+      <p style="color:#94a3b8;margin-bottom:20px">All institutional signals are unlocked. Enjoy the full 27pips experience.</p>
+      <a href="/" class="btn-primary" style="display:inline-block">← Back to Dashboard</a>
+    </div>
+
+    {% else %}
+    <div class="compare-grid">
+
+      <!-- Free tier -->
+      <div class="tier-card">
+        <p class="tier-name">Free</p>
+        <p class="tier-price">$0<span>/forever</span></p>
+        <ul class="tier-features">
+          <li class="yes">✅ Pre-School education module</li>
+          <li class="yes">✅ 3 free signals per week</li>
+          <li class="yes">✅ Basic trading journal</li>
+          <li class="yes">✅ Community access</li>
+          <li>❌ Premium signal entry prices</li>
+          <li>❌ Stop loss coordinates</li>
+          <li>❌ Take profit levels</li>
+          <li>❌ Prop firm tracker</li>
+          <li>❌ Full education curriculum</li>
+        </ul>
+        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">Current Plan</button>
+      </div>
+
+      <!-- Premium tier -->
+      <div class="tier-card featured">
+        <div class="tier-badge">👑 RECOMMENDED</div>
+        <p class="tier-name" style="color:#f59e0b">Premium</p>
+        <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$29<span style="-webkit-text-fill-color:#94a3b8">/month</span></p>
+        <ul class="tier-features">
+          <li class="yes">✅ Everything in Free</li>
+          <li class="yes">✅ <strong style="color:#f59e0b">All premium signal entry prices</strong></li>
+          <li class="yes">✅ <strong style="color:#f59e0b">Exact stop loss coordinates</strong></li>
+          <li class="yes">✅ <strong style="color:#f59e0b">TP1 & TP2 take profit levels</strong></li>
+          <li class="yes">✅ Full education curriculum</li>
+          <li class="yes">✅ Prop firm challenge tracker</li>
+          <li class="yes">✅ Equity curve analytics</li>
+          <li class="yes">✅ Priority community access</li>
+          <li class="yes">✅ Weekly live trading sessions</li>
+        </ul>
+        {% if user %}
+        <form method="POST" action="/upgrade/simulate">
+          <button type="submit" class="btn-upgrade">🚀 Upgrade to Premium Now</button>
+        </form>
+        <p style="text-align:center;font-size:0.75rem;color:#94a3b8;margin-top:10px">Simulated upgrade — no payment required for demo</p>
+        {% else %}
+        <button class="btn-upgrade" onclick="openModal('signup')">🚀 Create Account & Upgrade</button>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Social proof -->
+    <div style="text-align:center;margin-top:48px">
+      <p style="color:#94a3b8;font-size:0.88rem;margin-bottom:16px">Trusted by traders across Africa and beyond</p>
+      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">2,400+</p><p style="color:#94a3b8;font-size:0.8rem">Active Members</p></div>
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">89%</p><p style="color:#94a3b8;font-size:0.8rem">Signal Accuracy</p></div>
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">12</p><p style="color:#94a3b8;font-size:0.8rem">Countries</p></div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div class="modal-alert" id="modalAlert" style="display:none"></div>
+    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required /></div>
+      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
+    </form>
+    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
+      <div class="form-group"><label>Username</label><input type="text" id="signupUsername" required /></div>
+      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" required /></div>
+      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>

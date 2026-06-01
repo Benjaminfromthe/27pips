@@ -107,6 +107,13 @@
             {% for s in statuses %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
           </select>
         </div>
+        <div>
+          <label>Signal Type</label>
+          <select name="is_premium" style="border-color:#f59e0b">
+            <option value="0">🆓 Free — Visible to all</option>
+            <option value="1">👑 Premium — Members only</option>
+          </select>
+        </div>
       </div>
       <div style="margin-bottom:16px">
         <label>Notes (optional)</label>
@@ -146,8 +153,7 @@
             {% elif s.status == 'TP Hit' %}<span class="badge badge-tp">TP Hit</span>
             {% else %}<span class="badge badge-stopped">Stopped Out</span>{% endif %}
           </td>
-          <td style="color:#94a3b8;font-size:0.78rem">{{ s.created_at[:10] if s.created_at else '—' }}</td>
-          <td>
+          <td style="color:#94a3b8;font-size:0.78rem">{{ s.created_at[:10] if s.created_at else '—' }}</td>          <td>
             <div class="actions">
               <form method="POST" action="/admin/signals/update/{{ s.id }}" class="status-form" style="display:flex;gap:6px;align-items:center">
                 <select name="status">
