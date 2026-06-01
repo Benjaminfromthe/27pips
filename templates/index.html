@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>27pips — Shema Trading Hub</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ============================================================
+     GLOBAL HEADER / NAVIGATION
+============================================================ -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">📈</span>
+      <span class="logo-text">27<span class="logo-accent">pips</span></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#home"      class="nav-link">Home</a>
+      <a href="#education" class="nav-link">Education</a>
+      <a href="#plans"     class="nav-link">Trading Plans</a>
+      <a href="#signals"   class="nav-link">Signals</a>
+      <a href="#funded"    class="nav-link">Funded Accounts</a>
+      <a href="#about"     class="nav-link">About Us</a>
+    </nav>
+    <div class="header-actions">
+      {% if user %}
+        <!-- Logged-in user dropdown -->
+        <div class="user-dropdown" id="userDropdown">
+          <button class="btn-user" onclick="toggleUserMenu()">
+            <span class="user-avatar">{{ user.username[0].upper() }}</span>
+            Welcome, {{ user.username }} ▾
+          </button>
+          <div class="user-menu" id="userMenu">
+            <a href="#journal" class="user-menu-item" onclick="toggleUserMenu()">📓 My Journal</a>
+            <a href="#funded"  class="user-menu-item" onclick="toggleUserMenu()">🏆 My Tracker</a>
+            <hr class="user-menu-divider" />
+            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
+          </div>
+        </div>
+      {% else %}
+        <button class="btn-login" id="loginBtn" onclick="openModal('login')">Member Login</button>
+      {% endif %}
+      <button class="hamburger" id="hamburger" onclick="toggleNav()">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     AUTH MODAL — Login / Signup with smooth toggle
+============================================================ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
+
+    <!-- Tab switcher -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin"  onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab"        id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- Error / success message -->
+    <div class="modal-alert" id="modalAlert" style="display:none"></div>
+
+    <!-- LOGIN FORM -->
+    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="trader@27pips.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
+      <p class="modal-footer-text">No account? <a href="#" class="link-green" onclick="switchTab('signup')">Create one free →</a></p>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="signupUsername" placeholder="e.g. pips_trader" required />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signupEmail" placeholder="trader@27pips.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password <span style="color:var(--muted);font-weight:400">(min 6 chars)</span></label>
+        <input type="password" id="signupPassword" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
+      <p class="modal-footer-text">Already a member? <a href="#" class="link-green" onclick="switchTab('login')">Sign in →</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<section class="hero" id="home">
+  <div class="container hero-inner">
+    <div class="hero-badge">🔥 Live Signals Active — 3 Setups Today</div>
+    <h1 class="hero-title">
+      Master Forex.<br />
+      <span class="text-green">Trade with Precision.</span>
+    </h1>
+    <p class="hero-sub">
+      27pips is your all-in-one trading hub — structured education, live signals,
+      prop firm tracking, and a community of serious traders.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="openModal()">Start Learning Free</button>
+      <a href="#signals" class="btn-outline">View Live Signals</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">Active Traders</span></div>
+      <div class="stat"><span class="stat-num">89%</span><span class="stat-label">Signal Accuracy</span></div>
+      <div class="stat"><span class="stat-num">150+</span><span class="stat-label">Lessons</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Community</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EDUCATION — SCHOOL OF PIPSOLOGY
+============================================================ -->
+<section class="section" id="education">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">📚 Education</span>
+      <h2 class="section-title">School of Pipsology</h2>
+      <p class="section-sub">Structured learning from zero to professional trader. Complete modules, earn badges, level up.</p>
+    </div>
+    <div class="edu-grid">
+
+      <!-- Module 1 -->
+      <div class="edu-card">
+        <div class="edu-card-header">
+          <span class="edu-icon">🎒</span>
+          <div>
+            <h3 class="edu-module-title">Pre-School</h3>
+            <p class="edu-module-sub">Forex Basics</p>
+          </div>
+          <span class="edu-badge badge-locked">Locked</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:0%"></div>
+        </div>
+        <p class="progress-text">0 / 5 Lessons Completed</p>
+        <ul class="lesson-list">
+          <li class="lesson-item locked">📖 What is Forex?</li>
+          <li class="lesson-item locked">📖 Currency Pairs Explained</li>
+          <li class="lesson-item locked">📖 How to Read a Chart</li>
+          <li class="lesson-item locked">📖 Pips and Lots</li>
+          <li class="lesson-item locked">📖 Bid, Ask and Spread</li>
+        </ul>
+        <button class="btn-primary full-width" onclick="openModal()">Start Module</button>
+      </div>
+
+      <!-- Module 2 -->
+      <div class="edu-card">
+        <div class="edu-card-header">
+          <span class="edu-icon">🏫</span>
+          <div>
+            <h3 class="edu-module-title">Elementary</h3>
+            <p class="edu-module-sub">Chart Reading</p>
+          </div>
+          <span class="edu-badge badge-locked">Locked</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:0%"></div>
+        </div>
+        <p class="progress-text">0 / 6 Lessons Completed</p>
+        <ul class="lesson-list">
+          <li class="lesson-item locked">📖 Support and Resistance</li>
+          <li class="lesson-item locked">📖 Trend Lines</li>
+          <li class="lesson-item locked">📖 Candlestick Patterns</li>
+          <li class="lesson-item locked">📖 Moving Averages</li>
+          <li class="lesson-item locked">📖 RSI and MACD</li>
+          <li class="lesson-item locked">📖 Fibonacci Retracement</li>
+        </ul>
+        <button class="btn-outline full-width">Complete Pre-School First</button>
+      </div>
+
+      <!-- Module 3 -->
+      <div class="edu-card">
+        <div class="edu-card-header">
+          <span class="edu-icon">🎓</span>
+          <div>
+            <h3 class="edu-module-title">High School</h3>
+            <p class="edu-module-sub">Risk Management</p>
+          </div>
+          <span class="edu-badge badge-locked">Locked</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:0%"></div>
+        </div>
+        <p class="progress-text">0 / 7 Lessons Completed</p>
+        <ul class="lesson-list">
+          <li class="lesson-item locked">📖 Position Sizing</li>
+          <li class="lesson-item locked">📖 Risk/Reward Ratio</li>
+          <li class="lesson-item locked">📖 Stop Loss Strategies</li>
+          <li class="lesson-item locked">📖 Trading Psychology</li>
+          <li class="lesson-item locked">📖 Building a Trading Plan</li>
+          <li class="lesson-item locked">📖 Backtesting Basics</li>
+          <li class="lesson-item locked">📖 Journal Your Trades</li>
+        </ul>
+        <button class="btn-outline full-width">Complete Elementary First</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TRADE SIGNALS FEED
+============================================================ -->
+<section class="section section-dark" id="signals">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">⚡ Live</span>
+      <h2 class="section-title">Trade Signals Feed</h2>
+      <p class="section-sub">Real-time setups from our analysts. Entry, SL, and TP levels included.</p>
+    </div>
+    <div class="signals-table-wrap">
+      <table class="signals-table">
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Action</th>
+            <th>Entry</th>
+            <th>Stop Loss</th>
+            <th>TP 1</th>
+            <th>TP 2</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="signalsBody">
+          <tr>
+            <td class="asset-cell"><span class="asset-dot"></span>EUR/USD</td>
+            <td><span class="badge-buy">BUY</span></td>
+            <td class="mono">1.0850</td>
+            <td class="mono text-red">1.0800</td>
+            <td class="mono text-green">1.0900</td>
+            <td class="mono text-green">1.0950</td>
+            <td><span class="status-badge status-active">ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td class="asset-cell"><span class="asset-dot"></span>GBP/USD</td>
+            <td><span class="badge-sell">SELL</span></td>
+            <td class="mono">1.2700</td>
+            <td class="mono text-red">1.2750</td>
+            <td class="mono text-green">1.2650</td>
+            <td class="mono text-green">1.2600</td>
+            <td><span class="status-badge status-active">ACTIVE</span></td>
+          </tr>
+          <tr>
+            <td class="asset-cell"><span class="asset-dot asset-gold"></span>XAU/USD</td>
+            <td><span class="badge-buy">BUY</span></td>
+            <td class="mono">2320.00</td>
+            <td class="mono text-red">2300.00</td>
+            <td class="mono text-green">2350.00</td>
+            <td class="mono text-green">2380.00</td>
+            <td><span class="status-badge status-tp1">HIT TP1</span></td>
+          </tr>
+          <tr>
+            <td class="asset-cell"><span class="asset-dot"></span>USD/JPY</td>
+            <td><span class="badge-sell">SELL</span></td>
+            <td class="mono">154.50</td>
+            <td class="mono text-red">155.00</td>
+            <td class="mono text-green">154.00</td>
+            <td class="mono text-green">153.50</td>
+            <td><span class="status-badge status-closed">CLOSED</span></td>
+          </tr>
+          <tr>
+            <td class="asset-cell"><span class="asset-dot asset-blue"></span>NAS100</td>
+            <td><span class="badge-buy">BUY</span></td>
+            <td class="mono">18200</td>
+            <td class="mono text-red">18000</td>
+            <td class="mono text-green">18500</td>
+            <td class="mono text-green">18800</td>
+            <td><span class="status-badge status-active">ACTIVE</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="signals-cta">
+      <p class="text-muted">🔒 Full signal history and alerts available for members</p>
+      <button class="btn-primary" onclick="openModal()">Get Full Access</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TRADING JOURNAL WIDGET — Dynamic
+============================================================ -->
+<section class="section" id="journal">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">📓 Journal</span>
+      <h2 class="section-title">Trading Journal</h2>
+      <p class="section-sub">Log your trades, track your mindset, and review your performance over time.</p>
+    </div>
+
+    {% if user %}
+    <!-- LOGGED IN: show quick-log form + live trade table -->
+    <div class="journal-wrap">
+
+      <!-- Quick Log Form -->
+      <form class="journal-form" id="journalForm" onsubmit="submitTrade(event)" enctype="multipart/form-data">
+        <div class="journal-row">
+          <div class="form-group">
+            <label>Pair</label>
+            <input type="text" name="pair" id="j-pair" placeholder="EUR/USD" required />
+          </div>
+          <div class="form-group">
+            <label>Direction</label>
+            <select name="direction" id="j-direction">
+              <option value="Buy">📈 Buy (Long)</option>
+              <option value="Sell">📉 Sell (Short)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Outcome</label>
+            <select name="outcome" id="j-outcome">
+              <option value="">— Select —</option>
+              <option value="Win">✅ Win</option>
+              <option value="Loss">❌ Loss</option>
+            </select>
+          </div>
+        </div>
+        <div class="journal-row">
+          <div class="form-group">
+            <label>Entry Price</label>
+            <input type="number" step="any" name="entry_price" id="j-entry" placeholder="1.0850" required />
+          </div>
+          <div class="form-group">
+            <label>Exit Price</label>
+            <input type="number" step="any" name="exit_price" id="j-exit" placeholder="1.0900" />
+          </div>
+          <div class="form-group">
+            <label>Lot Size</label>
+            <input type="number" step="any" name="lot_size" id="j-lot" placeholder="0.10" />
+          </div>
+          <div class="form-group">
+            <label>Pips +/-</label>
+            <input type="number" step="any" name="pips_gained_lost" id="j-pips" placeholder="50" />
+          </div>
+        </div>
+        <div class="journal-row">
+          <div class="form-group full">
+            <label>Notes / Analysis</label>
+            <textarea name="notes" id="j-notes" rows="2" placeholder="Why did you take this trade?"></textarea>
+          </div>
+        </div>
+        <div class="journal-row">
+          <div class="form-group">
+            <label>Chart Screenshot</label>
+            <div class="upload-zone" onclick="document.getElementById('chartUpload').click()">
+              <span class="upload-icon">📷</span>
+              <p>Click to upload chart</p>
+              <p class="upload-hint">PNG, JPG up to 5MB</p>
+              <input type="file" name="chart_image" id="chartUpload" accept="image/*" style="display:none" onchange="previewChart(event)" />
+            </div>
+            <img id="chartPreview" class="chart-preview" style="display:none" />
+          </div>
+        </div>
+        <div id="journalMsg" class="modal-alert" style="display:none"></div>
+        <button type="submit" class="btn-primary" id="journalSubmitBtn">Log This Trade</button>
+      </form>
+
+      <!-- Recent Trades Table -->
+      <div class="journal-log" id="journalLog">
+        <h3 class="log-title">Recent Trades</h3>
+        <div id="tradesTableWrap">
+          <p class="text-muted" id="noEntries">Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- GUEST: auth gate -->
+    <div class="auth-gate-static">
+      <div class="auth-gate-box">
+        <div style="font-size:3rem">🔒</div>
+        <h3>Trading Journal</h3>
+        <p>Log your trades and track your performance over time.</p>
+        <button class="btn-primary" onclick="openModal('login')">Sign In to Access</button>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:8px">New here? <a href="#" class="link-green" onclick="openModal('signup')">Create free account</a></p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ============================================================
+     PROP FIRM CHALLENGE TRACKER — Dynamic
+============================================================ -->
+<section class="section section-dark" id="funded">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">🏆 Funded</span>
+      <h2 class="section-title">Prop Firm Challenge Tracker</h2>
+      <p class="section-sub">Track your challenge metrics in real time. Stay within rules, hit your targets.</p>
+    </div>
+
+    {% if user %}
+    <!-- RISK ALERT BANNER — shown by JS when drawdown_breached -->
+    <div class="drawdown-alert" id="drawdownAlert" style="display:none">
+      ⚠️ Daily Drawdown Warning: Risk Parameters Exceeded — Stop trading for today!
+    </div>
+
+    <!-- TRACKER SETUP FORM — shown by JS when no tracker account -->
+    <div id="trackerSetup" style="display:none">
+      <div class="tracker-setup-box">
+        <div style="font-size:2.5rem;margin-bottom:12px">🏦</div>
+        <h3 style="color:var(--text);margin-bottom:8px">Set Up Your Challenge Account</h3>
+        <p style="margin-bottom:20px">Enter your starting balance to begin tracking your prop firm challenge.</p>
+        <div class="form-group" style="max-width:280px;margin:0 auto 16px">
+          <label>Starting Balance ($)</label>
+          <input type="number" id="setupBalance" placeholder="10000" min="1" />
+        </div>
+        <div id="setupMsg" class="modal-alert" style="display:none"></div>
+        <button class="btn-primary" onclick="setupTracker()">Start Tracking</button>
+      </div>
+    </div>
+
+    <!-- TRACKER GRID — populated by JS -->
+    <div class="tracker-grid" id="trackerGrid">
+      <!-- Account Balance -->
+      <div class="tracker-card tracker-card-main">
+        <p class="tracker-label">Account Balance</p>
+        <p class="tracker-value text-green" id="t-balance">—</p>
+        <p class="tracker-sub" id="t-balance-sub">Loading...</p>
+        <div class="tracker-progress-wrap">
+          <div class="tracker-progress-bar" id="t-profit-bar" style="width:0%"></div>
+        </div>
+        <p class="tracker-hint" id="t-profit-hint">—</p>
+      </div>
+      <!-- Daily Drawdown -->
+      <div class="tracker-card">
+        <div class="tracker-icon">📉</div>
+        <p class="tracker-label">Daily Drawdown</p>
+        <p class="tracker-value text-yellow" id="t-daily">—</p>
+        <p class="tracker-sub" id="t-daily-sub">Limit: —</p>
+        <div class="tracker-progress-wrap">
+          <div class="tracker-progress-bar tracker-bar-yellow" id="t-daily-bar" style="width:0%"></div>
+        </div>
+        <p class="tracker-hint" id="t-daily-hint">—</p>
+      </div>
+      <!-- Max Drawdown -->
+      <div class="tracker-card">
+        <div class="tracker-icon">🛑</div>
+        <p class="tracker-label">Max Drawdown</p>
+        <p class="tracker-value text-green" id="t-max">—</p>
+        <p class="tracker-sub" id="t-max-sub">Limit: —</p>
+        <div class="tracker-progress-wrap">
+          <div class="tracker-progress-bar" id="t-max-bar" style="width:0%"></div>
+        </div>
+        <p class="tracker-hint" id="t-max-hint">—</p>
+      </div>
+      <!-- Profit Target -->
+      <div class="tracker-card">
+        <div class="tracker-icon">🎯</div>
+        <p class="tracker-label">Profit Target</p>
+        <p class="tracker-value text-blue" id="t-profit">—</p>
+        <p class="tracker-sub" id="t-profit-sub">Target: —</p>
+        <div class="tracker-progress-wrap">
+          <div class="tracker-progress-bar tracker-bar-blue" id="t-target-bar" style="width:0%"></div>
+        </div>
+        <p class="tracker-hint" id="t-target-hint">—</p>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- GUEST: auth gate -->
+    <div class="auth-gate-static">
+      <div class="auth-gate-box">
+        <div style="font-size:3rem">🔒</div>
+        <h3>Prop Firm Tracker</h3>
+        <p>Track your challenge metrics in real time.</p>
+        <button class="btn-primary" onclick="openModal('login')">Sign In to Access</button>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- ============================================================
+     TRADING PLANS
+============================================================ -->
+<section class="section" id="plans">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">💎 Plans</span>
+      <h2 class="section-title">Choose Your Plan</h2>
+      <p class="section-sub">Start free, upgrade when you're ready to go pro.</p>
+    </div>
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">Free</div>
+        <ul class="plan-features">
+          <li>✅ Pre-School Module</li>
+          <li>✅ 3 Signals per week</li>
+          <li>✅ Basic Journal</li>
+          <li>✅ Community Access</li>
+          <li class="disabled">❌ Full Education Track</li>
+          <li class="disabled">❌ Prop Firm Tracker</li>
+          <li class="disabled">❌ Daily Signals</li>
+        </ul>
+        <button class="btn-outline full-width" onclick="openModal()">Get Started</button>
+      </div>
+
+      <div class="plan-card plan-featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Pro Trader</div>
+        <div class="plan-price">$29<span>/mo</span></div>
+        <ul class="plan-features">
+          <li>✅ All Education Modules</li>
+          <li>✅ Daily Live Signals</li>
+          <li>✅ Full Trading Journal</li>
+          <li>✅ Prop Firm Tracker</li>
+          <li>✅ Priority Community</li>
+          <li>✅ Weekly Live Sessions</li>
+          <li class="disabled">❌ 1-on-1 Mentorship</li>
+        </ul>
+        <button class="btn-primary full-width" onclick="openModal()">Start Pro</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price">$79<span>/mo</span></div>
+        <ul class="plan-features">
+          <li>✅ Everything in Pro</li>
+          <li>✅ 1-on-1 Mentorship</li>
+          <li>✅ Private Signal Group</li>
+          <li>✅ Prop Firm Coaching</li>
+          <li>✅ Trade Reviews</li>
+          <li>✅ Custom Strategy Build</li>
+          <li>✅ Direct Analyst Access</li>
+        </ul>
+        <button class="btn-outline full-width" onclick="openModal()">Go Elite</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMMUNITY HUB
+============================================================ -->
+<section class="section section-dark" id="community">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">🌐 Community</span>
+      <h2 class="section-title">Join the Community</h2>
+      <p class="section-sub">Connect with thousands of traders. Share setups, get feedback, grow together.</p>
+    </div>
+    <div class="community-grid">
+      <div class="community-card community-telegram">
+        <div class="community-icon">✈️</div>
+        <h3>Telegram Channel</h3>
+        <p>Get instant signal alerts, market updates, and daily analysis delivered to your phone.</p>
+        <div class="community-stats">
+          <span>👥 1,200+ Members</span>
+          <span>📡 Daily Updates</span>
+        </div>
+        <a href="#" class="btn-community btn-telegram">Join Telegram</a>
+      </div>
+      <div class="community-card community-discord">
+        <div class="community-icon">🎮</div>
+        <h3>Discord Server</h3>
+        <p>Live trading rooms, chart sharing, strategy discussions, and weekly voice sessions.</p>
+        <div class="community-stats">
+          <span>👥 800+ Members</span>
+          <span>🔴 Live Sessions</span>
+        </div>
+        <a href="#" class="btn-community btn-discord">Join Discord</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+============================================================ -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">⭐ Reviews</span>
+      <h2 class="section-title">What Traders Say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"27pips completely changed how I approach the market. The education is structured and the signals are accurate."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JM</div>
+          <div><strong>Jean-Marie K.</strong><br/><span class="text-muted">Kigali, Rwanda</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"Passed my FTMO challenge using the prop firm tracker. The daily drawdown alerts kept me disciplined."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AM</div>
+          <div><strong>Amara M.</strong><br/><span class="text-muted">Nairobi, Kenya</span></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"The School of Pipsology section is incredible. I went from knowing nothing to trading live in 3 months."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">TN</div>
+          <div><strong>Tunde N.</strong><br/><span class="text-muted">Lagos, Nigeria</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT US
+============================================================ -->
+<section class="section section-dark" id="about">
+  <div class="container">
+    <div class="about-wrap">
+      <div class="about-text">
+        <span class="section-tag">🏢 About Us</span>
+        <h2 class="section-title">Built by Traders, for Traders</h2>
+        <p>27pips was founded by Shema Trading Hub — a team of professional forex traders based in East Africa. We built the platform we wished existed when we started: structured education, honest signals, and real community support.</p>
+        <p style="margin-top:1rem;">Our mission is simple — help every trader in Africa and beyond achieve consistency, pass prop firm challenges, and build a sustainable trading career.</p>
+        <div class="about-stats">
+          <div class="about-stat"><span class="stat-num">3+</span><span class="stat-label">Years Active</span></div>
+          <div class="about-stat"><span class="stat-num">2,400+</span><span class="stat-label">Students</span></div>
+          <div class="about-stat"><span class="stat-num">12</span><span class="stat-label">Countries</span></div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-card">
+          <div class="about-card-icon">🎯</div>
+          <h4>Our Mission</h4>
+          <p>Make professional forex education accessible to every African trader.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">👁️</div>
+          <h4>Our Vision</h4>
+          <p>Build the #1 trading education platform in Africa by 2027.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="logo-text">27<span class="logo-accent">pips</span></span>
+      <p>Shema Trading Hub — Learn. Trade. Grow.</p>
+    </div>
+    <div class="footer-links">
+      <a href="#education">Education</a>
+      <a href="#signals">Signals</a>
+      <a href="#plans">Plans</a>
+      <a href="#funded">Funded</a>
+      <a href="#about">About</a>
+    </div>
+    <p class="footer-copy">© 2025 27pips / Shema Trading Hub. All rights reserved. Trading involves risk.</p>
+  </div>
+</footer>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>
