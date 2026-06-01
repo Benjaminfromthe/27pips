@@ -488,3 +488,62 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTrackerData();
   }
 });
+
+// ============================================================
+// PHASE 3 — Dynamic Signals Feed
+// ============================================================
+
+async function loadSignals() {
+  const tbody = document.getElementById('signalsBody');
+  if (!tbody) return;
+
+  try {
+    const res     = await fetch('/signals/');
+    const signals = await res.json();
+
+    if (!signals.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">No signals posted yet. Check back soon.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = signals.map(s => {
+      const actionBadge = s.action === 'BUY'
+        ? '<span class="badge-buy">BUY</span>'
+        : '<span class="badge-sell">SELL</span>';
+
+      const statusMap = {
+        'Active':      '<span class="status-badge status-active">ACTIVE</span>',
+        'Pending':     '<span class="status-badge status-pending">PENDING</span>',
+        'TP Hit':      '<span class="status-badge status-tp">TP HIT ✅</span>',
+        'Stopped Out': '<span class="status-badge status-stopped">STOPPED</span>',
+      };
+      const statusBadge = statusMap[s.status] || `<span class="status-badge">${s.status}</span>`;
+
+      const dotClass = s.pair.includes('XAU') || s.pair.includes('GOLD') ? 'asset-dot asset-gold'
+                     : s.pair.includes('NAS') || s.pair.includes('US30') ? 'asset-dot asset-blue'
+                     : 'asset-dot';
+
+      return `
+        <tr>
+          <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}</td>
+          <td>${actionBadge}</td>
+          <td class="mono">${s.entry_price ?? '—'}</td>
+          <td class="mono text-red">${s.stop_loss ?? '—'}</td>
+          <td class="mono text-green">${s.take_profit_1 ?? '—'}</td>
+          <td class="mono text-green">${s.take_profit_2 ?? '—'}</td>
+          <td>${statusBadge}</td>
+        </tr>
+      `;
+    }).join('');
+
+  } catch {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">Could not load signals.</td></tr>';
+  }
+}
+
+// Load signals on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadSignals();
+  // Refresh signals every 60 seconds
+  setInterval(loadSignals, 60000);
+});

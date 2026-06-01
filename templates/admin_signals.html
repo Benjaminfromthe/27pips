@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>27pips — Signal Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0f172a;font-family:'Inter',sans-serif;color:#f1f5f9;min-height:100vh}
+    .header{background:#1e293b;border-bottom:1px solid #334155;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:1.4rem;font-weight:900}.logo span{color:#10b981}
+    .header-right{display:flex;gap:12px;align-items:center}
+    .badge-admin{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid #10b981;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700}
+    a.btn-logout{background:#334155;color:#94a3b8;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600}
+    a.btn-home{background:#10b981;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:0.85rem;font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:32px 24px}
+    h1{font-size:1.6rem;font-weight:800;margin-bottom:4px}
+    .sub{color:#94a3b8;font-size:0.88rem;margin-bottom:32px}
+
+    /* Add signal form */
+    .form-card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;margin-bottom:40px}
+    .form-card h2{font-size:1rem;font-weight:700;margin-bottom:20px;color:#f1f5f9}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:16px}
+    label{display:block;font-size:0.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px}
+    input,select,textarea{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:8px;color:#f1f5f9;padding:10px 12px;font-size:0.88rem;font-family:inherit}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#10b981}
+    textarea{resize:vertical;min-height:60px}
+    .btn-add{background:#10b981;color:#fff;border:none;padding:11px 28px;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit}
+    .btn-add:hover{background:#059669}
+
+    /* Signals table */
+    .table-card{background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
+    .table-card h2{font-size:1rem;font-weight:700;padding:20px 24px;border-bottom:1px solid #334155}
+    table{width:100%;border-collapse:collapse}
+    th{background:#0f172a;padding:11px 16px;text-align:left;font-size:0.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em}
+    td{padding:12px 16px;border-bottom:1px solid rgba(51,65,85,0.5);font-size:0.88rem}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(255,255,255,0.02)}
+    .mono{font-family:'Courier New',monospace;font-size:0.82rem}
+    .badge{padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700}
+    .badge-active  {background:rgba(16,185,129,0.15);color:#10b981}
+    .badge-pending {background:rgba(245,158,11,0.15);color:#f59e0b}
+    .badge-tp      {background:rgba(16,185,129,0.25);color:#34d399}
+    .badge-stopped {background:rgba(239,68,68,0.15);color:#ef4444}
+    .badge-buy {background:rgba(16,185,129,0.15);color:#10b981;padding:3px 8px;border-radius:6px;font-size:0.75rem;font-weight:700}
+    .badge-sell{background:rgba(239,68,68,0.15);color:#ef4444;padding:3px 8px;border-radius:6px;font-size:0.75rem;font-weight:700}
+    .actions{display:flex;gap:8px;align-items:center}
+    .status-form select{padding:5px 8px;font-size:0.78rem;border-radius:6px;background:#0f172a;color:#f1f5f9;border:1px solid #334155;width:auto}
+    .btn-update{background:#38bdf8;color:#0f172a;border:none;padding:5px 12px;border-radius:6px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit}
+    .btn-delete{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:5px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit}
+    .empty{text-align:center;padding:40px;color:#94a3b8}
+    @media(max-width:768px){.form-grid{grid-template-columns:1fr 1fr}table{display:block;overflow-x:auto}}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">27<span>pips</span> <span style="font-size:0.8rem;color:#94a3b8;font-weight:400">/ Admin</span></div>
+  <div class="header-right">
+    <span class="badge-admin">🔐 Admin</span>
+    <a href="/" class="btn-home">← Live Site</a>
+    <a href="/admin/logout" class="btn-logout">Logout</a>
+  </div>
+</div>
+
+<div class="container">
+  <h1>Signal Management</h1>
+  <p class="sub">Broadcast live trade setups to all 27pips members.</p>
+
+  <!-- ADD SIGNAL FORM -->
+  <div class="form-card">
+    <h2>📡 Broadcast New Signal</h2>
+    <form method="POST" action="/admin/signals/add">
+      <div class="form-grid">
+        <div>
+          <label>Pair</label>
+          <select name="pair" required>
+            {% for p in pairs %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Action</label>
+          <select name="action" required>
+            {% for a in actions %}<option value="{{ a }}">{{ a }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Entry Price</label>
+          <input type="number" step="any" name="entry_price" placeholder="1.0850" required />
+        </div>
+        <div>
+          <label>Stop Loss</label>
+          <input type="number" step="any" name="stop_loss" placeholder="1.0800" />
+        </div>
+        <div>
+          <label>Take Profit 1</label>
+          <input type="number" step="any" name="take_profit_1" placeholder="1.0900" />
+        </div>
+        <div>
+          <label>Take Profit 2</label>
+          <input type="number" step="any" name="take_profit_2" placeholder="1.0950" />
+        </div>
+        <div>
+          <label>Status</label>
+          <select name="status">
+            {% for s in statuses %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <label>Notes (optional)</label>
+        <textarea name="notes" placeholder="Setup analysis, confluence factors..."></textarea>
+      </div>
+      <button type="submit" class="btn-add">📡 Broadcast Signal</button>
+    </form>
+  </div>
+
+  <!-- SIGNALS TABLE -->
+  <div class="table-card">
+    <h2>📋 All Signals ({{ signals|length }})</h2>
+    {% if signals %}
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Pair</th><th>Action</th><th>Entry</th>
+          <th>SL</th><th>TP1</th><th>TP2</th><th>Status</th><th>Date</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in signals %}
+        <tr>
+          <td style="color:#94a3b8">{{ s.id }}</td>
+          <td style="font-weight:700">{{ s.pair }}</td>
+          <td>
+            {% if s.action == 'BUY' %}<span class="badge-buy">BUY</span>
+            {% else %}<span class="badge-sell">SELL</span>{% endif %}
+          </td>
+          <td class="mono">{{ s.entry_price }}</td>
+          <td class="mono" style="color:#ef4444">{{ s.stop_loss or '—' }}</td>
+          <td class="mono" style="color:#10b981">{{ s.take_profit_1 or '—' }}</td>
+          <td class="mono" style="color:#10b981">{{ s.take_profit_2 or '—' }}</td>
+          <td>
+            {% if s.status == 'Active' %}<span class="badge badge-active">Active</span>
+            {% elif s.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+            {% elif s.status == 'TP Hit' %}<span class="badge badge-tp">TP Hit</span>
+            {% else %}<span class="badge badge-stopped">Stopped Out</span>{% endif %}
+          </td>
+          <td style="color:#94a3b8;font-size:0.78rem">{{ s.created_at[:10] if s.created_at else '—' }}</td>
+          <td>
+            <div class="actions">
+              <form method="POST" action="/admin/signals/update/{{ s.id }}" class="status-form" style="display:flex;gap:6px;align-items:center">
+                <select name="status">
+                  {% for st in statuses %}
+                  <option value="{{ st }}" {% if st == s.status %}selected{% endif %}>{{ st }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn-update">Update</button>
+              </form>
+              <form method="POST" action="/admin/signals/delete/{{ s.id }}" onsubmit="return confirm('Delete this signal?')">
+                <button type="submit" class="btn-delete">✕</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">No signals yet. Broadcast your first setup above.</div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

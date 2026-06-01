@@ -648,3 +648,8 @@ p  { color: var(--muted); }
 
 /* Danger bar when drawdown > 80% */
 .tracker-bar-danger { background: var(--red) !important; }
+
+/* ── SIGNALS — new status badges ── */
+.status-pending { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.status-tp      { background: rgba(16,185,129,0.25); color: #34d399; }
+.status-stopped { background: rgba(239,68,68,0.15);  color: #ef4444; }

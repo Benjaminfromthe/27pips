@@ -52,6 +52,21 @@ def init_db():
         target_profit REAL NOT NULL DEFAULT 10.0
     )''')
 
+    # Signals
+    c.execute('''CREATE TABLE IF NOT EXISTS signals (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pair TEXT NOT NULL,
+        action TEXT NOT NULL CHECK(action IN ('BUY','SELL')),
+        entry_price REAL NOT NULL,
+        stop_loss REAL,
+        take_profit_1 REAL,
+        take_profit_2 REAL,
+        status TEXT NOT NULL DEFAULT 'Pending'
+               CHECK(status IN ('Pending','Active','TP Hit','Stopped Out')),
+        notes TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )''')
+
     conn.commit()
     conn.close()
     print("Database ready — pips.db")

@@ -105,7 +105,7 @@
 ============================================================ -->
 <section class="hero" id="home">
   <div class="container hero-inner">
-    <div class="hero-badge">🔥 Live Signals Active — 3 Setups Today</div>
+    <div class="hero-badge">🔥 Live Signals Active — <span id="signalCountBadge">{{ signal_count }}</span> Setups Today</div>
     <h1 class="hero-title">
       Master Forex.<br />
       <span class="text-green">Trade with Precision.</span>
@@ -219,7 +219,7 @@
 </section>
 
 <!-- ============================================================
-     TRADE SIGNALS FEED
+     TRADE SIGNALS FEED — Dynamic
 ============================================================ -->
 <section class="section section-dark" id="signals">
   <div class="container">
@@ -232,61 +232,12 @@
       <table class="signals-table">
         <thead>
           <tr>
-            <th>Asset</th>
-            <th>Action</th>
-            <th>Entry</th>
-            <th>Stop Loss</th>
-            <th>TP 1</th>
-            <th>TP 2</th>
-            <th>Status</th>
+            <th>Asset</th><th>Action</th><th>Entry</th>
+            <th>Stop Loss</th><th>TP 1</th><th>TP 2</th><th>Status</th>
           </tr>
         </thead>
         <tbody id="signalsBody">
-          <tr>
-            <td class="asset-cell"><span class="asset-dot"></span>EUR/USD</td>
-            <td><span class="badge-buy">BUY</span></td>
-            <td class="mono">1.0850</td>
-            <td class="mono text-red">1.0800</td>
-            <td class="mono text-green">1.0900</td>
-            <td class="mono text-green">1.0950</td>
-            <td><span class="status-badge status-active">ACTIVE</span></td>
-          </tr>
-          <tr>
-            <td class="asset-cell"><span class="asset-dot"></span>GBP/USD</td>
-            <td><span class="badge-sell">SELL</span></td>
-            <td class="mono">1.2700</td>
-            <td class="mono text-red">1.2750</td>
-            <td class="mono text-green">1.2650</td>
-            <td class="mono text-green">1.2600</td>
-            <td><span class="status-badge status-active">ACTIVE</span></td>
-          </tr>
-          <tr>
-            <td class="asset-cell"><span class="asset-dot asset-gold"></span>XAU/USD</td>
-            <td><span class="badge-buy">BUY</span></td>
-            <td class="mono">2320.00</td>
-            <td class="mono text-red">2300.00</td>
-            <td class="mono text-green">2350.00</td>
-            <td class="mono text-green">2380.00</td>
-            <td><span class="status-badge status-tp1">HIT TP1</span></td>
-          </tr>
-          <tr>
-            <td class="asset-cell"><span class="asset-dot"></span>USD/JPY</td>
-            <td><span class="badge-sell">SELL</span></td>
-            <td class="mono">154.50</td>
-            <td class="mono text-red">155.00</td>
-            <td class="mono text-green">154.00</td>
-            <td class="mono text-green">153.50</td>
-            <td><span class="status-badge status-closed">CLOSED</span></td>
-          </tr>
-          <tr>
-            <td class="asset-cell"><span class="asset-dot asset-blue"></span>NAS100</td>
-            <td><span class="badge-buy">BUY</span></td>
-            <td class="mono">18200</td>
-            <td class="mono text-red">18000</td>
-            <td class="mono text-green">18500</td>
-            <td class="mono text-green">18800</td>
-            <td><span class="status-badge status-active">ACTIVE</span></td>
-          </tr>
+          <tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">Loading signals...</td></tr>
         </tbody>
       </table>
     </div>
