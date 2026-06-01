@@ -9,6 +9,7 @@ from blueprints.journal.routes   import journal_bp
 from blueprints.signals.routes   import signals_bp
 from blueprints.tracker.routes   import tracker_bp
 from blueprints.admin.routes     import admin_bp
+from blueprints.analytics.routes import analytics_bp
 
 def create_app():
     app = Flask(__name__)
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(signals_bp,    url_prefix='/signals')
     app.register_blueprint(tracker_bp,    url_prefix='/tracker')
     app.register_blueprint(admin_bp,      url_prefix='/admin')
+    app.register_blueprint(analytics_bp,  url_prefix='/api/analytics')
 
     @app.route('/')
     def home():

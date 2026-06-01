@@ -6,6 +6,7 @@
   <title>27pips — Shema Trading Hub</title>
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -346,6 +347,53 @@
     {% endif %}
   </div>
 </section>
+
+<!-- ============================================================
+     EQUITY CURVE CHART — Analytics
+============================================================ -->
+{% if user %}
+<section class="section" id="analytics">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">📊 Analytics</span>
+      <h2 class="section-title">Equity Curve</h2>
+      <p class="section-sub">Your running account performance based on logged trades.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="equity-stats" id="equityStats" style="display:none">
+      <div class="equity-stat">
+        <p class="equity-stat-label">Starting Balance</p>
+        <p class="equity-stat-value" id="eq-start">—</p>
+      </div>
+      <div class="equity-stat">
+        <p class="equity-stat-label">Current Balance</p>
+        <p class="equity-stat-value" id="eq-current">—</p>
+      </div>
+      <div class="equity-stat">
+        <p class="equity-stat-label">Net P&L</p>
+        <p class="equity-stat-value" id="eq-pnl">—</p>
+      </div>
+      <div class="equity-stat">
+        <p class="equity-stat-label">Total Trades</p>
+        <p class="equity-stat-value" id="eq-trades">—</p>
+      </div>
+    </div>
+
+    <!-- Chart container -->
+    <div class="equity-chart-wrap">
+      <div id="equityEmpty" class="equity-empty" style="display:none">
+        <div style="font-size:3rem;margin-bottom:12px">📉</div>
+        <h3>No trade data yet</h3>
+        <p>Log your first trade in the Journal above to see your equity curve here.</p>
+        <a href="#journal" class="btn-primary" style="display:inline-block;margin-top:16px">Log a Trade →</a>
+      </div>
+      <canvas id="equityChart" style="display:none"></canvas>
+    </div>
+
+  </div>
+</section>
+{% endif %}
 
 <!-- ============================================================
      PROP FIRM CHALLENGE TRACKER — Dynamic

@@ -577,3 +577,127 @@ async function loadEducationProgress() {
 document.addEventListener('DOMContentLoaded', () => {
   loadEducationProgress();
 });
+
+// ============================================================
+// PHASE 5 — Equity Curve Chart (Chart.js)
+// ============================================================
+
+let equityChartInstance = null;
+
+async function loadEquityChart() {
+  const canvas = document.getElementById('equityChart');
+  const empty  = document.getElementById('equityEmpty');
+  const stats  = document.getElementById('equityStats');
+  if (!canvas) return;
+
+  try {
+    const res  = await fetch('/api/analytics/equity');
+    if (res.status === 401) return;   // not logged in — silent
+    const data = await res.json();
+
+    if (!data.success) return;
+
+    // No trades yet — show empty state
+    if (!data.has_data) {
+      canvas.style.display = 'none';
+      if (empty) empty.style.display = 'block';
+      return;
+    }
+
+    // Show chart + stats
+    canvas.style.display = 'block';
+    if (empty) empty.style.display = 'none';
+    if (stats) stats.style.display = 'grid';
+
+    // Populate stat cards
+    const fmt = v => '$' + v.toLocaleString('en-US', {minimumFractionDigits: 2});
+    setText('eq-start',  fmt(data.starting_balance));
+    setText('eq-current', fmt(data.current_balance));
+    const pnlEl = document.getElementById('eq-pnl');
+    if (pnlEl) {
+      pnlEl.textContent = (data.net_pnl >= 0 ? '+' : '') + fmt(data.net_pnl) + ` (${data.net_pct}%)`;
+      pnlEl.style.color = data.is_profit ? 'var(--green)' : 'var(--red)';
+    }
+    setText('eq-trades', data.total_trades + ' trades');
+
+    // Chart colors
+    const lineColor   = data.is_profit ? '#10b981' : '#ef4444';
+    const gradientTop = data.is_profit ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)';
+
+    // Destroy previous instance if exists
+    if (equityChartInstance) {
+      equityChartInstance.destroy();
+      equityChartInstance = null;
+    }
+
+    const ctx = canvas.getContext('2d');
+
+    // Gradient fill
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, gradientTop);
+    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+    equityChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Account Balance ($)',
+          data: data.data,
+          borderColor: lineColor,
+          borderWidth: 2.5,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.3,
+          pointRadius: data.data.length > 30 ? 0 : 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: lineColor,
+          pointBorderColor: '#1e293b',
+          pointBorderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            borderColor: '#334155',
+            borderWidth: 1,
+            titleColor: '#94a3b8',
+            bodyColor: '#f1f5f9',
+            bodyFont: { weight: '700', size: 14 },
+            padding: 12,
+            callbacks: {
+              label: ctx => ' $' + ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2})
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: 'rgba(51,65,85,0.5)', drawBorder: false },
+            ticks: { color: '#94a3b8', font: { size: 11 }, maxTicksLimit: 8 }
+          },
+          y: {
+            grid: { color: 'rgba(51,65,85,0.5)', drawBorder: false },
+            ticks: {
+              color: '#94a3b8',
+              font: { size: 11 },
+              callback: v => '$' + v.toLocaleString('en-US', {minimumFractionDigits: 0})
+            }
+          }
+        }
+      }
+    });
+
+  } catch (err) {
+    console.error('Equity chart error:', err);
+  }
+}
+
+// Load chart on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadEquityChart();
+});
