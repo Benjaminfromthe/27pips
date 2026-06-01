@@ -31,7 +31,6 @@ def create_app():
         user = None
         if 'user_id' in session:
             user = {'username': session['username']}
-        # Dynamic hero badge count
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         db    = get_db()
         row   = db.execute(

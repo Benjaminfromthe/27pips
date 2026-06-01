@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ lesson.title }} — 27pips</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    .lesson-content h2{color:#f1f5f9;font-size:1.4rem;font-weight:800;margin:28px 0 12px}
+    .lesson-content h3{color:#e2e8f0;font-size:1.05rem;font-weight:700;margin:20px 0 8px}
+    .lesson-content p{color:#94a3b8;line-height:1.8;margin-bottom:12px}
+    .lesson-content ul{color:#94a3b8;padding-left:20px;margin-bottom:12px;line-height:1.9}
+    .lesson-content li{margin-bottom:4px}
+    .lesson-content blockquote{background:rgba(16,185,129,0.08);border-left:4px solid #10b981;padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;color:#94a3b8;font-style:italic}
+    .lesson-content table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
+    .lesson-content th,.lesson-content td{padding:10px 14px;border:1px solid #334155;color:#94a3b8}
+    .lesson-content th{background:#1e293b;color:#f1f5f9;font-weight:700}
+    .lesson-content strong{color:#f1f5f9}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
+    <nav class="nav" id="nav">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/education/" class="nav-link" style="color:var(--green)">Education</a>
+      <a href="/#signals" class="nav-link">Signals</a>
+    </nav>
+    <div class="header-actions">
+      {% if user %}
+        <div class="user-dropdown" id="userDropdown">
+          <button class="btn-user" onclick="toggleUserMenu()">
+            <span class="user-avatar">{{ user.username[0].upper() }}</span>{{ user.username }} ▾
+          </button>
+          <div class="user-menu" id="userMenu">
+            <a href="/education/" class="user-menu-item">📚 Education</a>
+            <hr class="user-menu-divider" />
+            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
+          </div>
+        </div>
+      {% else %}
+        <button class="btn-login" onclick="openModal('login')">Member Login</button>
+      {% endif %}
+      <button class="hamburger" onclick="toggleNav()">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div class="modal-alert" id="modalAlert" style="display:none"></div>
+    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
+      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="trader@27pips.com" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div>
+      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
+    </form>
+    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
+      <div class="form-group"><label>Username</label><input type="text" id="signupUsername" required /></div>
+      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" required /></div>
+      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" required /></div>
+      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div style="background:#1e293b;border-bottom:1px solid #334155;padding:12px 0">
+  <div class="container" style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#94a3b8">
+    <a href="/education/" style="color:#94a3b8;text-decoration:none;hover:color:#10b981">Education</a>
+    <span>›</span>
+    <a href="/education/" style="color:#94a3b8;text-decoration:none">{{ course.title }}</a>
+    <span>›</span>
+    <span style="color:#f1f5f9">{{ lesson.title }}</span>
+  </div>
+</div>
+
+<!-- LESSON CONTENT -->
+<main style="background:#0f172a;min-height:70vh;padding:48px 0">
+  <div class="container" style="max-width:760px">
+
+    <!-- Lesson meta -->
+    <div style="margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <span style="background:rgba(16,185,129,0.1);color:#10b981;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">{{ course.title }}</span>
+        <span style="color:#94a3b8;font-size:0.8rem">⏱ {{ lesson.duration_minutes }} min read</span>
+        {% if is_completed %}
+        <span style="background:rgba(16,185,129,0.15);color:#10b981;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">✅ Completed</span>
+        {% endif %}
+      </div>
+      <h1 style="color:#f1f5f9;font-size:clamp(1.5rem,3vw,2rem);font-weight:900;line-height:1.2">{{ lesson.title }}</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="lesson-content" style="background:#1e293b;border:1px solid #334155;border-radius:20px;padding:36px">
+      {{ lesson.content | safe }}
+    </div>
+
+    <!-- Completion / Navigation -->
+    <div style="margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:16px">
+
+      {% if user %}
+        {% if not is_completed %}
+        <form method="POST" action="/education/lesson/{{ lesson.id }}/complete" style="width:100%;max-width:400px">
+          {% if next_lesson %}
+          <input type="hidden" name="next_lesson_id" value="{{ next_lesson.id }}" />
+          {% endif %}
+          <button type="submit" class="btn-primary full-width" style="padding:16px;font-size:1rem">
+            ✅ Mark as Completed {% if next_lesson %}→ Next: {{ next_lesson.title }}{% endif %}
+          </button>
+        </form>
+        {% else %}
+        <div style="text-align:center">
+          <p style="color:#10b981;font-weight:700;margin-bottom:12px">✅ You've completed this lesson!</p>
+          {% if next_lesson %}
+          <a href="/education/lesson/{{ next_lesson.id }}" class="btn-primary" style="display:inline-block">
+            Next Lesson: {{ next_lesson.title }} →
+          </a>
+          {% else %}
+          <a href="/education/" class="btn-primary" style="display:inline-block">← Back to All Courses</a>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% else %}
+        <!-- Guest CTA -->
+        <div style="text-align:center;background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;max-width:400px;width:100%">
+          <p style="color:#f1f5f9;font-weight:700;margin-bottom:8px">Track Your Progress</p>
+          <p style="color:#94a3b8;font-size:0.88rem;margin-bottom:20px">Sign in to mark lessons complete and track your learning journey.</p>
+          <button class="btn-primary full-width" onclick="openModal('login')">Sign In to Track Progress</button>
+          <p style="margin-top:12px;font-size:0.82rem;color:#94a3b8">New here? <a href="#" class="link-green" onclick="openModal('signup')">Create free account</a></p>
+        </div>
+      {% endif %}
+
+      <a href="/education/" style="color:#94a3b8;font-size:0.85rem;text-decoration:none">← Back to Education</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand"><span class="logo-text">27<span class="logo-accent">pips</span></span></div>
+    <p class="footer-copy">© 2025 27pips / Shema Trading Hub.</p>
+  </div>
+</footer>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -547,3 +547,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // Refresh signals every 60 seconds
   setInterval(loadSignals, 60000);
 });
+
+// ============================================================
+// PHASE 4 — Education Progress Widget on Homepage
+// ============================================================
+
+async function loadEducationProgress() {
+  // Only run if the edu-grid exists on the page
+  const eduGrid = document.querySelector('.edu-grid');
+  if (!eduGrid) return;
+
+  try {
+    const res  = await fetch('/education/progress');
+    const data = await res.json();
+    if (!data.logged_in || !data.progress.length) return;
+
+    // Update the first edu-card progress bar with real data
+    const cards = eduGrid.querySelectorAll('.edu-card');
+    data.progress.forEach((course, i) => {
+      if (!cards[i]) return;
+      const bar  = cards[i].querySelector('.progress-bar');
+      const text = cards[i].querySelector('.progress-text');
+      if (bar)  bar.style.width = course.pct + '%';
+      if (text) text.textContent = `${course.completed} / ${course.total} Lessons Completed`;
+    });
+  } catch { /* silent */ }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadEducationProgress();
+});
