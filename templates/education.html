@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>27pips — School of Pipsology</title>
+  {% include 'partials/theme_head.html' %}
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 </head>
@@ -20,6 +21,7 @@
       <a href="/#funded" class="nav-link">Tracker</a>
     </nav>
     <div class="header-actions">
+      {% include 'partials/theme_toggle.html' %}
       {% if user %}
         <div class="user-dropdown" id="userDropdown">
           <button class="btn-user" onclick="toggleUserMenu()">
@@ -147,6 +149,7 @@
   </div>
 </footer>
 
+<script src="/static/js/theme.js"></script>
 <script src="/static/js/main.js"></script>
 </body>
 </html>

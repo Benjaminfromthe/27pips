@@ -716,28 +716,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-// THEME & LANGUAGE — Dark/Light toggle + i18n
+// LANGUAGE — i18n (theme handled by theme.js)
 // ============================================================
-
-// ── Theme Toggle ───────────────────────────────────────────
-function initTheme() {
-  const saved = localStorage.getItem('pips_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  updateThemeBtn(saved);
-}
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
-  const next    = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('pips_theme', next);
-  updateThemeBtn(next);
-}
-
-function updateThemeBtn(theme) {
-  const btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
-}
 
 // ── Language dropdown ──────────────────────────────────────
 function toggleLangMenu() {
@@ -754,5 +734,3 @@ document.addEventListener('click', e => {
   }
 });
 
-// Run on load
-initTheme();

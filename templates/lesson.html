@@ -4,19 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ lesson.title }} — 27pips</title>
+  {% include 'partials/theme_head.html' %}
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    .lesson-content h2{color:#f1f5f9;font-size:1.4rem;font-weight:800;margin:28px 0 12px}
-    .lesson-content h3{color:#e2e8f0;font-size:1.05rem;font-weight:700;margin:20px 0 8px}
-    .lesson-content p{color:#94a3b8;line-height:1.8;margin-bottom:12px}
-    .lesson-content ul{color:#94a3b8;padding-left:20px;margin-bottom:12px;line-height:1.9}
+    .lesson-content h2{color:var(--text-primary);font-size:1.4rem;font-weight:800;margin:28px 0 12px}
+    .lesson-content h3{color:var(--text-primary);font-size:1.05rem;font-weight:700;margin:20px 0 8px;opacity:0.9}
+    .lesson-content p{color:var(--text-secondary);line-height:1.8;margin-bottom:12px}
+    .lesson-content ul{color:var(--text-secondary);padding-left:20px;margin-bottom:12px;line-height:1.9}
     .lesson-content li{margin-bottom:4px}
-    .lesson-content blockquote{background:rgba(16,185,129,0.08);border-left:4px solid #10b981;padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;color:#94a3b8;font-style:italic}
+    .lesson-content blockquote{background:color-mix(in srgb,var(--accent) 12%,transparent);border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;color:var(--text-secondary);font-style:italic}
     .lesson-content table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.88rem}
-    .lesson-content th,.lesson-content td{padding:10px 14px;border:1px solid #334155;color:#94a3b8}
-    .lesson-content th{background:#1e293b;color:#f1f5f9;font-weight:700}
-    .lesson-content strong{color:#f1f5f9}
+    .lesson-content th,.lesson-content td{padding:10px 14px;border:1px solid var(--border);color:var(--text-secondary)}
+    .lesson-content th{background:var(--bg-card);color:var(--text-primary);font-weight:700}
+    .lesson-content strong{color:var(--text-primary)}
   </style>
 </head>
 <body>
@@ -31,6 +32,7 @@
       <a href="/#signals" class="nav-link">Signals</a>
     </nav>
     <div class="header-actions">
+      {% include 'partials/theme_toggle.html' %}
       {% if user %}
         <div class="user-dropdown" id="userDropdown">
           <button class="btn-user" onclick="toggleUserMenu()">
@@ -154,6 +156,7 @@
   </div>
 </footer>
 
+<script src="/static/js/theme.js"></script>
 <script src="/static/js/main.js"></script>
 </body>
 </html>
