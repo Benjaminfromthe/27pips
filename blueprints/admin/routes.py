@@ -3,6 +3,7 @@
 # ============================================================
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from database import get_db
+import os
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -25,8 +26,9 @@ def admin_required(f):
 def admin_login():
     error = None
     if request.method == 'POST':
-        pin = request.form.get('pin', '')
-        if pin == '27pips2025':          # simple PIN — change in production
+        pin         = request.form.get('pin', '')
+        correct_pin = os.environ.get('ADMIN_PIN', '27pips2025')
+        if pin == correct_pin:
             session['is_admin'] = True
             return redirect(url_for('admin.admin_signals'))
         error = 'Invalid PIN.'

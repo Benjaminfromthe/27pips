@@ -1,6 +1,7 @@
 # ============================================================
-# 27pips — app.py  |  Main Flask application entry point
+# 27pips — app.py  |  Production-ready Flask entry point
 # ============================================================
+import os
 from flask import Flask, render_template, session, request
 from database import init_db
 from blueprints.auth.routes      import auth_bp
@@ -14,11 +15,14 @@ from blueprints.upgrade.routes   import upgrade_bp
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = 'pips-super-secret-key-2025-change-in-prod'
+
+    # ── Security — read from environment, fall back to local default ──
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'pips-local-dev-key-change-in-prod')
 
     with app.app_context():
         init_db()
 
+    # ── Blueprints ─────────────────────────────────────────
     app.register_blueprint(auth_bp,       url_prefix='/auth')
     app.register_blueprint(education_bp,  url_prefix='/education')
     app.register_blueprint(journal_bp,    url_prefix='/journal')
@@ -28,6 +32,7 @@ def create_app():
     app.register_blueprint(analytics_bp,  url_prefix='/api/analytics')
     app.register_blueprint(upgrade_bp,    url_prefix='/upgrade')
 
+    # ── Home route ─────────────────────────────────────────
     @app.route('/')
     def home():
         from database import get_db
@@ -56,7 +61,9 @@ def create_app():
 
     return app
 
+# ── Gunicorn entry point ────────────────────────────────────
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
-    print("27pips running at http://127.0.0.1:5000")
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')
