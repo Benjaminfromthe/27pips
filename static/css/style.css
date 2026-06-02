@@ -3,25 +3,62 @@
    Colors: #0f172a (bg), #1e293b (card), #10b981 (green), #38bdf8 (blue)
 ============================================================ */
 
+/* ============================================================
+   CSS VARIABLES — Dark mode (default) / Light mode
+============================================================ */
+:root {
+  --bg-primary:   #0f172a;
+  --bg-card:      #1e293b;
+  --bg-input:     #0f172a;
+  --border:       #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary:#94a3b8;
+  --accent:       #10b981;
+  --accent-blue:  #38bdf8;
+  --accent-yellow:#f59e0b;
+  --accent-red:   #ef4444;
+  --shadow:       0 4px 24px rgba(0,0,0,0.4);
+}
+
+[data-theme="light"] {
+  --bg-primary:   #f8fafc;
+  --bg-card:      #ffffff;
+  --bg-input:     #f1f5f9;
+  --border:       #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary:#64748b;
+  --accent:       #059669;
+  --accent-blue:  #0284c7;
+  --accent-yellow:#d97706;
+  --accent-red:   #dc2626;
+  --shadow:       0 4px 24px rgba(0,0,0,0.08);
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0f172a;
-  --card:      #1e293b;
-  --card2:     #0f172a;
-  --border:    #334155;
-  --green:     #10b981;
+  --bg:        var(--bg-primary);
+  --card:      var(--bg-card);
+  --card2:     var(--bg-primary);
+  --border:    var(--border);
+  --green:     var(--accent);
   --green-dim: #064e3b;
-  --blue:      #38bdf8;
-  --yellow:    #f59e0b;
-  --red:       #ef4444;
-  --text:      #f1f5f9;
-  --muted:     #94a3b8;
+  --blue:      var(--accent-blue);
+  --yellow:    var(--accent-yellow);
+  --red:       var(--accent-red);
+  --text:      var(--text-primary);
+  --muted:     var(--text-secondary);
   --radius:    12px;
-  --shadow:    0 4px 24px rgba(0,0,0,0.4);
+  --shadow:    var(--shadow);
 }
 
 html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s, color 0.3s;
+}
 
 body {
   background: var(--bg);
@@ -755,3 +792,215 @@ p  { color: var(--muted); }
   transition: all 0.2s;
 }
 .btn-upgrade-pill:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(245,158,11,0.35); }
+
+/* ============================================================
+   LIGHT MODE OVERRIDES
+============================================================ */
+[data-theme="light"] body { background: var(--bg-primary); color: var(--text-primary); }
+[data-theme="light"] .header { background: rgba(248,250,252,0.95); border-bottom-color: var(--border); }
+[data-theme="light"] .nav-link { color: var(--text-secondary); }
+[data-theme="light"] .nav-link:hover { color: var(--text-primary); background: var(--bg-input); }
+[data-theme="light"] .hero { background: linear-gradient(135deg,#f0fdf4,#eff6ff); }
+[data-theme="light"] .hero-title, [data-theme="light"] .section-title { color: var(--text-primary); }
+[data-theme="light"] .hero-sub, [data-theme="light"] .section-sub { color: var(--text-secondary); }
+[data-theme="light"] .edu-card,
+[data-theme="light"] .tracker-card,
+[data-theme="light"] .plan-card,
+[data-theme="light"] .testimonial-card,
+[data-theme="light"] .about-card,
+[data-theme="light"] .journal-form,
+[data-theme="light"] .journal-log { background: var(--bg-card); border-color: var(--border); }
+[data-theme="light"] .section-dark { background: var(--bg-input); }
+[data-theme="light"] .edu-module-title, [data-theme="light"] .log-title { color: var(--text-primary); }
+[data-theme="light"] .lesson-item { background: var(--bg-input); color: var(--text-secondary); }
+[data-theme="light"] .signals-table { background: var(--bg-card); }
+[data-theme="light"] .signals-table thead { background: var(--bg-input); }
+[data-theme="light"] .signals-table th { color: var(--text-secondary); border-bottom-color: var(--border); }
+[data-theme="light"] .signals-table td { border-bottom-color: var(--border); }
+[data-theme="light"] .modal { background: var(--bg-card); border-color: var(--border); }
+[data-theme="light"] .modal-tab { color: var(--text-secondary); }
+[data-theme="light"] .modal-tab.active { background: var(--bg-input); color: var(--text-primary); }
+[data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea {
+  background: var(--bg-input); border-color: var(--border); color: var(--text-primary);
+}
+[data-theme="light"] .footer { background: var(--bg-input); border-top-color: var(--border); }
+[data-theme="light"] .footer-links a { color: var(--text-secondary); }
+[data-theme="light"] .hero-stats { border-top-color: var(--border); }
+[data-theme="light"] .stat-num { color: var(--text-primary); }
+[data-theme="light"] .btn-outline { color: var(--text-primary); border-color: var(--border); }
+[data-theme="light"] .user-menu { background: var(--bg-card); border-color: var(--border); }
+[data-theme="light"] .user-menu-item { color: var(--text-primary); }
+[data-theme="light"] .user-menu-item:hover { background: var(--bg-input); }
+[data-theme="light"] .btn-user { background: var(--bg-card); border-color: var(--border); color: var(--text-primary); }
+
+/* ── Theme & Language toggle buttons ── */
+.theme-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.lang-dropdown { position: relative; }
+.lang-btn {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 0 12px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 100px;
+  box-shadow: var(--shadow);
+  z-index: 200;
+}
+.lang-menu.open { display: block; }
+.lang-menu a {
+  display: block;
+  padding: 9px 16px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.lang-menu a:hover { background: var(--bg-input); color: var(--accent); }
+.lang-menu a.active { color: var(--accent); font-weight: 800; }
+
+/* ============================================================
+   THEME SYSTEM — CSS Variables (Dark default / Light override)
+============================================================ */
+
+/* ── Dark theme (default) ── */
+:root {
+  --bg-primary:    #0f172a;
+  --bg-card:       #1e293b;
+  --bg-input:      #0f172a;
+  --text-primary:  #f1f5f9;
+  --text-secondary:#94a3b8;
+  --border-color:  #334155;
+  --accent:        #10b981;
+  --accent-blue:   #38bdf8;
+  --accent-yellow: #f59e0b;
+  --accent-red:    #ef4444;
+}
+
+/* ── Light theme override ── */
+[data-theme="light"] {
+  --bg-primary:    #f8fafc;
+  --bg-card:       #ffffff;
+  --bg-input:      #f1f5f9;
+  --text-primary:  #0f172a;
+  --text-secondary:#475569;
+  --border-color:  #e2e8f0;
+  --accent:        #059669;
+  --accent-blue:   #0284c7;
+  --accent-yellow: #d97706;
+  --accent-red:    #dc2626;
+}
+
+/* Apply variables to key elements */
+body           { background: var(--bg-primary);   color: var(--text-primary); }
+.header        { background: rgba(15,23,42,0.95); border-bottom-color: var(--border-color); }
+[data-theme="light"] .header { background: rgba(248,250,252,0.97); }
+.nav-link      { color: var(--text-secondary); }
+.nav-link:hover{ color: var(--text-primary); background: var(--bg-card); }
+.modal,.signals-table,.edu-card,.plan-card,.tracker-card,
+.journal-form,.journal-log,.testimonial-card,.about-card,
+.equity-chart-wrap,.community-card { background: var(--bg-card); border-color: var(--border-color); }
+.signals-table th { background: var(--bg-primary); color: var(--text-secondary); }
+.signals-table td { border-bottom-color: var(--border-color); }
+.form-group input,.form-group select,.form-group textarea {
+  background: var(--bg-input); border-color: var(--border-color); color: var(--text-primary);
+}
+.section-dark  { background: var(--bg-card); }
+[data-theme="light"] .section-dark { background: #f1f5f9; }
+.tracker-card  { background: var(--bg-input); }
+.lesson-item   { background: var(--bg-input); color: var(--text-secondary); }
+p              { color: var(--text-secondary); }
+h1,h2,h3,h4   { color: var(--text-primary); }
+
+/* ── Theme toggle button ── */
+.btn-theme, .theme-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-theme:hover, .theme-btn:hover { border-color: var(--accent); }
+
+/* ── Language dropdown ── */
+.lang-dropdown { position: relative; }
+.btn-lang, .lang-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn-lang:hover, .lang-btn:hover { border-color: var(--accent); }
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 110px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 200;
+}
+.lang-menu.open { display: block; }
+.lang-menu a {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.lang-menu a:hover { background: var(--bg-input); }
+.lang-menu a.active { color: var(--accent); }

@@ -20,30 +20,45 @@
       <span class="logo-text">27<span class="logo-accent">pips</span></span>
     </a>
     <nav class="nav" id="nav">
-      <a href="#home"      class="nav-link">Home</a>
-      <a href="#education" class="nav-link">Education</a>
-      <a href="#plans"     class="nav-link">Trading Plans</a>
-      <a href="#signals"   class="nav-link">Signals</a>
-      <a href="#funded"    class="nav-link">Funded Accounts</a>
-      <a href="#about"     class="nav-link">About Us</a>
+      <a href="#home"      class="nav-link">{{ t('nav_home') }}</a>
+      <a href="#education" class="nav-link">{{ t('nav_education') }}</a>
+      <a href="#plans"     class="nav-link">{{ t('nav_plans') }}</a>
+      <a href="#signals"   class="nav-link">{{ t('nav_signals') }}</a>
+      <a href="#funded"    class="nav-link">{{ t('nav_funded') }}</a>
+      <a href="#about"     class="nav-link">{{ t('nav_about') }}</a>
     </nav>
     <div class="header-actions">
+
+      <!-- Theme toggle -->
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+
+      <!-- Language dropdown -->
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-btn" onclick="toggleLangMenu()">
+          {{ lang.upper() }} ▾
+        </button>
+        <div class="lang-menu" id="langMenu">
+          <a href="/lang/en" class="{{ 'active' if lang == 'en' }}">🇬🇧 EN</a>
+          <a href="/lang/fr" class="{{ 'active' if lang == 'fr' }}">🇫🇷 FR</a>
+          <a href="/lang/rw" class="{{ 'active' if lang == 'rw' }}">🇷🇼 RW</a>
+        </div>
+      </div>
+
       {% if user %}
-        <!-- Logged-in user dropdown -->
         <div class="user-dropdown" id="userDropdown">
           <button class="btn-user" onclick="toggleUserMenu()">
             <span class="user-avatar">{{ user.username[0].upper() }}</span>
-            Welcome, {{ user.username }} ▾
+            {{ user.username }} ▾
           </button>
           <div class="user-menu" id="userMenu">
-            <a href="#journal" class="user-menu-item" onclick="toggleUserMenu()">📓 My Journal</a>
-            <a href="#funded"  class="user-menu-item" onclick="toggleUserMenu()">🏆 My Tracker</a>
+            <a href="#journal" class="user-menu-item" onclick="toggleUserMenu()">📓 {{ t('nav_journal') }}</a>
+            <a href="#funded"  class="user-menu-item" onclick="toggleUserMenu()">🏆 {{ t('nav_tracker') }}</a>
             <hr class="user-menu-divider" />
-            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
+            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 {{ t('nav_logout') }}</button>
           </div>
         </div>
       {% else %}
-        <button class="btn-login" id="loginBtn" onclick="openModal('login')">Member Login</button>
+        <button class="btn-login" id="loginBtn" onclick="openModal('login')">{{ t('nav_login') }}</button>
       {% endif %}
       <button class="hamburger" id="hamburger" onclick="toggleNav()">&#9776;</button>
     </div>

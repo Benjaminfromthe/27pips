@@ -714,3 +714,45 @@ async function loadEquityChart() {
 document.addEventListener('DOMContentLoaded', () => {
   loadEquityChart();
 });
+
+// ============================================================
+// THEME & LANGUAGE — Dark/Light toggle + i18n
+// ============================================================
+
+// ── Theme Toggle ───────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('pips_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeBtn(saved);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next    = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('pips_theme', next);
+  updateThemeBtn(next);
+}
+
+function updateThemeBtn(theme) {
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+// ── Language dropdown ──────────────────────────────────────
+function toggleLangMenu() {
+  const menu = document.getElementById('langMenu');
+  if (menu) menu.classList.toggle('open');
+}
+
+// Close lang menu on outside click
+document.addEventListener('click', e => {
+  const dd = document.getElementById('langDropdown');
+  if (dd && !dd.contains(e.target)) {
+    const menu = document.getElementById('langMenu');
+    if (menu) menu.classList.remove('open');
+  }
+});
+
+// Run on load
+initTheme();
