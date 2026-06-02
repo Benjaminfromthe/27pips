@@ -284,19 +284,30 @@ def init_db():
 
 
 def _seed_curriculum(db):
-    """Seed 2 courses with 3 lessons each."""
-    db.execute(
-        "INSERT INTO courses (title, description, slug, order_number) VALUES (?,?,?,?)",
-        ('Pre-School: Forex Basics',
-         'Start from zero. Learn what forex is, how currency pairs work, and how to read a chart.',
-         'beginner', 1)
+    """Seed 2 courses with 3 lessons each. Works on both SQLite and PostgreSQL."""
+
+    def insert_course(title, description, slug, order_number):
+        """Insert a course and return its new id — works on both backends."""
+        if USE_POSTGRES:
+            db.execute(
+                "INSERT INTO courses (title, description, slug, order_number) VALUES (%s,%s,%s,%s) RETURNING id",
+                (title, description, slug, order_number)
+            )
+            row = db._cursor.fetchone()
+            return row['id'] if row else None
+        else:
+            db.execute(
+                "INSERT INTO courses (title, description, slug, order_number) VALUES (?,?,?,?)",
+                (title, description, slug, order_number)
+            )
+            return db.lastrowid
+
+    # Course 1: Beginner
+    beginner_id = insert_course(
+        'Pre-School: Forex Basics',
+        'Start from zero. Learn what forex is, how currency pairs work, and how to read a chart.',
+        'beginner', 1
     )
-    row = db.fetchone() if USE_POSTGRES else None
-    # Get the new course id
-    if USE_POSTGRES:
-        beginner_id = db._cursor.fetchone()[0] if False else _last_id(db, 'courses')
-    else:
-        beginner_id = db.lastrowid
 
     beginner_lessons = [
         (beginner_id, 'What is Forex?',
@@ -310,13 +321,12 @@ def _seed_curriculum(db):
          3, 8),
     ]
 
-    db.execute(
-        "INSERT INTO courses (title, description, slug, order_number) VALUES (?,?,?,?)",
-        ('Elementary: Chart Reading',
-         'Learn to read price charts, identify key levels, and understand candlestick patterns.',
-         'intermediate', 2)
+    # Course 2: Intermediate
+    inter_id = insert_course(
+        'Elementary: Chart Reading',
+        'Learn to read price charts, identify key levels, and understand candlestick patterns.',
+        'intermediate', 2
     )
-    inter_id = _last_id(db, 'courses') if USE_POSTGRES else db.lastrowid
 
     inter_lessons = [
         (inter_id, 'Support and Resistance',
@@ -331,13 +341,13 @@ def _seed_curriculum(db):
     ]
 
     for lesson in beginner_lessons + inter_lessons:
-        db.execute(
-            'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) VALUES (?,?,?,?,?)',
-            lesson
-        )
-
-
-def _last_id(db, table):
-    """Get last inserted ID for PostgreSQL (SERIAL)."""
-    row = db.execute(f'SELECT MAX(id) FROM {table}').fetchone()
-    return row[0] if row else 1
+        if USE_POSTGRES:
+            db.execute(
+                'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) VALUES (%s,%s,%s,%s,%s)',
+                lesson
+            )
+        else:
+            db.execute(
+                'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) VALUES (?,?,?,?,?)',
+                lesson
+            )
