@@ -25,8 +25,14 @@ class DBConnection:
     """
     def __init__(self):
         if USE_POSTGRES:
-            import psycopg2
-            import psycopg2.extras
+            try:
+                import psycopg2
+                import psycopg2.extras
+            except ImportError:
+                raise RuntimeError(
+                    "psycopg2-binary is required for PostgreSQL. "
+                    "Run: pip install psycopg2-binary"
+                )
             self._conn   = psycopg2.connect(DB_URL)
             self._cursor = self._conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             self._pg     = True
