@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,89 +22,40 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header" id="header">
-  <div class="container header-inner">
-    <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
-    <nav class="nav" id="nav">
-      <a href="/" class="nav-link">Home</a>
-      <a href="/education/" class="nav-link" style="color:var(--green)">Education</a>
-      <a href="/#signals" class="nav-link">Signals</a>
-    </nav>
-    <div class="header-actions">
-      {% include 'partials/theme_toggle.html' %}
-      {% if user %}
-        <div class="user-dropdown" id="userDropdown">
-          <button class="btn-user" onclick="toggleUserMenu()">
-            <span class="user-avatar">{{ user.username[0].upper() }}</span>{{ user.username }} ▾
-          </button>
-          <div class="user-menu" id="userMenu">
-            <a href="/education/" class="user-menu-item">📚 Education</a>
-            <hr class="user-menu-divider" />
-            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
-          </div>
-        </div>
-      {% else %}
-        <button class="btn-login" onclick="openModal('login')">Member Login</button>
-      {% endif %}
-      <button class="hamburger" onclick="toggleNav()">&#9776;</button>
-    </div>
-  </div>
-</header>
+{% with show_nav=true, active_nav='education' %}
+{% include 'partials/site_header.html' %}
+{% endwith %}
 
-<!-- AUTH MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">&#10005;</button>
-    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
-    </div>
-    <div class="modal-alert" id="modalAlert" style="display:none"></div>
-    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
-      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="trader@27pips.com" required /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div>
-      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
-    </form>
-    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
-      <div class="form-group"><label>Username</label><input type="text" id="signupUsername" required /></div>
-      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" required /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" required /></div>
-      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
-    </form>
-  </div>
-</div>
+{% include 'partials/auth_modal.html' %}
 
-<!-- BREADCRUMB -->
-<div style="background:#1e293b;border-bottom:1px solid #334155;padding:12px 0">
-  <div class="container" style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#94a3b8">
-    <a href="/education/" style="color:#94a3b8;text-decoration:none;hover:color:#10b981">Education</a>
+<div style="background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px 0">
+  <div class="container" style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--text-secondary)">
+    <a href="/education/" style="color:var(--text-secondary);text-decoration:none">{{ t('nav_education') }}</a>
     <span>›</span>
     <a href="/education/" style="color:#94a3b8;text-decoration:none">{{ course.title }}</a>
     <span>›</span>
-    <span style="color:#f1f5f9">{{ lesson.title }}</span>
+    <span style="color:var(--text-primary)">{{ lesson.title }}</span>
   </div>
 </div>
 
 <!-- LESSON CONTENT -->
-<main style="background:#0f172a;min-height:70vh;padding:48px 0">
+<main style="background:var(--bg-primary);min-height:70vh;padding:48px 0">
   <div class="container" style="max-width:760px">
 
     <!-- Lesson meta -->
     <div style="margin-bottom:32px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
         <span style="background:rgba(16,185,129,0.1);color:#10b981;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">{{ course.title }}</span>
-        <span style="color:#94a3b8;font-size:0.8rem">⏱ {{ lesson.duration_minutes }} min read</span>
+        <span style="color:var(--text-secondary);font-size:0.8rem">⏱ {{ t('edu_lesson_min_read', minutes=lesson.duration_minutes) }}</span>
         {% if is_completed %}
-        <span style="background:rgba(16,185,129,0.15);color:#10b981;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">✅ Completed</span>
+        <span style="background:rgba(16,185,129,0.15);color:var(--accent);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">✅ {{ t('edu_lesson_completed') }}</span>
         {% endif %}
       </div>
-      <h1 style="color:#f1f5f9;font-size:clamp(1.5rem,3vw,2rem);font-weight:900;line-height:1.2">{{ lesson.title }}</h1>
+      <h1 style="color:var(--text-primary);font-size:clamp(1.5rem,3vw,2rem);font-weight:900;line-height:1.2">{{ lesson.title }}</h1>
     </div>
 
     <!-- Content -->
-    <div class="lesson-content" style="background:#1e293b;border:1px solid #334155;border-radius:20px;padding:36px">
+    <div class="lesson-content" style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:36px">
       {{ lesson.content | safe }}
     </div>
 
@@ -118,32 +69,32 @@
           <input type="hidden" name="next_lesson_id" value="{{ next_lesson.id }}" />
           {% endif %}
           <button type="submit" class="btn-primary full-width" style="padding:16px;font-size:1rem">
-            ✅ Mark as Completed {% if next_lesson %}→ Next: {{ next_lesson.title }}{% endif %}
+            ✅ {{ t('lesson_mark_complete') }} {% if next_lesson %}→ {{ t('lesson_next') }}: {{ next_lesson.title }}{% endif %}
           </button>
         </form>
         {% else %}
         <div style="text-align:center">
-          <p style="color:#10b981;font-weight:700;margin-bottom:12px">✅ You've completed this lesson!</p>
+          <p style="color:var(--accent);font-weight:700;margin-bottom:12px">✅ {{ t('lesson_completed') }}</p>
           {% if next_lesson %}
           <a href="/education/lesson/{{ next_lesson.id }}" class="btn-primary" style="display:inline-block">
-            Next Lesson: {{ next_lesson.title }} →
+            {{ t('lesson_next') }}: {{ next_lesson.title }} →
           </a>
           {% else %}
-          <a href="/education/" class="btn-primary" style="display:inline-block">← Back to All Courses</a>
+          <a href="/education/" class="btn-primary" style="display:inline-block">← {{ t('lesson_back_all') }}</a>
           {% endif %}
         </div>
         {% endif %}
       {% else %}
         <!-- Guest CTA -->
         <div style="text-align:center;background:#1e293b;border:1px solid #334155;border-radius:16px;padding:28px;max-width:400px;width:100%">
-          <p style="color:#f1f5f9;font-weight:700;margin-bottom:8px">Track Your Progress</p>
-          <p style="color:#94a3b8;font-size:0.88rem;margin-bottom:20px">Sign in to mark lessons complete and track your learning journey.</p>
-          <button class="btn-primary full-width" onclick="openModal('login')">Sign In to Track Progress</button>
-          <p style="margin-top:12px;font-size:0.82rem;color:#94a3b8">New here? <a href="#" class="link-green" onclick="openModal('signup')">Create free account</a></p>
+          <p style="color:var(--text-primary);font-weight:700;margin-bottom:8px">{{ t('lesson_track_title') }}</p>
+          <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:20px">{{ t('lesson_track_sub') }}</p>
+          <button class="btn-primary full-width" onclick="openModal('login')">{{ t('lesson_sign_in_track') }}</button>
+          <p style="margin-top:12px;font-size:0.82rem;color:var(--text-secondary)">{{ t('auth_no_account') }} <a href="#" class="link-green" onclick="openModal('signup')">{{ t('auth_create_free_account') }}</a></p>
         </div>
       {% endif %}
 
-      <a href="/education/" style="color:#94a3b8;font-size:0.85rem;text-decoration:none">← Back to Education</a>
+      <a href="/education/" style="color:var(--text-secondary);font-size:0.85rem;text-decoration:none">← {{ t('lesson_back_education') }}</a>
     </div>
 
   </div>
@@ -152,7 +103,7 @@
 <footer class="footer">
   <div class="container footer-inner">
     <div class="footer-brand"><span class="logo-text">27<span class="logo-accent">pips</span></span></div>
-    <p class="footer-copy">© 2025 27pips / Shema Trading Hub.</p>
+    <p class="footer-copy">{{ t('footer_copy') }}</p>
   </div>
 </footer>
 

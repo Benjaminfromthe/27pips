@@ -904,6 +904,9 @@ html[data-theme="light"] .theme-toggle__icon--moon {
 }
 .lang-btn:hover,
 .btn-lang:hover { border-color: var(--accent); color: var(--accent); }
+.lang-btn__flag { font-size: 1rem; line-height: 1; }
+.lang-btn__code { font-weight: 800; letter-spacing: 0.04em; }
+.lang-btn__caret { font-size: 0.65rem; opacity: 0.7; margin-left: 2px; }
 .lang-menu {
   display: none;
   position: absolute;

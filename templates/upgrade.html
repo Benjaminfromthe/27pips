@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>27pips Premium — Unlock Institutional Signals</title>
+  <title>{{ t('page_title_upgrade') }}</title>
   {% include 'partials/theme_head.html' %}
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -38,19 +38,20 @@
     <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
     <div class="header-actions">
       {% include 'partials/theme_toggle.html' %}
+      {% include 'partials/lang_switcher.html' %}
       {% if user %}
         <div class="user-dropdown" id="userDropdown">
           <button class="btn-user" onclick="toggleUserMenu()">
             <span class="user-avatar">{{ user.username[0].upper() }}</span>{{ user.username }} ▾
           </button>
           <div class="user-menu" id="userMenu">
-            <a href="/" class="user-menu-item">🏠 Dashboard</a>
+            <a href="/" class="user-menu-item">🏠 {{ t('nav_dashboard') }}</a>
             <hr class="user-menu-divider" />
-            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 Logout</button>
+            <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 {{ t('nav_logout') }}</button>
           </div>
         </div>
       {% else %}
-        <button class="btn-login" onclick="openModal('login')">Member Login</button>
+        <button class="btn-login" onclick="openModal('login')">{{ t('nav_login') }}</button>
       {% endif %}
     </div>
   </div>
@@ -60,21 +61,21 @@
 <div class="premium-hero">
   <div class="container">
     <span class="crown">👑</span>
-    <h1 class="premium-title">Unlock <span>27pips Premium</span></h1>
-    <p class="premium-sub">Get access to institutional-grade trade setups with exact Entry, Stop Loss, and Take Profit levels used by professional traders.</p>
+    <h1 class="premium-title">{{ t('upgrade_hero_title') }} <span>{{ t('upgrade_hero_brand') }}</span></h1>
+    <p class="premium-sub">{{ t('upgrade_page_sub') }}</p>
   </div>
 </div>
 
 <!-- COMPARISON -->
-<section style="background:#0f172a;padding:60px 0">
+<section style="background:var(--bg-primary);padding:60px 0">
   <div class="container">
 
     {% if tier == 'premium' %}
     <div class="already-premium">
       <div style="font-size:2.5rem;margin-bottom:12px">🎉</div>
-      <h2 style="color:#10b981;margin-bottom:8px">You're already Premium!</h2>
-      <p style="color:#94a3b8;margin-bottom:20px">All institutional signals are unlocked. Enjoy the full 27pips experience.</p>
-      <a href="/" class="btn-primary" style="display:inline-block">← Back to Dashboard</a>
+      <h2 style="color:var(--accent);margin-bottom:8px">{{ t('upgrade_already_title') }}</h2>
+      <p style="color:var(--text-secondary);margin-bottom:20px">{{ t('upgrade_already_sub') }}</p>
+      <a href="/" class="btn-primary" style="display:inline-block">← {{ t('upgrade_back_dashboard') }}</a>
     </div>
 
     {% else %}
@@ -82,7 +83,7 @@
 
       <!-- Free tier -->
       <div class="tier-card">
-        <p class="tier-name">Free</p>
+        <p class="tier-name">{{ t('plan_free') }}</p>
         <p class="tier-price">$0<span>/forever</span></p>
         <ul class="tier-features">
           <li class="yes">✅ Pre-School education module</li>
@@ -95,13 +96,13 @@
           <li>❌ Prop firm tracker</li>
           <li>❌ Full education curriculum</li>
         </ul>
-        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">Current Plan</button>
+        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">{{ t('upgrade_current_plan') }}</button>
       </div>
 
       <!-- Premium tier -->
       <div class="tier-card featured">
-        <div class="tier-badge">👑 RECOMMENDED</div>
-        <p class="tier-name" style="color:#f59e0b">Premium</p>
+        <div class="tier-badge">👑 {{ t('upgrade_recommended') }}</div>
+        <p class="tier-name" style="color:var(--accent-yellow)">{{ t('upgrade_tier_premium') }}</p>
         <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$29<span style="-webkit-text-fill-color:#94a3b8">/month</span></p>
         <ul class="tier-features">
           <li class="yes">✅ Everything in Free</li>
@@ -116,11 +117,11 @@
         </ul>
         {% if user %}
         <form method="POST" action="/upgrade/simulate">
-          <button type="submit" class="btn-upgrade">🚀 Upgrade to Premium Now</button>
+          <button type="submit" class="btn-upgrade">🚀 {{ t('upgrade_cta') }}</button>
         </form>
-        <p style="text-align:center;font-size:0.75rem;color:#94a3b8;margin-top:10px">Simulated upgrade — no payment required for demo</p>
+        <p style="text-align:center;font-size:0.75rem;color:var(--text-secondary);margin-top:10px">{{ t('upgrade_demo_note') }}</p>
         {% else %}
-        <button class="btn-upgrade" onclick="openModal('signup')">🚀 Create Account & Upgrade</button>
+        <button class="btn-upgrade" onclick="openModal('signup')">🚀 {{ t('upgrade_cta_signup') }}</button>
         {% endif %}
       </div>
 
@@ -128,11 +129,11 @@
 
     <!-- Social proof -->
     <div style="text-align:center;margin-top:48px">
-      <p style="color:#94a3b8;font-size:0.88rem;margin-bottom:16px">Trusted by traders across Africa and beyond</p>
+      <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:16px">{{ t('upgrade_social_proof') }}</p>
       <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
-        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">2,400+</p><p style="color:#94a3b8;font-size:0.8rem">Active Members</p></div>
-        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">89%</p><p style="color:#94a3b8;font-size:0.8rem">Signal Accuracy</p></div>
-        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:#f59e0b">12</p><p style="color:#94a3b8;font-size:0.8rem">Countries</p></div>
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:var(--accent-yellow)">2,400+</p><p style="color:var(--text-secondary);font-size:0.8rem">{{ t('upgrade_members') }}</p></div>
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:var(--accent-yellow)">89%</p><p style="color:var(--text-secondary);font-size:0.8rem">{{ t('hero_stat_accuracy') }}</p></div>
+        <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:var(--accent-yellow)">12</p><p style="color:var(--text-secondary);font-size:0.8rem">{{ t('about_stat_countries') }}</p></div>
       </div>
     </div>
     {% endif %}
@@ -140,29 +141,7 @@
   </div>
 </section>
 
-<!-- AUTH MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">&#10005;</button>
-    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
-    </div>
-    <div class="modal-alert" id="modalAlert" style="display:none"></div>
-    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
-      <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required /></div>
-      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
-    </form>
-    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
-      <div class="form-group"><label>Username</label><input type="text" id="signupUsername" required /></div>
-      <div class="form-group"><label>Email</label><input type="email" id="signupEmail" required /></div>
-      <div class="form-group"><label>Password</label><input type="password" id="signupPassword" required /></div>
-      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
-    </form>
-  </div>
-</div>
+{% include 'partials/auth_modal.html' %}
 
 <script src="/static/js/theme.js"></script>
 <script src="/static/js/main.js"></script>

@@ -1,0 +1,28 @@
+<div class="lang-dropdown" id="langDropdown">
+  <button
+    type="button"
+    class="lang-btn"
+    id="langBtn"
+    onclick="toggleLangMenu()"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-label="{{ t('lang_switch_label') }}"
+    title="{{ t('lang_switch_label') }}"
+  >
+    <span class="lang-btn__flag" aria-hidden="true">{{ current_lang_meta.flag }}</span>
+    <span class="lang-btn__code">{{ current_lang_meta.code }}</span>
+    <span class="lang-btn__caret" aria-hidden="true">▾</span>
+  </button>
+  <div class="lang-menu" id="langMenu" role="listbox" aria-label="{{ t('lang_switch_label') }}">
+    {% for code in supported_langs %}
+    <a
+      href="{{ url_for('set_language', lang_code=code) }}"
+      role="option"
+      class="{{ 'active' if lang == code }}"
+      hreflang="{{ code }}"
+      lang="{{ code }}"
+      aria-selected="{{ 'true' if lang == code else 'false' }}"
+    >{{ lang_meta[code].flag }} {{ lang_meta[code].native }}</a>
+    {% endfor %}
+  </div>
+</div>

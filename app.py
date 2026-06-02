@@ -4,7 +4,7 @@
 import os
 from flask import Flask, render_template, session, request, redirect, url_for
 from database import init_db
-from translations import get_translations, SUPPORTED_LANGS, DEFAULT_LANG
+from i18n import register_i18n
 from blueprints.auth.routes      import auth_bp
 from blueprints.education.routes import education_bp
 from blueprints.journal.routes   import journal_bp
@@ -33,38 +33,7 @@ def create_app():
     app.register_blueprint(analytics_bp,  url_prefix='/api/analytics')
     app.register_blueprint(upgrade_bp,    url_prefix='/upgrade')
 
-    # ── Language switcher route ────────────────────────────
-    @app.route('/lang/<lang_code>')
-    def set_language(lang_code):
-        if lang_code in SUPPORTED_LANGS:
-            session['lang'] = lang_code
-        return redirect(request.referrer or '/')
-
-    # ── Context processor — inject t() and lang into all templates ──
-    @app.context_processor
-    def inject_translations():
-        lang = session.get('lang', DEFAULT_LANG)
-        tr   = get_translations(lang)
-        def t(key, fallback=None):
-            return tr.get(key, fallback or key)
-        return dict(t=t, lang=lang, supported_langs=SUPPORTED_LANGS)
-
-    # ── Language route ─────────────────────────────────────
-    @app.route('/set-lang/<lang>')
-    def set_lang(lang):
-        from flask import redirect, request as req
-        if lang in SUPPORTED_LANGS:
-            session['lang'] = lang
-        return redirect(req.referrer or '/')
-
-    # ── Context processor — inject t() and lang into all templates ──
-    @app.context_processor
-    def inject_i18n():
-        lang = session.get('lang', DEFAULT_LANG)
-        translations = get_translations(lang)
-        def t(key, fallback=None):
-            return translations.get(key, fallback or key)
-        return dict(t=t, lang=lang, supported_langs=SUPPORTED_LANGS)
+    register_i18n(app)
 
     # ── Home route ─────────────────────────────────────────
     @app.route('/')

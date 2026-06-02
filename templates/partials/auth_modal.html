@@ -1,0 +1,43 @@
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&#10005;</button>
+    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin"  onclick="switchTab('login')">{{ t('auth_sign_in') }}</button>
+      <button class="modal-tab"        id="tabSignup" onclick="switchTab('signup')">{{ t('auth_create_account') }}</button>
+    </div>
+
+    <div class="modal-alert" id="modalAlert" style="display:none"></div>
+
+    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
+      <div class="form-group">
+        <label>{{ t('auth_email') }}</label>
+        <input type="email" id="loginEmail" placeholder="trader@27pips.com" required />
+      </div>
+      <div class="form-group">
+        <label>{{ t('auth_password') }}</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary full-width" id="loginBtn2">{{ t('auth_sign_in') }}</button>
+      <p class="modal-footer-text">{{ t('auth_no_account') }} <a href="#" class="link-green" onclick="switchTab('signup')">{{ t('auth_create_free') }}</a></p>
+    </form>
+
+    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
+      <div class="form-group">
+        <label>{{ t('auth_username') }}</label>
+        <input type="text" id="signupUsername" placeholder="pips_trader" required />
+      </div>
+      <div class="form-group">
+        <label>{{ t('auth_email') }}</label>
+        <input type="email" id="signupEmail" placeholder="trader@27pips.com" required />
+      </div>
+      <div class="form-group">
+        <label>{{ t('auth_password') }} <span style="color:var(--muted);font-weight:400">{{ t('auth_password_hint') }}</span></label>
+        <input type="password" id="signupPassword" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary full-width" id="signupBtn">{{ t('auth_create_account') }}</button>
+      <p class="modal-footer-text">{{ t('auth_already_member') }} <a href="#" class="link-green" onclick="switchTab('login')">{{ t('auth_sign_in_link') }}</a></p>
+    </form>
+  </div>
+</div>

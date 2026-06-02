@@ -722,7 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Language dropdown ──────────────────────────────────────
 function toggleLangMenu() {
   const menu = document.getElementById('langMenu');
-  if (menu) menu.classList.toggle('open');
+  const btn  = document.getElementById('langBtn');
+  if (!menu) return;
+  const open = menu.classList.toggle('open');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 
 // Close lang menu on outside click
@@ -730,7 +733,9 @@ document.addEventListener('click', e => {
   const dd = document.getElementById('langDropdown');
   if (dd && !dd.contains(e.target)) {
     const menu = document.getElementById('langMenu');
+    const btn  = document.getElementById('langBtn');
     if (menu) menu.classList.remove('open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
   }
 });
 

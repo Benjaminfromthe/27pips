@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>27pips — Shema Trading Hub</title>
+  <title>{{ t('page_title_home') }}</title>
   {% include 'partials/theme_head.html' %}
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -31,18 +31,7 @@
     <div class="header-actions">
 
       {% include 'partials/theme_toggle.html' %}
-
-      <!-- Language dropdown -->
-      <div class="lang-dropdown" id="langDropdown">
-        <button class="lang-btn" onclick="toggleLangMenu()">
-          {{ lang.upper() }} ▾
-        </button>
-        <div class="lang-menu" id="langMenu">
-          <a href="/lang/en" class="{{ 'active' if lang == 'en' }}">🇬🇧 EN</a>
-          <a href="/lang/fr" class="{{ 'active' if lang == 'fr' }}">🇫🇷 FR</a>
-          <a href="/lang/rw" class="{{ 'active' if lang == 'rw' }}">🇷🇼 RW</a>
-        </div>
-      </div>
+      {% include 'partials/lang_switcher.html' %}
 
       {% if user %}
         <div class="user-dropdown" id="userDropdown">
@@ -65,88 +54,32 @@
   </div>
 </header>
 
-<!-- ============================================================
-     AUTH MODAL — Login / Signup with smooth toggle
-============================================================ -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">&#10005;</button>
-    <div class="modal-logo">27<span class="logo-accent">pips</span></div>
+{% include 'partials/auth_modal.html' %}
 
-    <!-- Tab switcher -->
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabLogin"  onclick="switchTab('login')">Sign In</button>
-      <button class="modal-tab"        id="tabSignup" onclick="switchTab('signup')">Create Account</button>
-    </div>
-
-    <!-- Error / success message -->
-    <div class="modal-alert" id="modalAlert" style="display:none"></div>
-
-    <!-- LOGIN FORM -->
-    <form class="modal-form" id="loginForm" onsubmit="submitLogin(event)">
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="loginEmail" placeholder="trader@27pips.com" required />
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn-primary full-width" id="loginBtn2">Sign In</button>
-      <p class="modal-footer-text">No account? <a href="#" class="link-green" onclick="switchTab('signup')">Create one free →</a></p>
-    </form>
-
-    <!-- SIGNUP FORM -->
-    <form class="modal-form" id="signupForm" style="display:none" onsubmit="submitSignup(event)">
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="signupUsername" placeholder="e.g. pips_trader" required />
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="signupEmail" placeholder="trader@27pips.com" required />
-      </div>
-      <div class="form-group">
-        <label>Password <span style="color:var(--muted);font-weight:400">(min 6 chars)</span></label>
-        <input type="password" id="signupPassword" placeholder="••••••••" required />
-      </div>
-      <button type="submit" class="btn-primary full-width" id="signupBtn">Create Account</button>
-      <p class="modal-footer-text">Already a member? <a href="#" class="link-green" onclick="switchTab('login')">Sign in →</a></p>
-    </form>
-  </div>
-</div>
-
-<!-- UPGRADE SUCCESS FLASH BANNER -->
 {% if upgraded %}
 <div id="upgradeBanner" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a;padding:14px;text-align:center;font-weight:800;font-size:0.95rem;position:sticky;top:64px;z-index:90">
-  🎉 Welcome to 27pips Premium! All institutional signals are now unlocked.
-  <button onclick="document.getElementById('upgradeBanner').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;margin-left:12px;color:#0f172a">✕</button>
+  🎉 {{ t('upgrade_banner') }}
+  <button onclick="document.getElementById('upgradeBanner').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;margin-left:12px;color:#0f172a" aria-label="Close">✕</button>
 </div>
 {% endif %}
 
-<!-- ============================================================
-     HERO SECTION
-============================================================ -->
 <section class="hero" id="home">
   <div class="container hero-inner">
-    <div class="hero-badge">🔥 Live Signals Active — <span id="signalCountBadge">{{ signal_count }}</span> Setups Today</div>
+    <div class="hero-badge">{{ t('hero_badge_live', badge=t('hero_badge'), count=signal_count, setups=t('hero_setups_today')) }}</div>
     <h1 class="hero-title">
-      Master Forex.<br />
-      <span class="text-green">Trade with Precision.</span>
+      {{ t('hero_title_1') }}<br />
+      <span class="text-green">{{ t('hero_title_2') }}</span>
     </h1>
-    <p class="hero-sub">
-      27pips is your all-in-one trading hub — structured education, live signals,
-      prop firm tracking, and a community of serious traders.
-    </p>
+    <p class="hero-sub">{{ t('hero_sub') }}</p>
     <div class="hero-cta">
-      <button class="btn-primary" onclick="openModal()">Start Learning Free</button>
-      <a href="#signals" class="btn-outline">View Live Signals</a>
+      <button class="btn-primary" onclick="openModal()">{{ t('hero_cta_start') }}</button>
+      <a href="#signals" class="btn-outline">{{ t('hero_cta_signals') }}</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">Active Traders</span></div>
-      <div class="stat"><span class="stat-num">89%</span><span class="stat-label">Signal Accuracy</span></div>
-      <div class="stat"><span class="stat-num">150+</span><span class="stat-label">Lessons</span></div>
-      <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Community</span></div>
+      <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">{{ t('hero_stat_traders') }}</span></div>
+      <div class="stat"><span class="stat-num">89%</span><span class="stat-label">{{ t('hero_stat_accuracy') }}</span></div>
+      <div class="stat"><span class="stat-num">150+</span><span class="stat-label">{{ t('hero_stat_lessons') }}</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">{{ t('hero_stat_support') }}</span></div>
     </div>
   </div>
 </section>
@@ -157,9 +90,9 @@
 <section class="section" id="education">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">📚 Education</span>
-      <h2 class="section-title">School of Pipsology</h2>
-      <p class="section-sub">Structured learning from zero to professional trader. Complete modules, earn badges, level up.</p>
+      <span class="section-tag">📚 {{ t('edu_tag') }}</span>
+      <h2 class="section-title">{{ t('edu_title') }}</h2>
+      <p class="section-sub">{{ t('edu_sub') }}</p>
     </div>
     <div class="edu-grid">
 
@@ -171,7 +104,7 @@
             <h3 class="edu-module-title">Pre-School</h3>
             <p class="edu-module-sub">Forex Basics</p>
           </div>
-          <span class="edu-badge badge-locked">Locked</span>
+          <span class="edu-badge badge-locked">{{ t('edu_locked') }}</span>
         </div>
         <div class="progress-bar-wrap">
           <div class="progress-bar" style="width:0%"></div>
@@ -184,7 +117,7 @@
           <li class="lesson-item locked">📖 Pips and Lots</li>
           <li class="lesson-item locked">📖 Bid, Ask and Spread</li>
         </ul>
-        <button class="btn-primary full-width" onclick="window.location='/education/'">Start Module</button>
+        <button class="btn-primary full-width" onclick="window.location='/education/'">{{ t('edu_start_module') }}</button>
       </div>
 
       <!-- Module 2 — preview card -->
@@ -195,7 +128,7 @@
             <h3 class="edu-module-title">Elementary</h3>
             <p class="edu-module-sub">Chart Reading</p>
           </div>
-          <span class="edu-badge badge-locked">3 Lessons</span>
+          <span class="edu-badge badge-locked">{{ t('edu_lessons_count', count=3) }}</span>
         </div>
         <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
         <p class="progress-text">Support & Resistance · Candlesticks · Trend Lines</p>
@@ -204,7 +137,7 @@
           <li class="lesson-item locked">📖 Candlestick Patterns</li>
           <li class="lesson-item locked">📖 Trend Lines & Market Structure</li>
         </ul>
-        <a href="/education/" class="btn-outline full-width" style="display:block;text-align:center;text-decoration:none">View Curriculum →</a>
+        <a href="/education/" class="btn-outline full-width" style="display:block;text-align:center;text-decoration:none">{{ t('edu_view_curriculum') }}</a>
       </div>
 
       <!-- Module 3 — coming soon -->
@@ -215,7 +148,7 @@
             <h3 class="edu-module-title">High School</h3>
             <p class="edu-module-sub">Risk Management</p>
           </div>
-          <span class="edu-badge badge-locked">Coming Soon</span>
+          <span class="edu-badge badge-locked">{{ t('edu_coming_soon') }}</span>
         </div>
         <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
         <p class="progress-text">Position Sizing · Psychology · Trading Plan</p>
@@ -224,7 +157,7 @@
           <li class="lesson-item locked">📖 Risk/Reward Ratio</li>
           <li class="lesson-item locked">📖 Trading Psychology</li>
         </ul>
-        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:not-allowed">Coming Soon</button>
+        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:not-allowed">{{ t('edu_coming_soon') }}</button>
       </div>
 
     </div>
@@ -232,7 +165,7 @@
     <!-- CTA to full education page -->
     <div style="text-align:center;margin-top:32px">
       <a href="/education/" class="btn-primary" style="display:inline-block;padding:14px 36px;font-size:1rem">
-        📚 View Full Curriculum & Track Progress →
+        📚 {{ t('edu_cta') }}
       </a>
     </div>
 
@@ -245,26 +178,26 @@
 <section class="section section-dark" id="signals">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">⚡ Live</span>
-      <h2 class="section-title">Trade Signals Feed</h2>
-      <p class="section-sub">Real-time setups from our analysts. Entry, SL, and TP levels included.</p>
+      <span class="section-tag">⚡ {{ t('signals_tag') }}</span>
+      <h2 class="section-title">{{ t('signals_title') }}</h2>
+      <p class="section-sub">{{ t('signals_sub') }}</p>
     </div>
     <div class="signals-table-wrap">
       <table class="signals-table">
         <thead>
           <tr>
-            <th>Asset</th><th>Action</th><th>Entry</th>
-            <th>Stop Loss</th><th>TP 1</th><th>TP 2</th><th>Status</th>
+            <th>{{ t('signals_asset') }}</th><th>{{ t('signals_action') }}</th><th>{{ t('signals_entry') }}</th>
+            <th>{{ t('signals_sl') }}</th><th>{{ t('signals_tp1') }}</th><th>{{ t('signals_tp2') }}</th><th>{{ t('signals_status') }}</th>
           </tr>
         </thead>
         <tbody id="signalsBody">
-          <tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">Loading signals...</td></tr>
+          <tr><td colspan="7" style="text-align:center;color:var(--text-secondary);padding:24px">{{ t('loading_signals') }}</td></tr>
         </tbody>
       </table>
     </div>
     <div class="signals-cta">
-      <p class="text-muted">🔒 Full signal history and alerts available for members</p>
-      <button class="btn-primary" onclick="openModal()">Get Full Access</button>
+      <p class="text-muted">{{ t('signals_locked') }}</p>
+      <button class="btn-primary" onclick="openModal()">{{ t('signals_cta') }}</button>
     </div>
 
     <!-- Premium upsell banner for free/guest users -->
@@ -273,10 +206,10 @@
       <div class="premium-upsell-inner">
         <span style="font-size:1.8rem">👑</span>
         <div>
-          <p class="premium-upsell-title">🚀 Unlock VIP Setups</p>
-          <p class="premium-upsell-sub">Upgrade to Premium to see exact Entry, SL, and TP coordinates for high-probability institutional trades.</p>
+          <p class="premium-upsell-title">{{ t('premium_upsell_title') }}</p>
+          <p class="premium-upsell-sub">{{ t('premium_upsell_sub') }}</p>
         </div>
-        <a href="/upgrade" class="btn-upgrade-pill">Upgrade Now →</a>
+        <a href="/upgrade" class="btn-upgrade-pill">{{ t('premium_upgrade_now') }}</a>
       </div>
     </div>
     {% endif %}
@@ -290,9 +223,9 @@
 <section class="section" id="journal">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">📓 Journal</span>
-      <h2 class="section-title">Trading Journal</h2>
-      <p class="section-sub">Log your trades, track your mindset, and review your performance over time.</p>
+      <span class="section-tag">📓 {{ t('journal_tag') }}</span>
+      <h2 class="section-title">{{ t('journal_title') }}</h2>
+      <p class="section-sub">{{ t('journal_sub') }}</p>
     </div>
 
     {% if user %}
@@ -303,70 +236,70 @@
       <form class="journal-form" id="journalForm" onsubmit="submitTrade(event)" enctype="multipart/form-data">
         <div class="journal-row">
           <div class="form-group">
-            <label>Pair</label>
+            <label>{{ t('journal_pair') }}</label>
             <input type="text" name="pair" id="j-pair" placeholder="EUR/USD" required />
           </div>
           <div class="form-group">
-            <label>Direction</label>
+            <label>{{ t('journal_direction') }}</label>
             <select name="direction" id="j-direction">
-              <option value="Buy">📈 Buy (Long)</option>
-              <option value="Sell">📉 Sell (Short)</option>
+              <option value="Buy">{{ t('journal_direction_buy') }}</option>
+              <option value="Sell">{{ t('journal_direction_sell') }}</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Outcome</label>
+            <label>{{ t('journal_outcome') }}</label>
             <select name="outcome" id="j-outcome">
-              <option value="">— Select —</option>
-              <option value="Win">✅ Win</option>
-              <option value="Loss">❌ Loss</option>
+              <option value="">{{ t('journal_outcome_select') }}</option>
+              <option value="Win">{{ t('journal_outcome_win') }}</option>
+              <option value="Loss">{{ t('journal_outcome_loss') }}</option>
             </select>
           </div>
         </div>
         <div class="journal-row">
           <div class="form-group">
-            <label>Entry Price</label>
+            <label>{{ t('journal_entry') }}</label>
             <input type="number" step="any" name="entry_price" id="j-entry" placeholder="1.0850" required />
           </div>
           <div class="form-group">
-            <label>Exit Price</label>
+            <label>{{ t('journal_exit') }}</label>
             <input type="number" step="any" name="exit_price" id="j-exit" placeholder="1.0900" />
           </div>
           <div class="form-group">
-            <label>Lot Size</label>
+            <label>{{ t('journal_lot') }}</label>
             <input type="number" step="any" name="lot_size" id="j-lot" placeholder="0.10" />
           </div>
           <div class="form-group">
-            <label>Pips +/-</label>
+            <label>{{ t('journal_pips') }}</label>
             <input type="number" step="any" name="pips_gained_lost" id="j-pips" placeholder="50" />
           </div>
         </div>
         <div class="journal-row">
           <div class="form-group full">
-            <label>Notes / Analysis</label>
+            <label>{{ t('journal_notes') }}</label>
             <textarea name="notes" id="j-notes" rows="2" placeholder="Why did you take this trade?"></textarea>
           </div>
         </div>
         <div class="journal-row">
           <div class="form-group">
-            <label>Chart Screenshot</label>
+            <label>{{ t('journal_chart') }}</label>
             <div class="upload-zone" onclick="document.getElementById('chartUpload').click()">
               <span class="upload-icon">📷</span>
-              <p>Click to upload chart</p>
-              <p class="upload-hint">PNG, JPG up to 5MB</p>
+              <p>{{ t('journal_upload_click') }}</p>
+              <p class="upload-hint">{{ t('journal_upload_hint') }}</p>
               <input type="file" name="chart_image" id="chartUpload" accept="image/*" style="display:none" onchange="previewChart(event)" />
             </div>
             <img id="chartPreview" class="chart-preview" style="display:none" />
           </div>
         </div>
         <div id="journalMsg" class="modal-alert" style="display:none"></div>
-        <button type="submit" class="btn-primary" id="journalSubmitBtn">Log This Trade</button>
+        <button type="submit" class="btn-primary" id="journalSubmitBtn">{{ t('journal_log_btn') }}</button>
       </form>
 
       <!-- Recent Trades Table -->
       <div class="journal-log" id="journalLog">
-        <h3 class="log-title">Recent Trades</h3>
+        <h3 class="log-title">{{ t('journal_recent') }}</h3>
         <div id="tradesTableWrap">
-          <p class="text-muted" id="noEntries">Loading...</p>
+          <p class="text-muted" id="noEntries">{{ t('loading') }}</p>
         </div>
       </div>
     </div>
@@ -376,10 +309,10 @@
     <div class="auth-gate-static">
       <div class="auth-gate-box">
         <div style="font-size:3rem">🔒</div>
-        <h3>Trading Journal</h3>
-        <p>Log your trades and track your performance over time.</p>
-        <button class="btn-primary" onclick="openModal('login')">Sign In to Access</button>
-        <p style="font-size:0.8rem;color:var(--muted);margin-top:8px">New here? <a href="#" class="link-green" onclick="openModal('signup')">Create free account</a></p>
+        <h3>{{ t('journal_title') }}</h3>
+        <p>{{ t('journal_gate_sub') }}</p>
+        <button class="btn-primary" onclick="openModal('login')">{{ t('auth_sign_in_access') }}</button>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:8px">{{ t('auth_no_account') }} <a href="#" class="link-green" onclick="openModal('signup')">{{ t('auth_create_free_account') }}</a></p>
       </div>
     </div>
     {% endif %}
@@ -393,27 +326,27 @@
 <section class="section" id="analytics">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">📊 Analytics</span>
-      <h2 class="section-title">Equity Curve</h2>
-      <p class="section-sub">Your running account performance based on logged trades.</p>
+      <span class="section-tag">📊 {{ t('analytics_tag') }}</span>
+      <h2 class="section-title">{{ t('analytics_title') }}</h2>
+      <p class="section-sub">{{ t('analytics_sub') }}</p>
     </div>
 
     <!-- Stats row -->
     <div class="equity-stats" id="equityStats" style="display:none">
       <div class="equity-stat">
-        <p class="equity-stat-label">Starting Balance</p>
+        <p class="equity-stat-label">{{ t('analytics_start') }}</p>
         <p class="equity-stat-value" id="eq-start">—</p>
       </div>
       <div class="equity-stat">
-        <p class="equity-stat-label">Current Balance</p>
+        <p class="equity-stat-label">{{ t('analytics_current') }}</p>
         <p class="equity-stat-value" id="eq-current">—</p>
       </div>
       <div class="equity-stat">
-        <p class="equity-stat-label">Net P&L</p>
+        <p class="equity-stat-label">{{ t('analytics_pnl') }}</p>
         <p class="equity-stat-value" id="eq-pnl">—</p>
       </div>
       <div class="equity-stat">
-        <p class="equity-stat-label">Total Trades</p>
+        <p class="equity-stat-label">{{ t('analytics_trades') }}</p>
         <p class="equity-stat-value" id="eq-trades">—</p>
       </div>
     </div>
@@ -422,9 +355,9 @@
     <div class="equity-chart-wrap">
       <div id="equityEmpty" class="equity-empty" style="display:none">
         <div style="font-size:3rem;margin-bottom:12px">📉</div>
-        <h3>No trade data yet</h3>
-        <p>Log your first trade in the Journal above to see your equity curve here.</p>
-        <a href="#journal" class="btn-primary" style="display:inline-block;margin-top:16px">Log a Trade →</a>
+        <h3>{{ t('equity_empty_title') }}</h3>
+        <p>{{ t('equity_empty_sub') }}</p>
+        <a href="#journal" class="btn-primary" style="display:inline-block;margin-top:16px">{{ t('equity_log_trade') }}</a>
       </div>
       <canvas id="equityChart" style="display:none"></canvas>
     </div>
@@ -439,29 +372,29 @@
 <section class="section section-dark" id="funded">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">🏆 Funded</span>
-      <h2 class="section-title">Prop Firm Challenge Tracker</h2>
-      <p class="section-sub">Track your challenge metrics in real time. Stay within rules, hit your targets.</p>
+      <span class="section-tag">🏆 {{ t('tracker_tag') }}</span>
+      <h2 class="section-title">{{ t('tracker_title') }}</h2>
+      <p class="section-sub">{{ t('tracker_sub') }}</p>
     </div>
 
     {% if user %}
     <!-- RISK ALERT BANNER — shown by JS when drawdown_breached -->
     <div class="drawdown-alert" id="drawdownAlert" style="display:none">
-      ⚠️ Daily Drawdown Warning: Risk Parameters Exceeded — Stop trading for today!
+      {{ t('tracker_drawdown_alert') }}
     </div>
 
     <!-- TRACKER SETUP FORM — shown by JS when no tracker account -->
     <div id="trackerSetup" style="display:none">
       <div class="tracker-setup-box">
         <div style="font-size:2.5rem;margin-bottom:12px">🏦</div>
-        <h3 style="color:var(--text);margin-bottom:8px">Set Up Your Challenge Account</h3>
-        <p style="margin-bottom:20px">Enter your starting balance to begin tracking your prop firm challenge.</p>
+        <h3 style="color:var(--text);margin-bottom:8px">{{ t('tracker_setup_title') }}</h3>
+        <p style="margin-bottom:20px">{{ t('tracker_setup_sub') }}</p>
         <div class="form-group" style="max-width:280px;margin:0 auto 16px">
-          <label>Starting Balance ($)</label>
+          <label>{{ t('tracker_start_balance') }}</label>
           <input type="number" id="setupBalance" placeholder="10000" min="1" />
         </div>
         <div id="setupMsg" class="modal-alert" style="display:none"></div>
-        <button class="btn-primary" onclick="setupTracker()">Start Tracking</button>
+        <button class="btn-primary" onclick="setupTracker()">{{ t('tracker_start_tracking') }}</button>
       </div>
     </div>
 
@@ -469,9 +402,9 @@
     <div class="tracker-grid" id="trackerGrid">
       <!-- Account Balance -->
       <div class="tracker-card tracker-card-main">
-        <p class="tracker-label">Account Balance</p>
+        <p class="tracker-label">{{ t('tracker_balance') }}</p>
         <p class="tracker-value text-green" id="t-balance">—</p>
-        <p class="tracker-sub" id="t-balance-sub">Loading...</p>
+        <p class="tracker-sub" id="t-balance-sub">{{ t('loading') }}</p>
         <div class="tracker-progress-wrap">
           <div class="tracker-progress-bar" id="t-profit-bar" style="width:0%"></div>
         </div>
@@ -480,7 +413,7 @@
       <!-- Daily Drawdown -->
       <div class="tracker-card">
         <div class="tracker-icon">📉</div>
-        <p class="tracker-label">Daily Drawdown</p>
+        <p class="tracker-label">{{ t('tracker_daily') }}</p>
         <p class="tracker-value text-yellow" id="t-daily">—</p>
         <p class="tracker-sub" id="t-daily-sub">Limit: —</p>
         <div class="tracker-progress-wrap">
@@ -491,7 +424,7 @@
       <!-- Max Drawdown -->
       <div class="tracker-card">
         <div class="tracker-icon">🛑</div>
-        <p class="tracker-label">Max Drawdown</p>
+        <p class="tracker-label">{{ t('tracker_max') }}</p>
         <p class="tracker-value text-green" id="t-max">—</p>
         <p class="tracker-sub" id="t-max-sub">Limit: —</p>
         <div class="tracker-progress-wrap">
@@ -502,7 +435,7 @@
       <!-- Profit Target -->
       <div class="tracker-card">
         <div class="tracker-icon">🎯</div>
-        <p class="tracker-label">Profit Target</p>
+        <p class="tracker-label">{{ t('tracker_target') }}</p>
         <p class="tracker-value text-blue" id="t-profit">—</p>
         <p class="tracker-sub" id="t-profit-sub">Target: —</p>
         <div class="tracker-progress-wrap">
@@ -517,9 +450,9 @@
     <div class="auth-gate-static">
       <div class="auth-gate-box">
         <div style="font-size:3rem">🔒</div>
-        <h3>Prop Firm Tracker</h3>
-        <p>Track your challenge metrics in real time.</p>
-        <button class="btn-primary" onclick="openModal('login')">Sign In to Access</button>
+        <h3>{{ t('tracker_gate_title') }}</h3>
+        <p>{{ t('tracker_gate_sub') }}</p>
+        <button class="btn-primary" onclick="openModal('login')">{{ t('auth_sign_in_access') }}</button>
       </div>
     </div>
     {% endif %}
@@ -533,15 +466,15 @@
 <section class="section" id="plans">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">💎 Plans</span>
-      <h2 class="section-title">Choose Your Plan</h2>
-      <p class="section-sub">Start free, upgrade when you're ready to go pro.</p>
+      <span class="section-tag">💎 {{ t('plans_tag') }}</span>
+      <h2 class="section-title">{{ t('plans_title') }}</h2>
+      <p class="section-sub">{{ t('plans_sub') }}</p>
     </div>
     <div class="plans-grid">
 
       <div class="plan-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">Free</div>
+        <div class="plan-name">{{ t('plan_starter') }}</div>
+        <div class="plan-price">{{ t('plan_free') }}</div>
         <ul class="plan-features">
           <li>✅ Pre-School Module</li>
           <li>✅ 3 Signals per week</li>
@@ -551,13 +484,13 @@
           <li class="disabled">❌ Prop Firm Tracker</li>
           <li class="disabled">❌ Daily Signals</li>
         </ul>
-        <button class="btn-outline full-width" onclick="openModal()">Get Started</button>
+        <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_get_started') }}</button>
       </div>
 
       <div class="plan-card plan-featured">
-        <div class="plan-badge">Most Popular</div>
-        <div class="plan-name">Pro Trader</div>
-        <div class="plan-price">$29<span>/mo</span></div>
+        <div class="plan-badge">{{ t('plan_most_popular') }}</div>
+        <div class="plan-name">{{ t('plan_pro') }}</div>
+        <div class="plan-price">$29<span>{{ t('plan_per_month') }}</span></div>
         <ul class="plan-features">
           <li>✅ All Education Modules</li>
           <li>✅ Daily Live Signals</li>
@@ -567,12 +500,12 @@
           <li>✅ Weekly Live Sessions</li>
           <li class="disabled">❌ 1-on-1 Mentorship</li>
         </ul>
-        <button class="btn-primary full-width" onclick="openModal()">Start Pro</button>
+        <button class="btn-primary full-width" onclick="openModal()">{{ t('plan_start_pro') }}</button>
       </div>
 
       <div class="plan-card">
-        <div class="plan-name">Elite</div>
-        <div class="plan-price">$79<span>/mo</span></div>
+        <div class="plan-name">{{ t('plan_elite') }}</div>
+        <div class="plan-price">$79<span>{{ t('plan_per_month') }}</span></div>
         <ul class="plan-features">
           <li>✅ Everything in Pro</li>
           <li>✅ 1-on-1 Mentorship</li>
@@ -582,7 +515,7 @@
           <li>✅ Custom Strategy Build</li>
           <li>✅ Direct Analyst Access</li>
         </ul>
-        <button class="btn-outline full-width" onclick="openModal()">Go Elite</button>
+        <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_go_elite') }}</button>
       </div>
 
     </div>
@@ -595,30 +528,30 @@
 <section class="section section-dark" id="community">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">🌐 Community</span>
-      <h2 class="section-title">Join the Community</h2>
-      <p class="section-sub">Connect with thousands of traders. Share setups, get feedback, grow together.</p>
+      <span class="section-tag">🌐 {{ t('community_tag') }}</span>
+      <h2 class="section-title">{{ t('community_title') }}</h2>
+      <p class="section-sub">{{ t('community_sub') }}</p>
     </div>
     <div class="community-grid">
       <div class="community-card community-telegram">
         <div class="community-icon">✈️</div>
-        <h3>Telegram Channel</h3>
-        <p>Get instant signal alerts, market updates, and daily analysis delivered to your phone.</p>
+        <h3>{{ t('community_telegram_title') }}</h3>
+        <p>{{ t('community_telegram_sub') }}</p>
         <div class="community-stats">
-          <span>👥 1,200+ Members</span>
-          <span>📡 Daily Updates</span>
+          <span>{{ t('community_members_telegram') }}</span>
+          <span>{{ t('community_updates') }}</span>
         </div>
-        <a href="#" class="btn-community btn-telegram">Join Telegram</a>
+        <a href="#" class="btn-community btn-telegram">{{ t('community_join_telegram') }}</a>
       </div>
       <div class="community-card community-discord">
         <div class="community-icon">🎮</div>
-        <h3>Discord Server</h3>
-        <p>Live trading rooms, chart sharing, strategy discussions, and weekly voice sessions.</p>
+        <h3>{{ t('community_discord_title') }}</h3>
+        <p>{{ t('community_discord_sub') }}</p>
         <div class="community-stats">
-          <span>👥 800+ Members</span>
-          <span>🔴 Live Sessions</span>
+          <span>{{ t('community_members_discord') }}</span>
+          <span>{{ t('community_live_sessions') }}</span>
         </div>
-        <a href="#" class="btn-community btn-discord">Join Discord</a>
+        <a href="#" class="btn-community btn-discord">{{ t('community_join_discord') }}</a>
       </div>
     </div>
   </div>
@@ -630,8 +563,8 @@
 <section class="section" id="testimonials">
   <div class="container">
     <div class="section-header">
-      <span class="section-tag">⭐ Reviews</span>
-      <h2 class="section-title">What Traders Say</h2>
+      <span class="section-tag">⭐ {{ t('testimonials_tag') }}</span>
+      <h2 class="section-title">{{ t('testimonials_title') }}</h2>
     </div>
     <div class="testimonials-grid">
       <div class="testimonial-card">
@@ -669,26 +602,26 @@
   <div class="container">
     <div class="about-wrap">
       <div class="about-text">
-        <span class="section-tag">🏢 About Us</span>
-        <h2 class="section-title">Built by Traders, for Traders</h2>
-        <p>27pips was founded by Shema Trading Hub — a team of professional forex traders based in East Africa. We built the platform we wished existed when we started: structured education, honest signals, and real community support.</p>
-        <p style="margin-top:1rem;">Our mission is simple — help every trader in Africa and beyond achieve consistency, pass prop firm challenges, and build a sustainable trading career.</p>
+        <span class="section-tag">🏢 {{ t('about_tag') }}</span>
+        <h2 class="section-title">{{ t('about_title') }}</h2>
+        <p>{{ t('about_body_1') }}</p>
+        <p style="margin-top:1rem;">{{ t('about_body_2') }}</p>
         <div class="about-stats">
-          <div class="about-stat"><span class="stat-num">3+</span><span class="stat-label">Years Active</span></div>
-          <div class="about-stat"><span class="stat-num">2,400+</span><span class="stat-label">Students</span></div>
-          <div class="about-stat"><span class="stat-num">12</span><span class="stat-label">Countries</span></div>
+          <div class="about-stat"><span class="stat-num">3+</span><span class="stat-label">{{ t('about_stat_years') }}</span></div>
+          <div class="about-stat"><span class="stat-num">2,400+</span><span class="stat-label">{{ t('about_stat_students') }}</span></div>
+          <div class="about-stat"><span class="stat-num">12</span><span class="stat-label">{{ t('about_stat_countries') }}</span></div>
         </div>
       </div>
       <div class="about-visual">
         <div class="about-card">
           <div class="about-card-icon">🎯</div>
-          <h4>Our Mission</h4>
-          <p>Make professional forex education accessible to every African trader.</p>
+          <h4>{{ t('about_mission_title') }}</h4>
+          <p>{{ t('about_mission_text') }}</p>
         </div>
         <div class="about-card">
           <div class="about-card-icon">👁️</div>
-          <h4>Our Vision</h4>
-          <p>Build the #1 trading education platform in Africa by 2027.</p>
+          <h4>{{ t('about_vision_title') }}</h4>
+          <p>{{ t('about_vision_text') }}</p>
         </div>
       </div>
     </div>
@@ -702,16 +635,16 @@
   <div class="container footer-inner">
     <div class="footer-brand">
       <span class="logo-text">27<span class="logo-accent">pips</span></span>
-      <p>Shema Trading Hub — Learn. Trade. Grow.</p>
+      <p>{{ t('footer_hub', tagline=t('footer_tagline')) }}</p>
     </div>
     <div class="footer-links">
-      <a href="#education">Education</a>
-      <a href="#signals">Signals</a>
-      <a href="#plans">Plans</a>
-      <a href="#funded">Funded</a>
-      <a href="#about">About</a>
+      <a href="#education">{{ t('nav_education') }}</a>
+      <a href="#signals">{{ t('nav_signals') }}</a>
+      <a href="#plans">{{ t('nav_plans') }}</a>
+      <a href="#funded">{{ t('nav_funded') }}</a>
+      <a href="#about">{{ t('nav_about') }}</a>
     </div>
-    <p class="footer-copy">© 2025 27pips / Shema Trading Hub. All rights reserved. Trading involves risk.</p>
+    <p class="footer-copy">{{ t('footer_copy') }}</p>
   </div>
 </footer>
 
