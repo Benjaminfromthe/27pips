@@ -21,21 +21,16 @@ log = logging.getLogger(__name__)
 
 auth_bp = Blueprint('auth', __name__)
 
-# Token validity window
 RESET_TOKEN_HOURS = 1
-
-# SMTP socket timeout — applied per-operation inside the background thread
-SMTP_TIMEOUT = 10
+SMTP_TIMEOUT      = 10   # seconds — only used if SMTP fallback is active
 
 
 # ── helpers ───────────────────────────────────────────────
 def _hash_token(raw_token: str) -> str:
-    """SHA-256 hash a raw token before storing in the DB."""
     return hashlib.sha256(raw_token.encode()).hexdigest()
 
 
 def _make_t():
-    """Build a t() resolver for the current session language."""
     from i18n import get_translations
     lang    = session.get('lang', 'en')
     strings = get_translations(lang)
@@ -52,83 +47,88 @@ def _make_t():
     return t
 
 
-def _smtp_worker(cfg: dict, to_email: str, subject: str, body: str) -> None:
+# ── email worker (runs in daemon thread) ──────────────────
+def _email_worker(cfg: dict, to_email: str,
+                  subject: str, body_text: str, body_html: str) -> None:
     """
-    Runs in a daemon background thread — completely isolated from the
-    Gunicorn request worker.  Any exception here is caught and logged;
-    it can never propagate to the main thread or cause a 502/timeout.
+    Daemon thread: tries Resend API first (HTTPS, never blocked),
+    falls back to SMTP if Resend API key not set.
+    All exceptions are caught — this thread can never crash the app.
     """
-    reset_url = cfg['reset_url']          # kept for log messages
-    log.info('[RESET EMAIL] Background thread started for %s', to_email)
+    reset_url  = cfg['reset_url']
+    resend_key = cfg.get('resend_api_key', '').strip()
+    mail_user  = cfg.get('mail_user',  '').strip()
+    mail_pass  = cfg.get('mail_pass',  '').strip()
 
-    mail_user   = cfg['mail_user']
-    mail_pass   = cfg['mail_pass']
-    mail_server = cfg['mail_server']
-    mail_port   = cfg['mail_port']
-    mail_sender = cfg['mail_sender']
+    log.info('[RESET EMAIL] Thread started for %s', to_email)
 
-    # --- guard: no credentials → just log the link and exit cleanly ---
-    if not mail_user or not mail_pass:
-        log.info(
-            '[RESET EMAIL] No SMTP credentials configured. '
-            'Reset link (dev/staging): %s', reset_url
-        )
-        return
+    # ── Path 1: Resend API (preferred — HTTPS, no SMTP port issues) ──
+    if resend_key:
+        try:
+            import resend
+            resend.api_key = resend_key
+            resend.Emails.send({
+                'from':    cfg.get('mail_sender', 'onboarding@resend.dev'),
+                'to':      [to_email],
+                'subject': subject,
+                'text':    body_text,
+                'html':    body_html,
+            })
+            log.info('[RESET EMAIL] Sent via Resend to %s', to_email)
+            return
+        except Exception:
+            log.error('[RESET EMAIL] Resend send failed:\n%s\nReset link: %s',
+                      traceback.format_exc(), reset_url)
+            # Fall through to SMTP fallback
 
-    msg            = MIMEText(body, 'plain', 'utf-8')
-    msg['Subject'] = subject
-    msg['From']    = mail_sender
-    msg['To']      = to_email
+    # ── Path 2: SMTP fallback ──────────────────────────────
+    if mail_user and mail_pass:
+        mail_server = cfg.get('mail_server', 'smtp.gmail.com')
+        mail_port   = int(cfg.get('mail_port', 587))
+        mail_sender = cfg.get('mail_sender', 'noreply@27pips.com')
 
-    try:
-        with smtplib.SMTP(mail_server, mail_port, timeout=SMTP_TIMEOUT) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.ehlo()
-            smtp.login(mail_user, mail_pass)
-            smtp.sendmail(mail_sender, [to_email], msg.as_string())
-        log.info('[RESET EMAIL] Successfully sent to %s', to_email)
+        msg            = MIMEText(body_text, 'plain', 'utf-8')
+        msg['Subject'] = subject
+        msg['From']    = mail_sender
+        msg['To']      = to_email
 
-    except smtplib.SMTPAuthenticationError as exc:
-        log.warning(
-            '[RESET EMAIL] SMTP authentication failed — check MAIL_USERNAME '
-            'and MAIL_PASSWORD env vars. Error: %s  Reset link: %s',
-            exc, reset_url
-        )
-    except smtplib.SMTPServerDisconnected as exc:
-        log.warning(
-            '[RESET EMAIL] SMTP server disconnected: %s  Reset link: %s',
-            exc, reset_url
-        )
-    except smtplib.SMTPException as exc:
-        log.warning(
-            '[RESET EMAIL] SMTP error: %s  Reset link: %s', exc, reset_url
-        )
-    except OSError as exc:
-        # Catches socket.timeout, ConnectionRefusedError, gaierror (DNS), etc.
-        log.warning(
-            '[RESET EMAIL] Network/OS error (server=%s port=%s): %s  '
-            'Reset link: %s',
-            mail_server, mail_port, exc, reset_url
-        )
-    except Exception:
-        # Absolute last resort — log full traceback so it's visible in Render logs
-        log.error(
-            '[RESET EMAIL] Unexpected error sending to %s. '
-            'Reset link: %s\n%s',
-            to_email, reset_url, traceback.format_exc()
-        )
+        try:
+            with smtplib.SMTP(mail_server, mail_port,
+                              timeout=SMTP_TIMEOUT) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.ehlo()
+                smtp.login(mail_user, mail_pass)
+                smtp.sendmail(mail_sender, [to_email], msg.as_string())
+            log.info('[RESET EMAIL] Sent via SMTP to %s', to_email)
+            return
+        except smtplib.SMTPAuthenticationError:
+            log.warning('[RESET EMAIL] SMTP auth failed. '
+                        'Check MAIL_USERNAME / MAIL_PASSWORD. '
+                        'Reset link: %s', reset_url)
+        except OSError as exc:
+            log.warning('[RESET EMAIL] SMTP network error (%s). '
+                        'Reset link: %s', exc, reset_url)
+        except Exception:
+            log.error('[RESET EMAIL] SMTP unexpected error:\n%s\n'
+                      'Reset link: %s', traceback.format_exc(), reset_url)
+
+    # ── Path 3: No provider configured — log reset link ───
+    log.info(
+        '[RESET EMAIL] No email provider configured '
+        '(set RESEND_API_KEY or MAIL_USERNAME+MAIL_PASSWORD on Render). '
+        'Reset link: %s', reset_url
+    )
 
 
 def _fire_reset_email(app_config: dict, to_email: str,
                       reset_url: str, t_func) -> None:
     """
-    Build the email payload on the request thread (while we still have
-    app context and session), then hand it off to a daemon thread.
-    The request thread returns immediately after spawning — zero blocking.
+    Build email content on the request thread, then hand off to a
+    daemon thread.  Returns instantly — zero blocking on request worker.
     """
-    subject = t_func('reset_email_subject')
-    body    = '\n\n'.join([
+    subject   = t_func('reset_email_subject')
+    body_text = '\n\n'.join([
         t_func('reset_email_greeting'),
         t_func('reset_email_body'),
         reset_url,
@@ -136,31 +136,46 @@ def _fire_reset_email(app_config: dict, to_email: str,
         t_func('reset_email_ignore'),
         '— 27pips / Shema Trading Hub',
     ])
+    body_html = f"""
+<div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;padding:32px;background:#0f172a;color:#f1f5f9;border-radius:16px">
+  <h2 style="color:#10b981;margin-bottom:8px">27<span style="color:#f1f5f9">pips</span></h2>
+  <h3 style="margin-bottom:16px">{t_func('reset_email_subject')}</h3>
+  <p style="color:#94a3b8;margin-bottom:8px">{t_func('reset_email_greeting')}</p>
+  <p style="color:#94a3b8;margin-bottom:24px">{t_func('reset_email_body')}</p>
+  <a href="{reset_url}"
+     style="display:inline-block;background:#10b981;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;margin-bottom:24px">
+    {t_func('reset_update_password_btn')}
+  </a>
+  <p style="color:#64748b;font-size:0.8rem;margin-top:16px">{t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS)}</p>
+  <p style="color:#64748b;font-size:0.8rem">{t_func('reset_email_ignore')}</p>
+  <hr style="border-color:#334155;margin:24px 0">
+  <p style="color:#475569;font-size:0.75rem">© 2025 27pips / Shema Trading Hub</p>
+</div>
+"""
 
-    # Snapshot all config values NOW, before leaving the app context.
-    # The daemon thread has no Flask context and must not call current_app.
+    # Snapshot all config before leaving request context
     cfg = {
-        'mail_user':   app_config.get('MAIL_USERNAME',       '').strip(),
-        'mail_pass':   app_config.get('MAIL_PASSWORD',       '').strip(),
-        'mail_server': app_config.get('MAIL_SERVER',         'smtp.gmail.com'),
-        'mail_port':   int(app_config.get('MAIL_PORT',       587)),
-        'mail_sender': app_config.get('MAIL_DEFAULT_SENDER', 'noreply@27pips.com'),
-        'reset_url':   reset_url,
+        'resend_api_key': app_config.get('RESEND_API_KEY', '').strip(),
+        'mail_user':      app_config.get('MAIL_USERNAME',  '').strip(),
+        'mail_pass':      app_config.get('MAIL_PASSWORD',  '').strip(),
+        'mail_server':    app_config.get('MAIL_SERVER',    'smtp.gmail.com'),
+        'mail_port':      int(app_config.get('MAIL_PORT',  587)),
+        'mail_sender':    app_config.get('MAIL_DEFAULT_SENDER', 'onboarding@resend.dev'),
+        'reset_url':      reset_url,
     }
 
-    log.info(
-        '[RESET EMAIL] Spawning background thread for %s '
-        '(SMTP configured: %s)',
-        to_email, bool(cfg['mail_user'] and cfg['mail_pass'])
-    )
+    log.info('[RESET] Token stored — spawning email thread '
+             '(Resend configured: %s, SMTP configured: %s)',
+             bool(cfg['resend_api_key']),
+             bool(cfg['mail_user'] and cfg['mail_pass']))
 
-    t = threading.Thread(
-        target=_smtp_worker,
-        args=(cfg, to_email, subject, body),
-        daemon=True,        # dies with the process — won't keep Gunicorn alive
-        name=f'smtp-{to_email}'
+    thread = threading.Thread(
+        target=_email_worker,
+        args=(cfg, to_email, subject, body_text, body_html),
+        daemon=True,
+        name=f'reset-email-{to_email}',
     )
-    t.start()
+    thread.start()
 
 
 # ── REGISTER ──────────────────────────────────────────────

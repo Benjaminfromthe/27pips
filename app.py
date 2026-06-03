@@ -23,8 +23,7 @@ def create_app():
         'SECRET_KEY', 'pips-local-dev-key-change-in-prod'
     )
 
-    # ── SMTP config (read by auth/routes.py for password reset) ──
-    # These are optional — if not set, reset links are logged to console.
+    # ── SMTP config (fallback for password reset) ─────────────
     app.config['MAIL_SERVER']         = os.environ.get('MAIL_SERVER',   'smtp.gmail.com')
     app.config['MAIL_PORT']           = int(os.environ.get('MAIL_PORT', 587))
     app.config['MAIL_USERNAME']       = os.environ.get('MAIL_USERNAME', '')
@@ -33,6 +32,8 @@ def create_app():
         'MAIL_DEFAULT_SENDER',
         os.environ.get('MAIL_USERNAME', 'noreply@27pips.com')
     )
+    # ── Resend API (preferred email provider for password reset) ──
+    app.config['RESEND_API_KEY'] = os.environ.get('RESEND_API_KEY', '')
 
     # ── Database ──────────────────────────────────────────────
     with app.app_context():
