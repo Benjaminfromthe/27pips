@@ -58,7 +58,7 @@ async function submitLogin(event) {
   const email = document.getElementById('loginEmail').value.trim();
   const pass  = document.getElementById('loginPassword').value;
 
-  btn.textContent = 'Signing in...';
+  btn.textContent = i('signingIn');
   btn.classList.add('btn-loading');
 
   try {
@@ -74,12 +74,12 @@ async function submitLogin(event) {
       setTimeout(() => window.location.reload(), 800);
     } else {
       showAlert(data.message || 'Login failed.');
-      btn.textContent = 'Sign In';
+      btn.textContent = i('signIn');
       btn.classList.remove('btn-loading');
     }
   } catch {
-    showAlert('Network error. Please try again.');
-    btn.textContent = 'Sign In';
+    showAlert(i('networkError'));
+    btn.textContent = i('signIn');
     btn.classList.remove('btn-loading');
   }
 }
@@ -92,7 +92,7 @@ async function submitSignup(event) {
   const email    = document.getElementById('signupEmail').value.trim();
   const pass     = document.getElementById('signupPassword').value;
 
-  btn.textContent = 'Creating account...';
+  btn.textContent = i('creatingAccount');
   btn.classList.add('btn-loading');
 
   try {
@@ -108,12 +108,12 @@ async function submitSignup(event) {
       setTimeout(() => window.location.reload(), 800);
     } else {
       showAlert(data.message || 'Registration failed.');
-      btn.textContent = 'Create Account';
+      btn.textContent = i('createAccount');
       btn.classList.remove('btn-loading');
     }
   } catch {
-    showAlert('Network error. Please try again.');
-    btn.textContent = 'Create Account';
+    showAlert(i('networkError'));
+    btn.textContent = i('createAccount');
     btn.classList.remove('btn-loading');
   }
 }
@@ -153,6 +153,52 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// ── I18N HELPER ────────────────────────────────────────────
+// Returns a translated string from the server-injected I18N object,
+// falling back to the English default if the page doesn't inject it.
+const _i18nDefaults = {
+  signInToAccess:    'Sign In to Access',
+  newHere:           'New here?',
+  createFreeAccount: 'Create free account',
+  signingIn:         'Signing in…',
+  creatingAccount:   'Creating account…',
+  signIn:            'Sign In',
+  createAccount:     'Create Account',
+  networkError:      'Network error. Please try again.',
+  noSignalsYet:      'No signals posted yet. Check back soon.',
+  signalsError:      'Could not load signals.',
+  tradesSignIn:      'Sign in to view your trades.',
+  tradesError:       'Could not load trades.',
+  tradeSaved:        '✅ Trade logged successfully!',
+  tradeSaveFail:     'Failed to log trade.',
+  trackerSetupFail:  'Setup failed.',
+  trackerCreated:    '✅ Tracker account created!',
+  journalNoTrades:   'No trades logged yet.',
+  noTradesStart:     'No trades logged yet. Start journaling above.',
+  tablePair:         'Pair',
+  tableDir:          'Dir',
+  tableEntry:        'Entry',
+  tableExit:         'Exit',
+  tablePips:         'Pips',
+  tableOutcome:      'Outcome',
+  tableDate:         'Date',
+  trackerStartedAt:  'Started at',
+  trackerProfitProg: 'Profit Progress',
+  trackerDailyLimit: 'Limit',
+  trackerMaxLimit:   'Limit',
+  trackerMaxUsed:    '% of max limit used',
+  trackerSafe:       '✅ Safe',
+  trackerDanger:     '⚠️ Danger Zone',
+  trackerBreached:   '🚨 LIMIT BREACHED',
+  trackerTargetPct:  '🎉 Target Reached!',
+  trackerKeepGoing:  'of target reached — Keep going 💪',
+  equityTrades:      'trades',
+  eduProgressText:   '{done} / {total} Lessons Completed',
+};
+function i(key) {
+  return (window.I18N && window.I18N[key]) ? window.I18N[key] : (_i18nDefaults[key] || key);
+}
+
 // ── ROUTE PROTECTION — Journal & Tracker ───────────────────
 // Check if user is logged in; if not, show auth gate overlay
 async function checkAuthGates() {
@@ -160,8 +206,8 @@ async function checkAuthGates() {
     const res  = await fetch('/auth/me');
     const data = await res.json();
     if (!data.logged_in) {
-      addAuthGate('journal',  'Trading Journal',      'Log your trades and track your performance.');
-      addAuthGate('funded',   'Prop Firm Tracker',    'Track your challenge metrics in real time.');
+      addAuthGate('journal', 'Trading Journal',   'Log your trades and track your performance.');
+      addAuthGate('funded',  'Prop Firm Tracker', 'Track your challenge metrics in real time.');
     }
   } catch { /* silent — don't block UI */ }
 }
@@ -169,8 +215,6 @@ async function checkAuthGates() {
 function addAuthGate(sectionId, title, subtitle) {
   const section = document.getElementById(sectionId);
   if (!section) return;
-
-  // Find the content wrapper inside the section
   const container = section.querySelector('.journal-wrap, .tracker-grid');
   if (!container) return;
 
@@ -183,8 +227,8 @@ function addAuthGate(sectionId, title, subtitle) {
     <div style="font-size:2.5rem">🔒</div>
     <h3>${title}</h3>
     <p>${subtitle}</p>
-    <button class="btn-primary" onclick="openModal('login')">Sign In to Access</button>
-    <p style="font-size:0.8rem;color:var(--muted)">New here? <a href="#" class="link-green" onclick="openModal('signup')">Create free account</a></p>
+    <button class="btn-primary" onclick="openModal('login')">${i('signInToAccess')}</button>
+    <p style="font-size:0.8rem;color:var(--muted)">${i('newHere')} <a href="#" class="link-green" onclick="openModal('signup')">${i('createFreeAccount')}</a></p>
   `;
   container.appendChild(overlay);
 }
@@ -293,7 +337,7 @@ async function submitTrade(event) {
     const data = await res.json();
 
     if (data.success) {
-      msg.textContent  = '✅ Trade logged successfully!';
+      msg.textContent  = i('tradeSaved');
       msg.className    = 'modal-alert success';
       msg.style.display = 'block';
       form.reset();
@@ -303,12 +347,12 @@ async function submitTrade(event) {
       loadJournalEntries();   // refresh table
       loadTrackerData();      // refresh tracker (balance updated)
     } else {
-      msg.textContent  = data.message || 'Failed to log trade.';
+      msg.textContent  = data.message || i('tradeSaveFail');
       msg.className    = 'modal-alert error';
       msg.style.display = 'block';
     }
   } catch {
-    msg.textContent  = 'Network error. Please try again.';
+    msg.textContent  = i('networkError');
     msg.className    = 'modal-alert error';
     msg.style.display = 'block';
   }
@@ -324,13 +368,13 @@ async function loadJournalEntries() {
   try {
     const res  = await fetch('/journal/entries');
     if (res.status === 401) {
-      wrap.innerHTML = '<p class="text-muted">Sign in to view your trades.</p>';
+      wrap.innerHTML = `<p class="text-muted">${i('tradesSignIn')}</p>`;
       return;
     }
     const trades = await res.json();
 
     if (!trades.length) {
-      wrap.innerHTML = '<p class="text-muted" id="noEntries">No trades logged yet. Start journaling above.</p>';
+      wrap.innerHTML = `<p class="text-muted" id="noEntries">${i('noTradesStart')}</p>`;
       return;
     }
 
@@ -339,8 +383,8 @@ async function loadJournalEntries() {
         <table class="trades-table">
           <thead>
             <tr>
-              <th>Pair</th><th>Dir</th><th>Entry</th><th>Exit</th>
-              <th>Pips</th><th>Outcome</th><th>Date</th>
+              <th>${i('tablePair')}</th><th>${i('tableDir')}</th><th>${i('tableEntry')}</th><th>${i('tableExit')}</th>
+              <th>${i('tablePips')}</th><th>${i('tableOutcome')}</th><th>${i('tableDate')}</th>
             </tr>
           </thead>
           <tbody>
@@ -365,7 +409,7 @@ async function loadJournalEntries() {
     html += '</tbody></table></div>';
     wrap.innerHTML = html;
   } catch {
-    wrap.innerHTML = '<p class="text-muted">Could not load trades.</p>';
+    wrap.innerHTML = `<p class="text-muted">${i('tradesError')}</p>`;
   }
 }
 
@@ -396,14 +440,14 @@ async function loadTrackerData() {
 
     // Balance card
     setText('t-balance',     '$' + data.current_balance.toLocaleString('en-US', {minimumFractionDigits:2}));
-    setText('t-balance-sub', 'Started at $' + data.account_size.toLocaleString('en-US', {minimumFractionDigits:2}));
+    setText('t-balance-sub', `${i('trackerStartedAt')} $` + data.account_size.toLocaleString('en-US', {minimumFractionDigits:2}));
     setBar ('t-profit-bar',  data.profit_percent);
-    setText('t-profit-hint', `Profit Progress: ${data.profit_progress}% / ${data.target_profit}% target`);
+    setText('t-profit-hint', `${i('trackerProfitProg')}: ${data.profit_progress}% / ${data.target_profit}% target`);
 
     // Daily drawdown card
     const dailyColor = data.daily_used_percent >= 80 ? 'text-red' : 'text-yellow';
     setValueColor('t-daily', `${data.daily_loss_today}%`, dailyColor);
-    setText('t-daily-sub',  `Limit: ${data.daily_drawdown_limit}%`);
+    setText('t-daily-sub',  `${i('trackerDailyLimit')}: ${data.daily_drawdown_limit}%`);
     const dailyBar = document.getElementById('t-daily-bar');
     if (dailyBar) {
       dailyBar.style.width = Math.min(data.daily_used_percent, 100) + '%';
@@ -411,21 +455,21 @@ async function loadTrackerData() {
         ? 'tracker-progress-bar tracker-bar-danger'
         : 'tracker-progress-bar tracker-bar-yellow';
     }
-    const safeLabel = data.drawdown_breached ? '🚨 LIMIT BREACHED' : data.daily_used_percent >= 80 ? '⚠️ Danger Zone' : '✅ Safe';
+    const safeLabel = data.drawdown_breached ? i('trackerBreached') : data.daily_used_percent >= 80 ? i('trackerDanger') : i('trackerSafe');
     setText('t-daily-hint', `${data.daily_used_percent}% of daily limit used — ${safeLabel}`);
 
     // Max drawdown card
     const maxColor = data.max_used_percent >= 80 ? 'text-red' : 'text-green';
     setValueColor('t-max', `${data.total_loss}%`, maxColor);
-    setText('t-max-sub',  `Limit: ${data.max_loss_limit}%`);
+    setText('t-max-sub',  `${i('trackerMaxLimit')}: ${data.max_loss_limit}%`);
     setBar ('t-max-bar',  data.max_used_percent);
-    setText('t-max-hint', `${data.max_used_percent}% of max limit used`);
+    setText('t-max-hint', `${data.max_used_percent}% ${i('trackerMaxUsed')}`);
 
     // Profit target card
     setText('t-profit',     `${data.profit_progress}%`);
-    setText('t-profit-sub', `Target: ${data.target_profit}%`);
+    setText('t-profit-sub', `${i('trackerDailyLimit')}: ${data.target_profit}%`);
     setBar ('t-target-bar', data.profit_percent);
-    const progressLabel = data.profit_percent >= 100 ? '🎉 Target Reached!' : `${data.profit_percent}% of target reached — Keep going 💪`;
+    const progressLabel = data.profit_percent >= 100 ? i('trackerTargetPct') : `${data.profit_percent}% ${i('trackerKeepGoing')}`;
     setText('t-target-hint', progressLabel);
 
   } catch {
@@ -468,12 +512,12 @@ async function setupTracker() {
   const data = await res.json();
 
   if (data.success) {
-    msg.textContent  = '✅ Tracker account created!';
+    msg.textContent  = i('trackerCreated');
     msg.className    = 'modal-alert success';
     msg.style.display = 'block';
     setTimeout(() => loadTrackerData(), 800);
   } else {
-    msg.textContent  = data.message || 'Setup failed.';
+    msg.textContent  = data.message || i('trackerSetupFail');
     msg.className    = 'modal-alert error';
     msg.style.display = 'block';
   }
@@ -506,7 +550,7 @@ async function loadSignals() {
     const user_tier = json.user_tier || window.USER_TIER || 'guest';
 
     if (!signals.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">No signals posted yet. Check back soon.</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">${i('noSignalsYet')}</td></tr>`;
       return;
     }
 
@@ -550,7 +594,7 @@ async function loadSignals() {
     }).join('');
 
   } catch {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">Could not load signals.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">${i('signalsError')}</td></tr>`;
   }
 }
 
@@ -582,7 +626,9 @@ async function loadEducationProgress() {
       const bar  = cards[i].querySelector('.progress-bar');
       const text = cards[i].querySelector('.progress-text');
       if (bar)  bar.style.width = course.pct + '%';
-      if (text) text.textContent = `${course.completed} / ${course.total} Lessons Completed`;
+      if (text) text.textContent = i('eduProgressText')
+        .replace('{done}', course.completed)
+        .replace('{total}', course.total);
     });
   } catch { /* silent */ }
 }
@@ -631,7 +677,7 @@ async function loadEquityChart() {
       pnlEl.textContent = (data.net_pnl >= 0 ? '+' : '') + fmt(data.net_pnl) + ` (${data.net_pct}%)`;
       pnlEl.style.color = data.is_profit ? 'var(--green)' : 'var(--red)';
     }
-    setText('eq-trades', data.total_trades + ' trades');
+    setText('eq-trades', data.total_trades + ' ' + i('equityTrades'));
 
     // Chart colors
     const lineColor   = data.is_profit ? '#10b981' : '#ef4444';
@@ -739,3 +785,41 @@ document.addEventListener('click', e => {
   }
 });
 
+
+// ============================================================
+// THEME & LANGUAGE — Dark/Light toggle + i18n
+// ============================================================
+
+// ── THEME TOGGLE ───────────────────────────────────────────
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('27pips-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+// Apply saved theme immediately on page load (before paint)
+(function() {
+  const saved = localStorage.getItem('27pips-theme') || 'dark';
+  applyTheme(saved);
+})();
+
+// ── LANGUAGE DROPDOWN ──────────────────────────────────────
+function toggleLangMenu() {
+  const menu = document.getElementById('langMenu');
+  if (menu) menu.classList.toggle('open');
+}
+
+// Close lang menu when clicking outside
+document.addEventListener('click', e => {
+  const dropdown = document.getElementById('langDropdown');
+  if (dropdown && !dropdown.contains(e.target)) {
+    const menu = document.getElementById('langMenu');
+    if (menu) menu.classList.remove('open');
+  }
+});

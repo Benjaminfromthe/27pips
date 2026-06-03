@@ -649,10 +649,51 @@
 </footer>
 
 <script src="/static/js/theme.js"></script>
+<script>
+  // Inject server-side user tier and i18n strings into JS context
+  window.USER_TIER = "{{ user_tier }}";
+  window.I18N = {
+    signInToAccess:    "{{ t('auth_sign_in_access') }}",
+    newHere:           "{{ t('auth_no_account') }}",
+    createFreeAccount: "{{ t('auth_create_free_account') }}",
+    signingIn:         "{{ t('auth_signing_in') }}",
+    creatingAccount:   "{{ t('auth_creating_account') }}",
+    signIn:            "{{ t('auth_sign_in') }}",
+    createAccount:     "{{ t('auth_create_account') }}",
+    networkError:      "{{ t('error_network') }}",
+    noSignalsYet:      "{{ t('signals_none_yet') }}",
+    signalsError:      "{{ t('signals_load_error') }}",
+    tradesSignIn:      "{{ t('journal_trades_signin') }}",
+    tradesError:       "{{ t('journal_trades_error') }}",
+    tradeSaved:        "{{ t('journal_saved') }}",
+    tradeSaveFail:     "{{ t('journal_save_fail') }}",
+    trackerSetupFail:  "{{ t('tracker_setup_fail') }}",
+    trackerCreated:    "{{ t('tracker_created') }}",
+    journalNoTrades:   "{{ t('journal_no_trades') }}",
+    noTradesStart:     "{{ t('journal_no_trades_start') }}",
+    tablePair:         "{{ t('journal_pair') }}",
+    tableDir:          "{{ t('journal_col_dir') }}",
+    tableEntry:        "{{ t('journal_entry') }}",
+    tableExit:         "{{ t('journal_exit') }}",
+    tablePips:         "{{ t('journal_pips') }}",
+    tableOutcome:      "{{ t('journal_outcome') }}",
+    tableDate:         "{{ t('admin_col_date') }}",
+    trackerStartedAt:  "{{ t('tracker_started_at') }}",
+    trackerProfitProg: "{{ t('tracker_profit_progress') }}",
+    trackerDailyLimit: "{{ t('tracker_daily_limit') }}",
+    trackerMaxLimit:   "{{ t('tracker_max_limit') }}",
+    trackerMaxUsed:    "{{ t('tracker_max_used') }}",
+    trackerSafe:       "{{ t('tracker_safe') }}",
+    trackerDanger:     "{{ t('tracker_danger_zone') }}",
+    trackerBreached:   "{{ t('tracker_limit_breached') }}",
+    trackerTargetPct:  "{{ t('tracker_target_reached') }}",
+    trackerKeepGoing:  "{{ t('tracker_keep_going') }}",
+    equityTrades:      "{{ t('analytics_trades') }}",
+    eduProgressText:   "{{ t('edu_progress_lessons', done='{done}', total='{total}') }}"
+  };
+</script>
 <script src="/static/js/main.js"></script>
 <script>
-  // Inject server-side user tier into JS context
-  window.USER_TIER = "{{ user_tier }}";
 </script>
 </body>
 </html>

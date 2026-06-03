@@ -1,37 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>27pips Admin</title>
+  <title>{{ t('admin_page_title') }}</title>
+  {% include 'partials/theme_head.html' %}
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:#0f172a;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
-    .card{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center}
-    .logo{font-size:2rem;font-weight:900;color:#f1f5f9;margin-bottom:8px}
+    body{background:var(--bg-primary,#0f172a);font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px}
+    .admin-topbar{position:fixed;top:0;right:0;display:flex;align-items:center;gap:10px;padding:10px 20px;z-index:100}
+    .card{background:var(--bg-card,#1e293b);border:1px solid var(--border,#334155);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center}
+    .logo{font-size:2rem;font-weight:900;color:var(--text-primary,#f1f5f9);margin-bottom:8px}
     .logo span{color:#10b981}
-    h2{color:#f1f5f9;font-size:1.2rem;margin-bottom:4px}
-    p{color:#94a3b8;font-size:0.85rem;margin-bottom:28px}
-    label{display:block;text-align:left;font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
-    input{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:10px;color:#f1f5f9;padding:12px 14px;font-size:0.9rem;font-family:inherit;margin-bottom:20px}
+    h2{color:var(--text-primary,#f1f5f9);font-size:1.2rem;margin-bottom:4px}
+    p{color:var(--text-secondary,#94a3b8);font-size:0.85rem;margin-bottom:28px}
+    label{display:block;text-align:left;font-size:0.75rem;font-weight:700;color:var(--text-secondary,#94a3b8);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+    input{width:100%;background:var(--bg-input,#0f172a);border:1.5px solid var(--border,#334155);border-radius:10px;color:var(--text-primary,#f1f5f9);padding:12px 14px;font-size:0.9rem;font-family:inherit;margin-bottom:20px}
     input:focus{outline:none;border-color:#10b981}
-    button{width:100%;background:#10b981;color:#fff;border:none;padding:13px;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit}
-    button:hover{background:#059669}
+    button[type=submit]{width:100%;background:#10b981;color:#fff;border:none;padding:13px;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit}
+    button[type=submit]:hover{background:#059669}
     .error{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:10px;font-size:0.85rem;margin-bottom:16px}
   </style>
 </head>
 <body>
+
+  <!-- Theme toggle + lang switcher pinned to top-right -->
+  <div class="admin-topbar">
+    {% include 'partials/theme_toggle.html' %}
+    {% include 'partials/lang_switcher.html' %}
+  </div>
+
   <div class="card">
     <div class="logo">27<span>pips</span></div>
-    <h2>Admin Access</h2>
-    <p>Enter your admin PIN to continue</p>
+    <h2>{{ t('admin_access_title') }}</h2>
+    <p>{{ t('admin_access_sub') }}</p>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
     <form method="POST">
-      <label>Admin PIN</label>
+      <label>{{ t('admin_pin_label') }}</label>
       <input type="password" name="pin" placeholder="••••••••" required autofocus />
-      <button type="submit">Enter Admin Panel</button>
+      <button type="submit">{{ t('admin_enter_btn') }}</button>
     </form>
   </div>
+
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/main.js"></script>
 </body>
 </html>
