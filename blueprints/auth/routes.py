@@ -7,6 +7,8 @@ import secrets
 import hashlib
 import smtplib
 import logging
+import threading
+import traceback
 from email.mime.text import MIMEText
 from datetime import datetime, timezone, timedelta
 
@@ -22,8 +24,8 @@ auth_bp = Blueprint('auth', __name__)
 # Token validity window
 RESET_TOKEN_HOURS = 1
 
-# SMTP connection + send timeout (seconds) — prevents Gunicorn worker hang
-SMTP_TIMEOUT = 8
+# SMTP socket timeout — applied per-operation inside the background thread
+SMTP_TIMEOUT = 10
 
 
 # ── helpers ───────────────────────────────────────────────
@@ -50,38 +52,30 @@ def _make_t():
     return t
 
 
-def _send_reset_email(to_email: str, reset_url: str, t_func) -> bool:
+def _smtp_worker(cfg: dict, to_email: str, subject: str, body: str) -> None:
     """
-    Send a password-reset email using plain smtplib (no Flask-Mail import
-    needed — avoids the circular-import crash).
-
-    Returns True on success.  On ANY failure, logs the error and the reset
-    URL to the server console and returns False.  The caller always shows
-    the same user-facing message regardless, so the form never crashes.
+    Runs in a daemon background thread — completely isolated from the
+    Gunicorn request worker.  Any exception here is caught and logged;
+    it can never propagate to the main thread or cause a 502/timeout.
     """
-    mail_user   = current_app.config.get('MAIL_USERNAME', '').strip()
-    mail_pass   = current_app.config.get('MAIL_PASSWORD', '').strip()
-    mail_server = current_app.config.get('MAIL_SERVER',   'smtp.gmail.com')
-    mail_port   = int(current_app.config.get('MAIL_PORT', 587))
-    mail_sender = current_app.config.get('MAIL_DEFAULT_SENDER', 'noreply@27pips.com')
+    reset_url = cfg['reset_url']          # kept for log messages
+    log.info('[RESET EMAIL] Background thread started for %s', to_email)
 
-    # --- guard: if credentials are empty skip the network call entirely ---
+    mail_user   = cfg['mail_user']
+    mail_pass   = cfg['mail_pass']
+    mail_server = cfg['mail_server']
+    mail_port   = cfg['mail_port']
+    mail_sender = cfg['mail_sender']
+
+    # --- guard: no credentials → just log the link and exit cleanly ---
     if not mail_user or not mail_pass:
-        log.info('[PASSWORD RESET] SMTP credentials not configured. '
-                 'Reset link (dev/staging): %s', reset_url)
-        return False
+        log.info(
+            '[RESET EMAIL] No SMTP credentials configured. '
+            'Reset link (dev/staging): %s', reset_url
+        )
+        return
 
-    subject = t_func('reset_email_subject')
-    body = '\n\n'.join([
-        t_func('reset_email_greeting'),
-        t_func('reset_email_body'),
-        reset_url,
-        t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS),
-        t_func('reset_email_ignore'),
-        '— 27pips / Shema Trading Hub',
-    ])
-
-    msg = MIMEText(body, 'plain', 'utf-8')
+    msg            = MIMEText(body, 'plain', 'utf-8')
     msg['Subject'] = subject
     msg['From']    = mail_sender
     msg['To']      = to_email
@@ -93,27 +87,80 @@ def _send_reset_email(to_email: str, reset_url: str, t_func) -> bool:
             smtp.ehlo()
             smtp.login(mail_user, mail_pass)
             smtp.sendmail(mail_sender, [to_email], msg.as_string())
-        log.info('[PASSWORD RESET] Email sent to %s', to_email)
-        return True
+        log.info('[RESET EMAIL] Successfully sent to %s', to_email)
 
     except smtplib.SMTPAuthenticationError as exc:
-        log.warning('[PASSWORD RESET] SMTP auth failed (%s). '
-                    'Reset link: %s', exc, reset_url)
+        log.warning(
+            '[RESET EMAIL] SMTP authentication failed — check MAIL_USERNAME '
+            'and MAIL_PASSWORD env vars. Error: %s  Reset link: %s',
+            exc, reset_url
+        )
     except smtplib.SMTPServerDisconnected as exc:
-        log.warning('[PASSWORD RESET] SMTP server disconnected (%s). '
-                    'Reset link: %s', exc, reset_url)
+        log.warning(
+            '[RESET EMAIL] SMTP server disconnected: %s  Reset link: %s',
+            exc, reset_url
+        )
     except smtplib.SMTPException as exc:
-        log.warning('[PASSWORD RESET] SMTP error (%s). '
-                    'Reset link: %s', exc, reset_url)
+        log.warning(
+            '[RESET EMAIL] SMTP error: %s  Reset link: %s', exc, reset_url
+        )
     except OSError as exc:
-        # Covers socket.timeout, ConnectionRefusedError, etc.
-        log.warning('[PASSWORD RESET] Network error sending email (%s). '
-                    'Reset link: %s', exc, reset_url)
-    except Exception as exc:          # absolute last-resort catch
-        log.error('[PASSWORD RESET] Unexpected error (%s). '
-                  'Reset link: %s', exc, reset_url)
+        # Catches socket.timeout, ConnectionRefusedError, gaierror (DNS), etc.
+        log.warning(
+            '[RESET EMAIL] Network/OS error (server=%s port=%s): %s  '
+            'Reset link: %s',
+            mail_server, mail_port, exc, reset_url
+        )
+    except Exception:
+        # Absolute last resort — log full traceback so it's visible in Render logs
+        log.error(
+            '[RESET EMAIL] Unexpected error sending to %s. '
+            'Reset link: %s\n%s',
+            to_email, reset_url, traceback.format_exc()
+        )
 
-    return False
+
+def _fire_reset_email(app_config: dict, to_email: str,
+                      reset_url: str, t_func) -> None:
+    """
+    Build the email payload on the request thread (while we still have
+    app context and session), then hand it off to a daemon thread.
+    The request thread returns immediately after spawning — zero blocking.
+    """
+    subject = t_func('reset_email_subject')
+    body    = '\n\n'.join([
+        t_func('reset_email_greeting'),
+        t_func('reset_email_body'),
+        reset_url,
+        t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS),
+        t_func('reset_email_ignore'),
+        '— 27pips / Shema Trading Hub',
+    ])
+
+    # Snapshot all config values NOW, before leaving the app context.
+    # The daemon thread has no Flask context and must not call current_app.
+    cfg = {
+        'mail_user':   app_config.get('MAIL_USERNAME',       '').strip(),
+        'mail_pass':   app_config.get('MAIL_PASSWORD',       '').strip(),
+        'mail_server': app_config.get('MAIL_SERVER',         'smtp.gmail.com'),
+        'mail_port':   int(app_config.get('MAIL_PORT',       587)),
+        'mail_sender': app_config.get('MAIL_DEFAULT_SENDER', 'noreply@27pips.com'),
+        'reset_url':   reset_url,
+    }
+
+    log.info(
+        '[RESET EMAIL] Spawning background thread for %s '
+        '(SMTP configured: %s)',
+        to_email, bool(cfg['mail_user'] and cfg['mail_pass'])
+    )
+
+    t = threading.Thread(
+        target=_smtp_worker,
+        args=(cfg, to_email, subject, body),
+        daemon=True,        # dies with the process — won't keep Gunicorn alive
+        name=f'smtp-{to_email}'
+    )
+    t.start()
 
 
 # ── REGISTER ──────────────────────────────────────────────
@@ -229,8 +276,14 @@ def forgot_password():
                 reset_url = url_for('auth.reset_password',
                                     token=raw_token, _external=True)
 
-                # Non-blocking — any SMTP failure is caught inside
-                _send_reset_email(email, reset_url, t)
+                # Snapshot config NOW (app context exists here on request thread).
+                # _fire_reset_email spawns a daemon thread and returns instantly.
+                # The Gunicorn worker is free before any SMTP network call happens.
+                log.info('[RESET] Token stored for user_id=%s — spawning email thread',
+                         row['id'])
+                _fire_reset_email(
+                    dict(current_app.config), email, reset_url, t
+                )
 
             db.close()
 
