@@ -3,7 +3,6 @@
 # ============================================================
 import os
 from flask import Flask, render_template, session, request
-from flask_mail import Mail
 from database import init_db
 from i18n import register_i18n
 from blueprints.auth.routes      import auth_bp
@@ -15,33 +14,31 @@ from blueprints.admin.routes     import admin_bp
 from blueprints.analytics.routes import analytics_bp
 from blueprints.upgrade.routes   import upgrade_bp
 
-# Flask-Mail instance — imported by auth blueprint for password reset
-mail = Mail()
-
 
 def create_app():
     app = Flask(__name__)
 
-    # ── Security ────────────────────────────────────────────
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'pips-local-dev-key-change-in-prod')
+    # ── Security ─────────────────────────────────────────────
+    app.config['SECRET_KEY'] = os.environ.get(
+        'SECRET_KEY', 'pips-local-dev-key-change-in-prod'
+    )
 
-    # ── Flask-Mail ──────────────────────────────────────────
+    # ── SMTP config (read by auth/routes.py for password reset) ──
+    # These are optional — if not set, reset links are logged to console.
     app.config['MAIL_SERVER']         = os.environ.get('MAIL_SERVER',   'smtp.gmail.com')
     app.config['MAIL_PORT']           = int(os.environ.get('MAIL_PORT', 587))
-    app.config['MAIL_USE_TLS']        = os.environ.get('MAIL_USE_TLS',  'true').lower() == 'true'
     app.config['MAIL_USERNAME']       = os.environ.get('MAIL_USERNAME', '')
     app.config['MAIL_PASSWORD']       = os.environ.get('MAIL_PASSWORD', '')
     app.config['MAIL_DEFAULT_SENDER'] = os.environ.get(
         'MAIL_DEFAULT_SENDER',
         os.environ.get('MAIL_USERNAME', 'noreply@27pips.com')
     )
-    mail.init_app(app)
 
-    # ── Database ─────────────────────────────────────────────
+    # ── Database ──────────────────────────────────────────────
     with app.app_context():
         init_db()
 
-    # ── Blueprints ───────────────────────────────────────────
+    # ── Blueprints ────────────────────────────────────────────
     app.register_blueprint(auth_bp,       url_prefix='/auth')
     app.register_blueprint(education_bp,  url_prefix='/education')
     app.register_blueprint(journal_bp,    url_prefix='/journal')
@@ -53,7 +50,7 @@ def create_app():
 
     register_i18n(app)
 
-    # ── Home route ────────────────────────────────────────────
+    # ── Home ──────────────────────────────────────────────────
     @app.route('/')
     def home():
         from database import get_db
@@ -62,7 +59,10 @@ def create_app():
         user_tier = 'guest'
         if 'user_id' in session:
             db  = get_db()
-            row = db.execute('SELECT username, tier FROM users WHERE id=?', (session['user_id'],)).fetchone()
+            row = db.execute(
+                'SELECT username, tier FROM users WHERE id=?',
+                (session['user_id'],)
+            ).fetchone()
             db.close()
             if row:
                 user      = {'username': row['username']}
@@ -71,21 +71,27 @@ def create_app():
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         db    = get_db()
         row   = db.execute(
-            "SELECT COUNT(*) as cnt FROM signals WHERE DATE(created_at)=? AND status IN ('Active','Pending')",
+            "SELECT COUNT(*) as cnt FROM signals "
+            "WHERE DATE(created_at)=? AND status IN ('Active','Pending')",
             (today,)
         ).fetchone()
         db.close()
         signal_count = row['cnt'] if row else 0
         upgraded     = request.args.get('upgraded') == '1'
-        return render_template('index.html', user=user, signal_count=signal_count,
+        return render_template('index.html', user=user,
+                               signal_count=signal_count,
                                user_tier=user_tier, upgraded=upgraded)
 
     return app
 
 
-# ── Gunicorn entry point ─────────────────────────────────────
+# ── Gunicorn entry point ──────────────────────────────────
 app = create_app()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')
+    app.run(
+        host='0.0.0.0',
+        port=port,
+        debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    )

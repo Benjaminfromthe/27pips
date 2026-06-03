@@ -5,16 +5,25 @@
 import os
 import secrets
 import hashlib
+import smtplib
+import logging
+from email.mime.text import MIMEText
 from datetime import datetime, timezone, timedelta
 
-from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
+from flask import (Blueprint, request, jsonify, session,
+                   render_template, redirect, url_for, current_app)
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db
+
+log = logging.getLogger(__name__)
 
 auth_bp = Blueprint('auth', __name__)
 
 # Token validity window
 RESET_TOKEN_HOURS = 1
+
+# SMTP connection + send timeout (seconds) — prevents Gunicorn worker hang
+SMTP_TIMEOUT = 8
 
 
 # ── helpers ───────────────────────────────────────────────
@@ -24,10 +33,11 @@ def _hash_token(raw_token: str) -> str:
 
 
 def _make_t():
-    """Build a t() resolver for the current session language (no Jinja context)."""
+    """Build a t() resolver for the current session language."""
     from i18n import get_translations
-    lang = session.get('lang', 'en')
+    lang    = session.get('lang', 'en')
     strings = get_translations(lang)
+
     def t(key, **kwargs):
         text = strings.get(key, key)
         if kwargs:
@@ -36,49 +46,90 @@ def _make_t():
             except (KeyError, ValueError):
                 return text
         return text
+
     return t
 
 
-def _send_reset_email(app, to_email: str, reset_url: str, t_func) -> bool:
+def _send_reset_email(to_email: str, reset_url: str, t_func) -> bool:
     """
-    Attempt to send the password-reset email via Flask-Mail.
-    Returns True on success, False on any error (so the route
-    can degrade gracefully when SMTP is not configured).
+    Send a password-reset email using plain smtplib (no Flask-Mail import
+    needed — avoids the circular-import crash).
+
+    Returns True on success.  On ANY failure, logs the error and the reset
+    URL to the server console and returns False.  The caller always shows
+    the same user-facing message regardless, so the form never crashes.
     """
-    try:
-        from flask_mail import Message
-        from app import mail
-        subject = t_func('reset_email_subject')
-        body = (
-            f"{t_func('reset_email_greeting')}\n\n"
-            f"{t_func('reset_email_body')}\n\n"
-            f"{reset_url}\n\n"
-            f"{t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS)}\n\n"
-            f"{t_func('reset_email_ignore')}\n\n"
-            f"— 27pips / Shema Trading Hub"
-        )
-        msg = Message(subject=subject, recipients=[to_email], body=body)
-        mail.send(msg)
-        return True
-    except Exception as exc:
-        app.logger.warning(f"Password reset email failed: {exc}")
+    mail_user   = current_app.config.get('MAIL_USERNAME', '').strip()
+    mail_pass   = current_app.config.get('MAIL_PASSWORD', '').strip()
+    mail_server = current_app.config.get('MAIL_SERVER',   'smtp.gmail.com')
+    mail_port   = int(current_app.config.get('MAIL_PORT', 587))
+    mail_sender = current_app.config.get('MAIL_DEFAULT_SENDER', 'noreply@27pips.com')
+
+    # --- guard: if credentials are empty skip the network call entirely ---
+    if not mail_user or not mail_pass:
+        log.info('[PASSWORD RESET] SMTP credentials not configured. '
+                 'Reset link (dev/staging): %s', reset_url)
         return False
+
+    subject = t_func('reset_email_subject')
+    body = '\n\n'.join([
+        t_func('reset_email_greeting'),
+        t_func('reset_email_body'),
+        reset_url,
+        t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS),
+        t_func('reset_email_ignore'),
+        '— 27pips / Shema Trading Hub',
+    ])
+
+    msg = MIMEText(body, 'plain', 'utf-8')
+    msg['Subject'] = subject
+    msg['From']    = mail_sender
+    msg['To']      = to_email
+
+    try:
+        with smtplib.SMTP(mail_server, mail_port, timeout=SMTP_TIMEOUT) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+            smtp.login(mail_user, mail_pass)
+            smtp.sendmail(mail_sender, [to_email], msg.as_string())
+        log.info('[PASSWORD RESET] Email sent to %s', to_email)
+        return True
+
+    except smtplib.SMTPAuthenticationError as exc:
+        log.warning('[PASSWORD RESET] SMTP auth failed (%s). '
+                    'Reset link: %s', exc, reset_url)
+    except smtplib.SMTPServerDisconnected as exc:
+        log.warning('[PASSWORD RESET] SMTP server disconnected (%s). '
+                    'Reset link: %s', exc, reset_url)
+    except smtplib.SMTPException as exc:
+        log.warning('[PASSWORD RESET] SMTP error (%s). '
+                    'Reset link: %s', exc, reset_url)
+    except OSError as exc:
+        # Covers socket.timeout, ConnectionRefusedError, etc.
+        log.warning('[PASSWORD RESET] Network error sending email (%s). '
+                    'Reset link: %s', exc, reset_url)
+    except Exception as exc:          # absolute last-resort catch
+        log.error('[PASSWORD RESET] Unexpected error (%s). '
+                  'Reset link: %s', exc, reset_url)
+
+    return False
 
 
 # ── REGISTER ──────────────────────────────────────────────
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data     = request.get_json()
-    username = data.get('username', '').strip()
-    email    = data.get('email', '').strip().lower()
-    password = data.get('password', '')
+    username = (data.get('username') or '').strip()
+    email    = (data.get('email')    or '').strip().lower()
+    password =  data.get('password') or ''
 
     if not username or not email or not password:
         return jsonify({'success': False, 'message': 'All fields are required.'}), 400
     if len(password) < 6:
         return jsonify({'success': False, 'message': 'Password must be at least 6 characters.'}), 400
 
-    db = get_db()
+    db       = get_db()
     existing = db.execute(
         'SELECT id FROM users WHERE email = ? OR username = ?', (email, username)
     ).fetchone()
@@ -103,8 +154,8 @@ def register():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data     = request.get_json()
-    email    = data.get('email', '').strip().lower()
-    password = data.get('password', '')
+    email    = (data.get('email')    or '').strip().lower()
+    password =  data.get('password') or ''
 
     if not email or not password:
         return jsonify({'success': False, 'message': 'Email and password required.'}), 400
@@ -136,57 +187,54 @@ def me():
     return jsonify({'logged_in': False})
 
 
-# ── FORGOT PASSWORD — GET: show form, POST: process request ─
+# ── FORGOT PASSWORD ────────────────────────────────────────
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
-    from flask import current_app
-    t = _make_t()
-
-    # Flash-style one-time messages via query params (avoids session complexity)
-    message     = None
+    t            = _make_t()
+    message      = None
     message_type = 'success'
 
     if request.method == 'POST':
-        email = request.form.get('email', '').strip().lower()
+        email = (request.form.get('email') or '').strip().lower()
 
         if not email:
             message      = t('reset_error_email_required')
             message_type = 'error'
         else:
             db  = get_db()
-            row = db.execute('SELECT id, username FROM users WHERE email = ?', (email,)).fetchone()
+            row = db.execute(
+                'SELECT id FROM users WHERE email = ?', (email,)
+            ).fetchone()
 
             if row:
-                # Generate a cryptographically secure token
                 raw_token  = secrets.token_urlsafe(32)
                 token_hash = _hash_token(raw_token)
-                expires_at = datetime.now(timezone.utc) + timedelta(hours=RESET_TOKEN_HOURS)
+                expires_at = (datetime.now(timezone.utc)
+                              + timedelta(hours=RESET_TOKEN_HOURS))
 
-                # Invalidate any existing unused tokens for this user
+                # Invalidate prior unused tokens for this user
                 db.execute(
-                    'UPDATE password_reset_tokens SET used = 1 WHERE user_id = ? AND used = 0',
+                    'UPDATE password_reset_tokens '
+                    'SET used = 1 WHERE user_id = ? AND used = 0',
                     (row['id'],)
                 )
-                # Store the new hashed token
                 db.execute(
-                    'INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)',
-                    (row['id'], token_hash, expires_at.strftime('%Y-%m-%d %H:%M:%S'))
+                    'INSERT INTO password_reset_tokens '
+                    '(user_id, token_hash, expires_at) VALUES (?, ?, ?)',
+                    (row['id'], token_hash,
+                     expires_at.strftime('%Y-%m-%d %H:%M:%S'))
                 )
                 db.commit()
 
-                # Build the reset URL
-                reset_url = url_for('auth.reset_password', token=raw_token, _external=True)
+                reset_url = url_for('auth.reset_password',
+                                    token=raw_token, _external=True)
 
-                # Attempt email send; log failure but don't reveal it to the user
-                email_sent = _send_reset_email(current_app, email, reset_url, t)
-                if not email_sent:
-                    current_app.logger.info(
-                        f"[DEV] Reset link for {email}: {reset_url}"
-                    )
+                # Non-blocking — any SMTP failure is caught inside
+                _send_reset_email(email, reset_url, t)
 
             db.close()
 
-            # Always show the same message to prevent user-enumeration attacks
+            # Always identical message — prevents user enumeration
             message = t('reset_request_sent')
 
     return render_template(
@@ -197,7 +245,7 @@ def forgot_password():
     )
 
 
-# ── RESET PASSWORD — GET: show form, POST: update password ──
+# ── RESET PASSWORD ────────────────────────────────────────
 @auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     t          = _make_t()
@@ -213,7 +261,6 @@ def reset_password(token):
         (token_hash,)
     ).fetchone()
 
-    # Validate token
     if not row:
         db.close()
         return render_template('auth/reset_password.html',
@@ -226,11 +273,12 @@ def reset_password(token):
                                error=t('reset_error_token_used'),
                                token=None, user=None)
 
-    # Parse expiry — handle both datetime objects and strings
+    # Normalise expires_at to UTC-aware datetime
     expires_at = row['expires_at']
     if isinstance(expires_at, str):
-        expires_at = datetime.strptime(expires_at, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
-    elif expires_at.tzinfo is None:
+        expires_at = (datetime.strptime(expires_at, '%Y-%m-%d %H:%M:%S')
+                      .replace(tzinfo=timezone.utc))
+    elif getattr(expires_at, 'tzinfo', None) is None:
         expires_at = expires_at.replace(tzinfo=timezone.utc)
 
     if now > expires_at:
@@ -239,10 +287,9 @@ def reset_password(token):
                                error=t('reset_error_token_expired'),
                                token=None, user=None)
 
-    # Token is valid — handle form submission
     if request.method == 'POST':
-        password  = request.form.get('password', '')
-        password2 = request.form.get('password2', '')
+        password  = request.form.get('password',  '') or ''
+        password2 = request.form.get('password2', '') or ''
 
         if len(password) < 6:
             db.close()
@@ -256,7 +303,6 @@ def reset_password(token):
                                    error=t('reset_error_password_mismatch'),
                                    token=token, user=None)
 
-        # Update password + mark token used in one transaction
         pw_hash = generate_password_hash(password)
         db.execute('UPDATE users SET password_hash = ? WHERE id = ?',
                    (pw_hash, row['user_id']))
@@ -264,7 +310,6 @@ def reset_password(token):
                    (row['id'],))
         db.commit()
         db.close()
-
         return redirect(url_for('auth.reset_success'))
 
     db.close()
@@ -275,5 +320,4 @@ def reset_password(token):
 # ── RESET SUCCESS ─────────────────────────────────────────
 @auth_bp.route('/reset-success')
 def reset_success():
-    t = _make_t()
     return render_template('auth/reset_success.html', user=None)
