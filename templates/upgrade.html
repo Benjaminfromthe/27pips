@@ -84,17 +84,17 @@
       <!-- Free tier -->
       <div class="tier-card">
         <p class="tier-name">{{ t('plan_free') }}</p>
-        <p class="tier-price">$0<span>/forever</span></p>
+        <p class="tier-price">$0<span>{{ t('plan_price_forever') }}</span></p>
         <ul class="tier-features">
-          <li class="yes">✅ Pre-School education module</li>
-          <li class="yes">✅ 3 free signals per week</li>
-          <li class="yes">✅ Basic trading journal</li>
-          <li class="yes">✅ Community access</li>
-          <li>❌ Premium signal entry prices</li>
-          <li>❌ Stop loss coordinates</li>
-          <li>❌ Take profit levels</li>
-          <li>❌ Prop firm tracker</li>
-          <li>❌ Full education curriculum</li>
+          <li class="yes">✅ {{ t('plan_starter_feat1') }}</li>
+          <li class="yes">✅ {{ t('plan_starter_feat2') }}</li>
+          <li class="yes">✅ {{ t('plan_starter_feat3') }}</li>
+          <li class="yes">✅ {{ t('plan_starter_feat4') }}</li>
+          <li>❌ {{ t('upgrade_free_no1') }}</li>
+          <li>❌ {{ t('upgrade_free_no2') }}</li>
+          <li>❌ {{ t('upgrade_free_no3') }}</li>
+          <li>❌ {{ t('plan_starter_no2') }}</li>
+          <li>❌ {{ t('plan_starter_no1') }}</li>
         </ul>
         <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">{{ t('upgrade_current_plan') }}</button>
       </div>
@@ -103,17 +103,17 @@
       <div class="tier-card featured">
         <div class="tier-badge">👑 {{ t('upgrade_recommended') }}</div>
         <p class="tier-name" style="color:var(--accent-yellow)">{{ t('upgrade_tier_premium') }}</p>
-        <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$29<span style="-webkit-text-fill-color:#94a3b8">/month</span></p>
+        <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$29<span style="-webkit-text-fill-color:#94a3b8">{{ t('plan_per_month') }}</span></p>
         <ul class="tier-features">
-          <li class="yes">✅ Everything in Free</li>
-          <li class="yes">✅ <strong style="color:#f59e0b">All premium signal entry prices</strong></li>
-          <li class="yes">✅ <strong style="color:#f59e0b">Exact stop loss coordinates</strong></li>
-          <li class="yes">✅ <strong style="color:#f59e0b">TP1 & TP2 take profit levels</strong></li>
-          <li class="yes">✅ Full education curriculum</li>
-          <li class="yes">✅ Prop firm challenge tracker</li>
-          <li class="yes">✅ Equity curve analytics</li>
-          <li class="yes">✅ Priority community access</li>
-          <li class="yes">✅ Weekly live trading sessions</li>
+          <li class="yes">✅ {{ t('upgrade_premium_feat1') }}</li>
+          <li class="yes">✅ <strong style="color:#f59e0b">{{ t('upgrade_premium_feat2') }}</strong></li>
+          <li class="yes">✅ <strong style="color:#f59e0b">{{ t('upgrade_premium_feat3') }}</strong></li>
+          <li class="yes">✅ <strong style="color:#f59e0b">{{ t('upgrade_premium_feat4') }}</strong></li>
+          <li class="yes">✅ {{ t('plan_pro_feat1') }}</li>
+          <li class="yes">✅ {{ t('plan_pro_feat4') }}</li>
+          <li class="yes">✅ {{ t('upgrade_premium_feat7') }}</li>
+          <li class="yes">✅ {{ t('plan_pro_feat5') }}</li>
+          <li class="yes">✅ {{ t('plan_pro_feat6') }}</li>
         </ul>
         {% if user %}
         <form method="POST" action="/upgrade/simulate">

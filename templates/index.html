@@ -101,21 +101,21 @@
         <div class="edu-card-header">
           <span class="edu-icon">🎒</span>
           <div>
-            <h3 class="edu-module-title">Pre-School</h3>
-            <p class="edu-module-sub">Forex Basics</p>
+            <h3 class="edu-module-title">{{ t('edu_module1_title') }}</h3>
+            <p class="edu-module-sub">{{ t('edu_module1_sub') }}</p>
           </div>
           <span class="edu-badge badge-locked">{{ t('edu_locked') }}</span>
         </div>
         <div class="progress-bar-wrap">
           <div class="progress-bar" style="width:0%"></div>
         </div>
-        <p class="progress-text">0 / 5 Lessons Completed</p>
+        <p class="progress-text">{{ t('edu_progress_lessons', done=0, total=5) }}</p>
         <ul class="lesson-list">
-          <li class="lesson-item locked">📖 What is Forex?</li>
-          <li class="lesson-item locked">📖 Currency Pairs Explained</li>
-          <li class="lesson-item locked">📖 How to Read a Chart</li>
-          <li class="lesson-item locked">📖 Pips and Lots</li>
-          <li class="lesson-item locked">📖 Bid, Ask and Spread</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_what_is_forex') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_currency_pairs') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_read_chart') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_pips_lots') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_bid_ask') }}</li>
         </ul>
         <button class="btn-primary full-width" onclick="window.location='/education/'">{{ t('edu_start_module') }}</button>
       </div>
@@ -125,17 +125,17 @@
         <div class="edu-card-header">
           <span class="edu-icon">🏫</span>
           <div>
-            <h3 class="edu-module-title">Elementary</h3>
-            <p class="edu-module-sub">Chart Reading</p>
+            <h3 class="edu-module-title">{{ t('edu_module2_title') }}</h3>
+            <p class="edu-module-sub">{{ t('edu_module2_sub') }}</p>
           </div>
           <span class="edu-badge badge-locked">{{ t('edu_lessons_count', count=3) }}</span>
         </div>
         <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
-        <p class="progress-text">Support & Resistance · Candlesticks · Trend Lines</p>
+        <p class="progress-text">{{ t('edu_module2_topics') }}</p>
         <ul class="lesson-list">
-          <li class="lesson-item locked">📖 Support and Resistance</li>
-          <li class="lesson-item locked">📖 Candlestick Patterns</li>
-          <li class="lesson-item locked">📖 Trend Lines & Market Structure</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_support_resistance') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_candlesticks') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_trend_lines') }}</li>
         </ul>
         <a href="/education/" class="btn-outline full-width" style="display:block;text-align:center;text-decoration:none">{{ t('edu_view_curriculum') }}</a>
       </div>
@@ -145,17 +145,17 @@
         <div class="edu-card-header">
           <span class="edu-icon">🎓</span>
           <div>
-            <h3 class="edu-module-title">High School</h3>
-            <p class="edu-module-sub">Risk Management</p>
+            <h3 class="edu-module-title">{{ t('edu_module3_title') }}</h3>
+            <p class="edu-module-sub">{{ t('edu_module3_sub') }}</p>
           </div>
           <span class="edu-badge badge-locked">{{ t('edu_coming_soon') }}</span>
         </div>
         <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
-        <p class="progress-text">Position Sizing · Psychology · Trading Plan</p>
+        <p class="progress-text">{{ t('edu_module3_topics') }}</p>
         <ul class="lesson-list">
-          <li class="lesson-item locked">📖 Position Sizing</li>
-          <li class="lesson-item locked">📖 Risk/Reward Ratio</li>
-          <li class="lesson-item locked">📖 Trading Psychology</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_position_sizing') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_risk_reward') }}</li>
+          <li class="lesson-item locked">📖 {{ t('edu_lesson_psychology') }}</li>
         </ul>
         <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:not-allowed">{{ t('edu_coming_soon') }}</button>
       </div>
@@ -276,7 +276,7 @@
         <div class="journal-row">
           <div class="form-group full">
             <label>{{ t('journal_notes') }}</label>
-            <textarea name="notes" id="j-notes" rows="2" placeholder="Why did you take this trade?"></textarea>
+            <textarea name="notes" id="j-notes" rows="2" placeholder="{{ t('journal_notes_placeholder') }}"></textarea>
           </div>
         </div>
         <div class="journal-row">
@@ -415,7 +415,7 @@
         <div class="tracker-icon">📉</div>
         <p class="tracker-label">{{ t('tracker_daily') }}</p>
         <p class="tracker-value text-yellow" id="t-daily">—</p>
-        <p class="tracker-sub" id="t-daily-sub">Limit: —</p>
+        <p class="tracker-sub" id="t-daily-sub">{{ t('tracker_limit_label') }}: —</p>
         <div class="tracker-progress-wrap">
           <div class="tracker-progress-bar tracker-bar-yellow" id="t-daily-bar" style="width:0%"></div>
         </div>
@@ -426,7 +426,7 @@
         <div class="tracker-icon">🛑</div>
         <p class="tracker-label">{{ t('tracker_max') }}</p>
         <p class="tracker-value text-green" id="t-max">—</p>
-        <p class="tracker-sub" id="t-max-sub">Limit: —</p>
+        <p class="tracker-sub" id="t-max-sub">{{ t('tracker_limit_label') }}: —</p>
         <div class="tracker-progress-wrap">
           <div class="tracker-progress-bar" id="t-max-bar" style="width:0%"></div>
         </div>
@@ -437,7 +437,7 @@
         <div class="tracker-icon">🎯</div>
         <p class="tracker-label">{{ t('tracker_target') }}</p>
         <p class="tracker-value text-blue" id="t-profit">—</p>
-        <p class="tracker-sub" id="t-profit-sub">Target: —</p>
+        <p class="tracker-sub" id="t-profit-sub">{{ t('tracker_target_label') }}: —</p>
         <div class="tracker-progress-wrap">
           <div class="tracker-progress-bar tracker-bar-blue" id="t-target-bar" style="width:0%"></div>
         </div>
@@ -476,13 +476,13 @@
         <div class="plan-name">{{ t('plan_starter') }}</div>
         <div class="plan-price">{{ t('plan_free') }}</div>
         <ul class="plan-features">
-          <li>✅ Pre-School Module</li>
-          <li>✅ 3 Signals per week</li>
-          <li>✅ Basic Journal</li>
-          <li>✅ Community Access</li>
-          <li class="disabled">❌ Full Education Track</li>
-          <li class="disabled">❌ Prop Firm Tracker</li>
-          <li class="disabled">❌ Daily Signals</li>
+          <li>✅ {{ t('plan_starter_feat1') }}</li>
+          <li>✅ {{ t('plan_starter_feat2') }}</li>
+          <li>✅ {{ t('plan_starter_feat3') }}</li>
+          <li>✅ {{ t('plan_starter_feat4') }}</li>
+          <li class="disabled">❌ {{ t('plan_starter_no1') }}</li>
+          <li class="disabled">❌ {{ t('plan_starter_no2') }}</li>
+          <li class="disabled">❌ {{ t('plan_starter_no3') }}</li>
         </ul>
         <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_get_started') }}</button>
       </div>
@@ -492,13 +492,13 @@
         <div class="plan-name">{{ t('plan_pro') }}</div>
         <div class="plan-price">$29<span>{{ t('plan_per_month') }}</span></div>
         <ul class="plan-features">
-          <li>✅ All Education Modules</li>
-          <li>✅ Daily Live Signals</li>
-          <li>✅ Full Trading Journal</li>
-          <li>✅ Prop Firm Tracker</li>
-          <li>✅ Priority Community</li>
-          <li>✅ Weekly Live Sessions</li>
-          <li class="disabled">❌ 1-on-1 Mentorship</li>
+          <li>✅ {{ t('plan_pro_feat1') }}</li>
+          <li>✅ {{ t('plan_pro_feat2') }}</li>
+          <li>✅ {{ t('plan_pro_feat3') }}</li>
+          <li>✅ {{ t('plan_pro_feat4') }}</li>
+          <li>✅ {{ t('plan_pro_feat5') }}</li>
+          <li>✅ {{ t('plan_pro_feat6') }}</li>
+          <li class="disabled">❌ {{ t('plan_pro_no1') }}</li>
         </ul>
         <button class="btn-primary full-width" onclick="openModal()">{{ t('plan_start_pro') }}</button>
       </div>
@@ -507,13 +507,13 @@
         <div class="plan-name">{{ t('plan_elite') }}</div>
         <div class="plan-price">$79<span>{{ t('plan_per_month') }}</span></div>
         <ul class="plan-features">
-          <li>✅ Everything in Pro</li>
-          <li>✅ 1-on-1 Mentorship</li>
-          <li>✅ Private Signal Group</li>
-          <li>✅ Prop Firm Coaching</li>
-          <li>✅ Trade Reviews</li>
-          <li>✅ Custom Strategy Build</li>
-          <li>✅ Direct Analyst Access</li>
+          <li>✅ {{ t('plan_elite_feat1') }}</li>
+          <li>✅ {{ t('plan_elite_feat2') }}</li>
+          <li>✅ {{ t('plan_elite_feat3') }}</li>
+          <li>✅ {{ t('plan_elite_feat4') }}</li>
+          <li>✅ {{ t('plan_elite_feat5') }}</li>
+          <li>✅ {{ t('plan_elite_feat6') }}</li>
+          <li>✅ {{ t('plan_elite_feat7') }}</li>
         </ul>
         <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_go_elite') }}</button>
       </div>
@@ -569,26 +569,26 @@
     <div class="testimonials-grid">
       <div class="testimonial-card">
         <div class="stars">⭐⭐⭐⭐⭐</div>
-        <p>"27pips completely changed how I approach the market. The education is structured and the signals are accurate."</p>
+        <p>{{ t('testimonial_1_text') }}</p>
         <div class="testimonial-author">
           <div class="author-avatar">JM</div>
-          <div><strong>Jean-Marie K.</strong><br/><span class="text-muted">Kigali, Rwanda</span></div>
+          <div><strong>{{ t('testimonial_1_name') }}</strong><br/><span class="text-muted">{{ t('testimonial_1_location') }}</span></div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="stars">⭐⭐⭐⭐⭐</div>
-        <p>"Passed my FTMO challenge using the prop firm tracker. The daily drawdown alerts kept me disciplined."</p>
+        <p>{{ t('testimonial_2_text') }}</p>
         <div class="testimonial-author">
           <div class="author-avatar">AM</div>
-          <div><strong>Amara M.</strong><br/><span class="text-muted">Nairobi, Kenya</span></div>
+          <div><strong>{{ t('testimonial_2_name') }}</strong><br/><span class="text-muted">{{ t('testimonial_2_location') }}</span></div>
         </div>
       </div>
       <div class="testimonial-card">
         <div class="stars">⭐⭐⭐⭐⭐</div>
-        <p>"The School of Pipsology section is incredible. I went from knowing nothing to trading live in 3 months."</p>
+        <p>{{ t('testimonial_3_text') }}</p>
         <div class="testimonial-author">
           <div class="author-avatar">TN</div>
-          <div><strong>Tunde N.</strong><br/><span class="text-muted">Lagos, Nigeria</span></div>
+          <div><strong>{{ t('testimonial_3_name') }}</strong><br/><span class="text-muted">{{ t('testimonial_3_location') }}</span></div>
         </div>
       </div>
     </div>
