@@ -327,5 +327,37 @@
 
   "lesson_content_candlesticks": "<h2>Reading Candlestick Patterns</h2><p>Candlesticks show four key prices: <strong>Open, High, Low, Close</strong>. The body shows the range between open and close. The wicks show the extremes.</p><h3>Key Reversal Patterns</h3><ul><li>🕯️ <strong>Doji</strong> — Open ≈ Close. Market indecision. Watch for direction after.</li><li>🔨 <strong>Hammer</strong> — Long lower wick at support. Bullish reversal signal.</li><li>⭐ <strong>Shooting Star</strong> — Long upper wick at resistance. Bearish reversal signal.</li><li>🌙 <strong>Engulfing</strong> — One candle completely engulfs the previous. Strong reversal.</li></ul><h3>How to Use Them</h3><p>Never trade a candlestick pattern in isolation. Always confirm with:</p><ul><li>Key support/resistance level</li><li>Trend direction</li><li>Volume or momentum indicator</li></ul><blockquote>💡 <strong>Key Takeaway:</strong> Candlestick patterns are clues, not guarantees. Use them as confirmation, not as standalone signals.</blockquote>",
 
-  "lesson_content_trend_lines": "<h2>Trend Lines and Market Structure</h2><p>The most fundamental concept in trading: <strong>the trend is your friend</strong>. Understanding market structure tells you whether to look for buys, sells, or to stay out.</p><h3>Market Structure</h3><ul><li>📈 <strong>Uptrend</strong> = Higher Highs (HH) + Higher Lows (HL)</li><li>📉 <strong>Downtrend</strong> = Lower Highs (LH) + Lower Lows (LL)</li><li>↔️ <strong>Ranging</strong> = Price bouncing between two levels</li></ul><h3>Drawing Trend Lines</h3><p>In an uptrend, connect the <strong>higher lows</strong>. In a downtrend, connect the <strong>lower highs</strong>. A break of the trend line signals a potential reversal.</p><h3>Trading With the Trend</h3><p>Always trade in the direction of the higher timeframe trend. If the daily chart is bullish, look for buy setups on the 1-hour chart.</p><blockquote>💡 <strong>Key Takeaway:</strong> Identify the trend on a higher timeframe first, then drop to a lower timeframe to find your entry. This is called top-down analysis.</blockquote>"
+  "lesson_content_trend_lines": "<h2>Trend Lines and Market Structure</h2><p>The most fundamental concept in trading: <strong>the trend is your friend</strong>. Understanding market structure tells you whether to look for buys, sells, or to stay out.</p><h3>Market Structure</h3><ul><li>📈 <strong>Uptrend</strong> = Higher Highs (HH) + Higher Lows (HL)</li><li>📉 <strong>Downtrend</strong> = Lower Highs (LH) + Lower Lows (LL)</li><li>↔️ <strong>Ranging</strong> = Price bouncing between two levels</li></ul><h3>Drawing Trend Lines</h3><p>In an uptrend, connect the <strong>higher lows</strong>. In a downtrend, connect the <strong>lower highs</strong>. A break of the trend line signals a potential reversal.</p><h3>Trading With the Trend</h3><p>Always trade in the direction of the higher timeframe trend. If the daily chart is bullish, look for buy setups on the 1-hour chart.</p><blockquote>💡 <strong>Key Takeaway:</strong> Identify the trend on a higher timeframe first, then drop to a lower timeframe to find your entry. This is called top-down analysis.</blockquote>",
+
+  "reset_forgot_page_title": "27pips — Forgot Password",
+  "reset_forgot_title": "Forgot Your Password?",
+  "reset_forgot_sub": "Enter your account email address and we'll send you a secure link to reset your password.",
+  "reset_forgot_password_link": "Forgot password?",
+  "reset_send_link_btn": "Send Reset Link",
+  "reset_request_sent": "If that email is registered, a reset link has been sent. Please check your inbox (and spam folder).",
+  "reset_error_email_required": "Please enter your email address.",
+
+  "reset_new_password_page_title": "27pips — Set New Password",
+  "reset_new_password_title": "Set a New Password",
+  "reset_new_password_sub": "Choose a strong password for your account.",
+  "reset_new_password_label": "New Password",
+  "reset_confirm_password_label": "Confirm Password",
+  "reset_update_password_btn": "Update Password",
+  "reset_error_password_short": "Password must be at least 6 characters.",
+  "reset_error_password_mismatch": "Passwords do not match.",
+  "reset_error_invalid_token": "This reset link is invalid. Please request a new one.",
+  "reset_error_token_used": "This reset link has already been used. Please request a new one.",
+  "reset_error_token_expired": "This reset link has expired. Please request a new one.",
+  "reset_invalid_title": "Invalid Reset Link",
+  "reset_request_new_link": "Request a New Link",
+
+  "reset_success_page_title": "27pips — Password Updated",
+  "reset_success_title": "Password Updated!",
+  "reset_success_sub": "Your password has been changed successfully. You can now sign in with your new credentials.",
+
+  "reset_email_subject": "27pips — Password Reset Request",
+  "reset_email_greeting": "Hi there,",
+  "reset_email_body": "We received a request to reset your 27pips account password. Click the link below to set a new password:",
+  "reset_email_expiry": "This link will expire in {hours} hour(s).",
+  "reset_email_ignore": "If you did not request a password reset, you can safely ignore this email."
 }

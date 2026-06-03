@@ -20,6 +20,9 @@
         <input type="password" id="loginPassword" placeholder="••••••••" required />
       </div>
       <button type="submit" class="btn-primary full-width" id="loginBtn2">{{ t('auth_sign_in') }}</button>
+      <p class="modal-footer-text">
+        <a href="/auth/forgot-password" class="link-green" style="font-size:0.82rem">{{ t('reset_forgot_password_link') }}</a>
+      </p>
       <p class="modal-footer-text">{{ t('auth_no_account') }} <a href="#" class="link-green" onclick="switchTab('signup')">{{ t('auth_create_free') }}</a></p>
     </form>
 

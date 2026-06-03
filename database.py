@@ -185,6 +185,14 @@ def _schema_sql():
                 completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(user_id, lesson_id)
             )''',
+            '''CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id),
+                token_hash TEXT NOT NULL UNIQUE,
+                expires_at TIMESTAMP NOT NULL,
+                used INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )''',
         ]
     else:
         # SQLite schema (original)
@@ -256,6 +264,14 @@ def _schema_sql():
                 lesson_id INTEGER NOT NULL REFERENCES lessons(id),
                 completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(user_id, lesson_id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id),
+                token_hash TEXT NOT NULL UNIQUE,
+                expires_at DATETIME NOT NULL,
+                used INTEGER NOT NULL DEFAULT 0,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )''',
         ]
 

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>{{ t('reset_success_page_title') }}</title>
+  {% include 'partials/theme_head.html' %}
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .auth-page-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 24px 48px;
+      background: var(--hero-gradient);
+    }
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 20px;
+      padding: 56px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .success-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; }
+    .auth-card h1 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .auth-card p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Consistent site header -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">📈</span>
+        <span class="logo-text">27<span class="logo-accent">pips</span></span>
+      </a>
+      <div class="header-actions">
+        {% include 'partials/theme_toggle.html' %}
+        {% include 'partials/lang_switcher.html' %}
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-page-wrap">
+    <div class="auth-card">
+      <span class="success-icon">✅</span>
+      <h1>{{ t('reset_success_title') }}</h1>
+      <p>{{ t('reset_success_sub') }}</p>
+      <div class="btn-group">
+        <button class="btn-primary full-width" onclick="openModal('login')"
+                style="padding:13px">
+          {{ t('auth_sign_in') }}
+        </button>
+        <a href="/" class="btn-outline full-width" style="padding:13px">
+          ← {{ t('nav_home') }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-text">27<span class="logo-accent">pips</span></span>
+      </div>
+      <p class="footer-copy">{{ t('footer_copy') }}</p>
+    </div>
+  </footer>
+
+  {% include 'partials/auth_modal.html' %}
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -2,7 +2,8 @@
 # 27pips — app.py  |  Production-ready Flask entry point
 # ============================================================
 import os
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request
+from flask_mail import Mail
 from database import init_db
 from i18n import register_i18n
 from blueprints.auth.routes      import auth_bp
@@ -14,16 +15,33 @@ from blueprints.admin.routes     import admin_bp
 from blueprints.analytics.routes import analytics_bp
 from blueprints.upgrade.routes   import upgrade_bp
 
+# Flask-Mail instance — imported by auth blueprint for password reset
+mail = Mail()
+
+
 def create_app():
     app = Flask(__name__)
 
-    # ── Security — read from environment, fall back to local default ──
+    # ── Security ────────────────────────────────────────────
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'pips-local-dev-key-change-in-prod')
 
+    # ── Flask-Mail ──────────────────────────────────────────
+    app.config['MAIL_SERVER']         = os.environ.get('MAIL_SERVER',   'smtp.gmail.com')
+    app.config['MAIL_PORT']           = int(os.environ.get('MAIL_PORT', 587))
+    app.config['MAIL_USE_TLS']        = os.environ.get('MAIL_USE_TLS',  'true').lower() == 'true'
+    app.config['MAIL_USERNAME']       = os.environ.get('MAIL_USERNAME', '')
+    app.config['MAIL_PASSWORD']       = os.environ.get('MAIL_PASSWORD', '')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get(
+        'MAIL_DEFAULT_SENDER',
+        os.environ.get('MAIL_USERNAME', 'noreply@27pips.com')
+    )
+    mail.init_app(app)
+
+    # ── Database ─────────────────────────────────────────────
     with app.app_context():
         init_db()
 
-    # ── Blueprints ─────────────────────────────────────────
+    # ── Blueprints ───────────────────────────────────────────
     app.register_blueprint(auth_bp,       url_prefix='/auth')
     app.register_blueprint(education_bp,  url_prefix='/education')
     app.register_blueprint(journal_bp,    url_prefix='/journal')
@@ -35,7 +53,7 @@ def create_app():
 
     register_i18n(app)
 
-    # ── Home route ─────────────────────────────────────────
+    # ── Home route ────────────────────────────────────────────
     @app.route('/')
     def home():
         from database import get_db
@@ -64,7 +82,8 @@ def create_app():
 
     return app
 
-# ── Gunicorn entry point ────────────────────────────────────
+
+# ── Gunicorn entry point ─────────────────────────────────────
 app = create_app()
 
 if __name__ == '__main__':

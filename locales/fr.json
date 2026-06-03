@@ -327,5 +327,37 @@
 
   "lesson_content_candlesticks": "<h2>Lire les Figures en Chandeliers</h2><p>Les chandeliers montrent quatre prix clés : <strong>Ouverture, Haut, Bas, Clôture</strong>. Le corps montre la plage entre l'ouverture et la clôture. Les mèches montrent les extrêmes.</p><h3>Figures de Retournement Clés</h3><ul><li>🕯️ <strong>Doji</strong> — Ouverture ≈ Clôture. Indécision du marché. Attendez la direction.</li><li>🔨 <strong>Marteau</strong> — Longue mèche inférieure au support. Signal de retournement haussier.</li><li>⭐ <strong>Étoile Filante</strong> — Longue mèche supérieure à la résistance. Signal de retournement baissier.</li><li>🌙 <strong>Englobant</strong> — Une bougie englobe complètement la précédente. Fort retournement.</li></ul><h3>Comment les utiliser</h3><p>Ne tradez jamais une figure en chandelier isolément. Confirmez toujours avec :</p><ul><li>Un niveau de support/résistance clé</li><li>La direction de la tendance</li><li>Un indicateur de volume ou de momentum</li></ul><blockquote>💡 <strong>Point clé :</strong> Les figures en chandeliers sont des indices, pas des garanties. Utilisez-les comme confirmation, pas comme signaux isolés.</blockquote>",
 
-  "lesson_content_trend_lines": "<h2>Lignes de Tendance et Structure du Marché</h2><p>Le concept le plus fondamental en trading : <strong>la tendance est votre amie</strong>. Comprendre la structure du marché vous indique s'il faut chercher à acheter, vendre, ou rester à l'écart.</p><h3>Structure du Marché</h3><ul><li>📈 <strong>Tendance haussière</strong> = Sommets plus hauts (HH) + Creux plus hauts (HL)</li><li>📉 <strong>Tendance baissière</strong> = Sommets plus bas (LH) + Creux plus bas (LL)</li><li>↔️ <strong>Range</strong> = Prix rebondissant entre deux niveaux</li></ul><h3>Tracer des Lignes de Tendance</h3><p>En tendance haussière, reliez les <strong>creux plus hauts</strong>. En tendance baissière, reliez les <strong>sommets plus bas</strong>. Une rupture de la ligne de tendance signale un retournement potentiel.</p><h3>Trader avec la Tendance</h3><p>Tradez toujours dans la direction de la tendance du timeframe supérieur. Si le graphique journalier est haussier, cherchez des configurations d'achat sur le graphique 1 heure.</p><blockquote>💡 <strong>Point clé :</strong> Identifiez d'abord la tendance sur un timeframe supérieur, puis descendez sur un timeframe inférieur pour trouver votre entrée. C'est l'analyse top-down.</blockquote>"
+  "lesson_content_trend_lines": "<h2>Lignes de Tendance et Structure du Marché</h2><p>Le concept le plus fondamental en trading : <strong>la tendance est votre amie</strong>. Comprendre la structure du marché vous indique s'il faut chercher à acheter, vendre, ou rester à l'écart.</p><h3>Structure du Marché</h3><ul><li>📈 <strong>Tendance haussière</strong> = Sommets plus hauts (HH) + Creux plus hauts (HL)</li><li>📉 <strong>Tendance baissière</strong> = Sommets plus bas (LH) + Creux plus bas (LL)</li><li>↔️ <strong>Range</strong> = Prix rebondissant entre deux niveaux</li></ul><h3>Tracer des Lignes de Tendance</h3><p>En tendance haussière, reliez les <strong>creux plus hauts</strong>. En tendance baissière, reliez les <strong>sommets plus bas</strong>. Une rupture de la ligne de tendance signale un retournement potentiel.</p><h3>Trader avec la Tendance</h3><p>Tradez toujours dans la direction de la tendance du timeframe supérieur. Si le graphique journalier est haussier, cherchez des configurations d'achat sur le graphique 1 heure.</p><blockquote>💡 <strong>Point clé :</strong> Identifiez d'abord la tendance sur un timeframe supérieur, puis descendez sur un timeframe inférieur pour trouver votre entrée. C'est l'analyse top-down.</blockquote>",
+
+  "reset_forgot_page_title": "27pips — Mot de passe oublié",
+  "reset_forgot_title": "Mot de passe oublié ?",
+  "reset_forgot_sub": "Entrez l'adresse e-mail de votre compte et nous vous enverrons un lien sécurisé pour réinitialiser votre mot de passe.",
+  "reset_forgot_password_link": "Mot de passe oublié ?",
+  "reset_send_link_btn": "Envoyer le lien de réinitialisation",
+  "reset_request_sent": "Si cet e-mail est enregistré, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception (et les spams).",
+  "reset_error_email_required": "Veuillez entrer votre adresse e-mail.",
+
+  "reset_new_password_page_title": "27pips — Nouveau mot de passe",
+  "reset_new_password_title": "Définir un nouveau mot de passe",
+  "reset_new_password_sub": "Choisissez un mot de passe fort pour votre compte.",
+  "reset_new_password_label": "Nouveau mot de passe",
+  "reset_confirm_password_label": "Confirmer le mot de passe",
+  "reset_update_password_btn": "Mettre à jour le mot de passe",
+  "reset_error_password_short": "Le mot de passe doit comporter au moins 6 caractères.",
+  "reset_error_password_mismatch": "Les mots de passe ne correspondent pas.",
+  "reset_error_invalid_token": "Ce lien de réinitialisation est invalide. Veuillez en demander un nouveau.",
+  "reset_error_token_used": "Ce lien a déjà été utilisé. Veuillez en demander un nouveau.",
+  "reset_error_token_expired": "Ce lien a expiré. Veuillez en demander un nouveau.",
+  "reset_invalid_title": "Lien de réinitialisation invalide",
+  "reset_request_new_link": "Demander un nouveau lien",
+
+  "reset_success_page_title": "27pips — Mot de passe mis à jour",
+  "reset_success_title": "Mot de passe mis à jour !",
+  "reset_success_sub": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.",
+
+  "reset_email_subject": "27pips — Demande de réinitialisation du mot de passe",
+  "reset_email_greeting": "Bonjour,",
+  "reset_email_body": "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte 27pips. Cliquez sur le lien ci-dessous pour définir un nouveau mot de passe :",
+  "reset_email_expiry": "Ce lien expirera dans {hours} heure(s).",
+  "reset_email_ignore": "Si vous n'avez pas demandé de réinitialisation, vous pouvez ignorer cet e-mail en toute sécurité."
 }

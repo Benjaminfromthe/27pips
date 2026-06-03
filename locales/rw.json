@@ -327,5 +327,37 @@
 
   "lesson_content_candlesticks": "<h2>Gusoma Imiterere y'Ibishusho</h2><p>Ibishusho bigaragaza ibiciro bine by'ibanze: <strong>Gufungura, Hejuru, Hasi, Gufunga</strong>. Umubiri ugaragaza urwego hagati yo gufungura no gufunga. Intore zigaragaza uburemere.</p><h3>Imiterere Nkuru y'Ihinduka</h3><ul><li>🕯️ <strong>Doji</strong> — Gufungura ≈ Gufunga. Isoko ntirimenyereye. Tegereza inzira.</li><li>🔨 <strong>Nyundo</strong> — Intore nderebera hasi kuri gushyigikira. Ikimenyetso cy'ihinduka ry'hejuru.</li><li>⭐ <strong>Inyenyeri Yaguye</strong> — Intore nderebera hejuru kuri guhangana. Ikimenyetso cy'ihinduka ry'hasi.</li><li>🌙 <strong>Gukwikira</strong> — Igishusho kimwe kikwikira ikindi. Ihinduka ryanguruye.</li></ul><h3>Uburyo bwo Kuzikoresha</h3><p>Ntucuruze imiterere y'igishusho wenyine. Buri gihe emeza na:</p><ul><li>Ingano nkuru y'gushyigikira/guhangana</li><li>Inzira y'iterambere</li><li>Ingano cyangwa ikimenyetso cy'ingufu</li></ul><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Imiterere y'ibishusho ni ibimenyetso, si ingwate. Ikoresha nk'emeza, si nk'ikimenyetso cy'ubwenge.</blockquote>",
 
-  "lesson_content_trend_lines": "<h2>Imirongo y'Iterambere no Imiterere y'Isoko</h2><p>Igitekerezo cy'ibanze cyane mu bucuruzi: <strong>iterambere ni inshuti yawe</strong>. Gusobanukirwa imiterere y'isoko bigira ngo ubone niba ugomba kugura, kugurisha, cyangwa kureka.</p><h3>Imiterere y'Isoko</h3><ul><li>📈 <strong>Iterambere ry'hejuru</strong> = Ingano z'Hejuru (HH) + Ingano z'Hasi z'Hejuru (HL)</li><li>📉 <strong>Iterambere ry'hasi</strong> = Ingano z'Hejuru z'Hasi (LH) + Ingano z'Hasi z'Hasi (LL)</li><li>↔️ <strong>Kongereza</strong> = Igiciro gisubira hagati y'ingano ebyiri</li></ul><h3>Gushushanya Imirongo y'Iterambere</h3><p>Mu iterambere ry'hejuru, huza <strong>ingano z'hasi z'hejuru</strong>. Mu iterambere ry'hasi, huza <strong>ingano z'hejuru z'hasi</strong>. Gucimura umurongo w'iterambere bigaragaza impinduka iyo ari yo yose.</p><h3>Gucuruza na Iterambere</h3><p>Buri gihe curuza mu nzira y'iterambere ry'igihe kinini. Niba ikirangantego cy'umunsi gifite iterambere ry'hejuru, reba igenamiterere ryo kugura kuri ikirangantego cy'isaha 1.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Banza usesengure iterambere ku gihe kinini, hanyuma ugwe ku gihe gito kugira ngo ubone injira yawe. Ibi bita isesengura ryo hejuru ugakaguka hasi.</blockquote>"
+  "lesson_content_trend_lines": "<h2>Imirongo y'Iterambere no Imiterere y'Isoko</h2><p>Igitekerezo cy'ibanze cyane mu bucuruzi: <strong>iterambere ni inshuti yawe</strong>. Gusobanukirwa imiterere y'isoko bigira ngo ubone niba ugomba kugura, kugurisha, cyangwa kureka.</p><h3>Imiterere y'Isoko</h3><ul><li>📈 <strong>Iterambere ry'hejuru</strong> = Ingano z'Hejuru (HH) + Ingano z'Hasi z'Hejuru (HL)</li><li>📉 <strong>Iterambere ry'hasi</strong> = Ingano z'Hejuru z'Hasi (LH) + Ingano z'Hasi z'Hasi (LL)</li><li>↔️ <strong>Kongereza</strong> = Igiciro gisubira hagati y'ingano ebyiri</li></ul><h3>Gushushanya Imirongo y'Iterambere</h3><p>Mu iterambere ry'hejuru, huza <strong>ingano z'hasi z'hejuru</strong>. Mu iterambere ry'hasi, huza <strong>ingano z'hejuru z'hasi</strong>. Gucimura umurongo w'iterambere bigaragaza impinduka iyo ari yo yose.</p><h3>Gucuruza na Iterambere</h3><p>Buri gihe curuza mu nzira y'iterambere ry'igihe kinini. Niba ikirangantego cy'umunsi gifite iterambere ry'hejuru, reba igenamiterere ryo kugura kuri ikirangantego cy'isaha 1.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Banza usesengure iterambere ku gihe kinini, hanyuma ugwe ku gihe gito kugira ngo ubone injira yawe. Ibi bita isesengura ryo hejuru ugakaguka hasi.</blockquote>",
+
+  "reset_forgot_page_title": "27pips — Wibagiwe Ijambo ry'Ibanga",
+  "reset_forgot_title": "Wibagiwe Ijambo ry'Ibanga?",
+  "reset_forgot_sub": "Andika imeli ya konti yawe kandi tuzakoherereza uturasho two gusubiramo ijambo ry'ibanga ryawe mu buryo bwizewe.",
+  "reset_forgot_password_link": "Wibagiwe ijambo ry'ibanga?",
+  "reset_send_link_btn": "Ohereza Uturasho two Gusubiramo",
+  "reset_request_sent": "Niba iyo imeli yanditswe, uturasho two gusubiramo two tuoherejwe. Reba ahabwa ubutumwa (na spam).",
+  "reset_error_email_required": "Injiza imeli yawe.",
+
+  "reset_new_password_page_title": "27pips — Shyiraho Ijambo Rishya ry'Ibanga",
+  "reset_new_password_title": "Shyiraho Ijambo Rishya ry'Ibanga",
+  "reset_new_password_sub": "Hitamo ijambo ry'ibanga rikomeye kuri konti yawe.",
+  "reset_new_password_label": "Ijambo Rishya ry'Ibanga",
+  "reset_confirm_password_label": "Emeza Ijambo ry'Ibanga",
+  "reset_update_password_btn": "Vugurura Ijambo ry'Ibanga",
+  "reset_error_password_short": "Ijambo ry'ibanga rigomba kuba nibura inyuguti 6.",
+  "reset_error_password_mismatch": "Amagambo y'ibanga ntahura.",
+  "reset_error_invalid_token": "Utu rasho two gusubiramo ntibiringanye. Saba bishya.",
+  "reset_error_token_used": "Utu rasho two gusubiramo twakoreshejwe. Saba bishya.",
+  "reset_error_token_expired": "Utu rasho two gusubiramo twarangiye. Saba bishya.",
+  "reset_invalid_title": "Uturasho Two Gusubiramo Ntibiringanye",
+  "reset_request_new_link": "Saba Uturasho Tushya",
+
+  "reset_success_page_title": "27pips — Ijambo ry'Ibanga Rivuguruwe",
+  "reset_success_title": "Ijambo ry'Ibanga Rivuguruwe!",
+  "reset_success_sub": "Ijambo ryawe ry'ibanga ryahinduwe neza. Ubu ushobora kwinjira hakoreshejwe amakuru yawe mashya.",
+
+  "reset_email_subject": "27pips — Gusaba Gusubiramo Ijambo ry'Ibanga",
+  "reset_email_greeting": "Muraho,",
+  "reset_email_body": "Twakiriwe ubusabe bwo gusubiramo ijambo ry'ibanga rya konti yawe ya 27pips. Kanda hasi kugira ngo ushyireho ijambo rishya ry'ibanga:",
+  "reset_email_expiry": "Utu rasho tuzarangira mu masaha {hours}.",
+  "reset_email_ignore": "Niba utasabye gusubiramo ijambo ry'ibanga, ushobora kwirengagiza iyi message."
 }
