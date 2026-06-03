@@ -44,8 +44,15 @@ class DBConnection:
             self._pg     = False
 
     def execute(self, sql, params=()):
-        # Convert SQLite ? placeholders to PostgreSQL %s
+        # Translate SQLite-specific syntax to PostgreSQL equivalents
         if self._pg:
+            import re as _re
+            # INSERT OR IGNORE INTO t (...) VALUES (...)
+            # → INSERT INTO t (...) VALUES (...) ON CONFLICT DO NOTHING
+            if _re.search(r'(?i)INSERT\s+OR\s+IGNORE\s+INTO', sql):
+                sql = _re.sub(r'(?i)INSERT\s+OR\s+IGNORE\s+INTO', 'INSERT INTO', sql)
+                sql = sql.rstrip().rstrip(';') + ' ON CONFLICT DO NOTHING'
+            # ? placeholders → %s
             sql = sql.replace('?', '%s')
         self._cursor.execute(sql, params)
         return self

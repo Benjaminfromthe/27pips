@@ -123,7 +123,11 @@ def lesson_view(lesson_id):
         return "Lesson not found", 404
 
     lesson = dict(lesson)
-    course = dict(db.execute('SELECT * FROM courses WHERE id=?', (lesson['course_id'],)).fetchone())
+    course_row = db.execute('SELECT * FROM courses WHERE id=?', (lesson['course_id'],)).fetchone()
+    if not course_row:
+        db.close()
+        return "Course not found", 404
+    course = dict(course_row)
 
     _resolve_lesson(lesson, t)
     _resolve_course(course, t)
@@ -170,6 +174,9 @@ def complete_lesson(lesson_id):
             (session['user_id'], lesson_id)
         )
         db.commit()
+    except Exception:
+        # Silently ignore duplicate-entry errors (already completed)
+        pass
     finally:
         db.close()
 
