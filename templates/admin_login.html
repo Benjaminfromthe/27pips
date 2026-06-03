@@ -6,37 +6,160 @@
   <meta name="google" content="notranslate" />
   <title>{{ t('admin_page_title') }}</title>
   {% include 'partials/theme_head.html' %}
+  <!-- Load main stylesheet so CSS variables + component styles work properly -->
+  <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bg-primary,#0f172a);font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px}
-    .admin-topbar{position:fixed;top:0;right:0;display:flex;align-items:center;gap:10px;padding:10px 20px;z-index:100}
-    .card{background:var(--bg-card,#1e293b);border:1px solid var(--border,#334155);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center}
-    .logo{font-size:2rem;font-weight:900;color:var(--text-primary,#f1f5f9);margin-bottom:8px}
-    .logo span{color:#10b981}
-    h2{color:var(--text-primary,#f1f5f9);font-size:1.2rem;margin-bottom:4px}
-    p{color:var(--text-secondary,#94a3b8);font-size:0.85rem;margin-bottom:28px}
-    label{display:block;text-align:left;font-size:0.75rem;font-weight:700;color:var(--text-secondary,#94a3b8);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
-    input{width:100%;background:var(--bg-input,#0f172a);border:1.5px solid var(--border,#334155);border-radius:10px;color:var(--text-primary,#f1f5f9);padding:12px 14px;font-size:0.9rem;font-family:inherit;margin-bottom:20px}
-    input:focus{outline:none;border-color:#10b981}
-    button[type=submit]{width:100%;background:#10b981;color:#fff;border:none;padding:13px;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:inherit}
-    button[type=submit]:hover{background:#059669}
-    .error{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:10px;font-size:0.85rem;margin-bottom:16px}
+    /* Page layout */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Sticky header bar — matches the rest of the site exactly */
+    .admin-login-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-login-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .admin-login-logo {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .admin-login-logo span { color: var(--accent); }
+    .admin-login-logo small {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Login card */
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .login-logo {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .login-logo span { color: var(--accent); }
+    .login-card h2 {
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+    .login-card > p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+    }
+    .login-card label {
+      display: block;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .login-card input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .login-card input:focus { outline: none; border-color: var(--accent); }
+    .login-card button[type=submit] {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+    .login-card button[type=submit]:hover { background: var(--accent-hover); }
+    .login-error {
+      background: rgba(239,68,68,0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Theme toggle + lang switcher pinned to top-right -->
-  <div class="admin-topbar">
-    {% include 'partials/theme_toggle.html' %}
-    {% include 'partials/lang_switcher.html' %}
-  </div>
+  <!-- Site-consistent header with logo + theme toggle + lang switcher -->
+  <header class="admin-login-header">
+    <div class="admin-login-header-inner">
+      <a href="/" class="admin-login-logo">
+        <span class="logo-icon">📈</span>
+        27<span>pips</span>
+        <small>/ {{ t('admin_panel_label') }}</small>
+      </a>
+      <div class="header-controls">
+        {% include 'partials/theme_toggle.html' %}
+        {% include 'partials/lang_switcher.html' %}
+      </div>
+    </div>
+  </header>
 
-  <div class="card">
-    <div class="logo">27<span>pips</span></div>
+  <!-- Login card — centred vertically on the page -->
+  <div class="login-card">
+    <div class="login-logo">27<span>pips</span></div>
     <h2>{{ t('admin_access_title') }}</h2>
     <p>{{ t('admin_access_sub') }}</p>
-    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
     <form method="POST">
       <label>{{ t('admin_pin_label') }}</label>
       <input type="password" name="pin" placeholder="••••••••" required autofocus />
@@ -44,7 +167,7 @@
     </form>
   </div>
 
-<script src="/static/js/theme.js"></script>
-<script src="/static/js/main.js"></script>
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/main.js"></script>
 </body>
 </html>
