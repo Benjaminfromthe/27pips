@@ -122,10 +122,12 @@ def _email_worker(cfg: dict, to_email: str,
 
 
 def _fire_reset_email(app_config: dict, to_email: str,
-                      reset_url: str, t_func) -> None:
+                      reset_url: str, t_func) -> bool:
     """
     Build email content on the request thread, then hand off to a
-    daemon thread.  Returns instantly — zero blocking on request worker.
+    daemon thread.  Returns True if an email provider IS configured
+    (so the route knows whether to show the link inline or not).
+    Returns instantly — zero blocking on request worker.
     """
     subject   = t_func('reset_email_subject')
     body_text = '\n\n'.join([
@@ -164,8 +166,12 @@ def _fire_reset_email(app_config: dict, to_email: str,
         'reset_url':      reset_url,
     }
 
-    log.info('[RESET] Token stored — spawning email thread '
-             '(Resend configured: %s, SMTP configured: %s)',
+    email_provider_configured = bool(
+        cfg['resend_api_key'] or (cfg['mail_user'] and cfg['mail_pass'])
+    )
+
+    log.info('[RESET] Spawning email thread '
+             '(Resend: %s, SMTP: %s)',
              bool(cfg['resend_api_key']),
              bool(cfg['mail_user'] and cfg['mail_pass']))
 
@@ -176,6 +182,7 @@ def _fire_reset_email(app_config: dict, to_email: str,
         name=f'reset-email-{to_email}',
     )
     thread.start()
+    return email_provider_configured
 
 
 # ── REGISTER ──────────────────────────────────────────────
@@ -255,6 +262,7 @@ def forgot_password():
     t            = _make_t()
     message      = None
     message_type = 'success'
+    reset_url    = None   # shown inline when no email provider is configured
 
     if request.method == 'POST':
         email = (request.form.get('email') or '').strip().lower()
@@ -288,27 +296,32 @@ def forgot_password():
                 )
                 db.commit()
 
-                reset_url = url_for('auth.reset_password',
-                                    token=raw_token, _external=True)
+                _reset_url = url_for('auth.reset_password',
+                                     token=raw_token, _external=True)
 
-                # Snapshot config NOW (app context exists here on request thread).
-                # _fire_reset_email spawns a daemon thread and returns instantly.
-                # The Gunicorn worker is free before any SMTP network call happens.
                 log.info('[RESET] Token stored for user_id=%s — spawning email thread',
                          row['id'])
-                _fire_reset_email(
-                    dict(current_app.config), email, reset_url, t
+
+                email_sent = _fire_reset_email(
+                    dict(current_app.config), email, _reset_url, t
                 )
+
+                # If no email provider is configured, surface the link
+                # directly on the page so users can reset immediately.
+                if not email_sent:
+                    reset_url = _reset_url
 
             db.close()
 
-            # Always identical message — prevents user enumeration
+            # Show success message regardless (prevents user enumeration).
+            # If reset_url is set the template also shows a clickable button.
             message = t('reset_request_sent')
 
     return render_template(
         'auth/forgot_password.html',
         message=message,
         message_type=message_type,
+        reset_url=reset_url,
         user=None,
     )
 

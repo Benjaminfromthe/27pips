@@ -359,5 +359,9 @@
   "reset_email_greeting": "Hi there,",
   "reset_email_body": "We received a request to reset your 27pips account password. Click the link below to set a new password:",
   "reset_email_expiry": "This link will expire in {hours} hour(s).",
-  "reset_email_ignore": "If you did not request a password reset, you can safely ignore this email."
+  "reset_email_ignore": "If you did not request a password reset, you can safely ignore this email.",
+
+  "reset_link_direct_label": "Email delivery is not yet configured. Click the button below to reset your password directly:",
+  "reset_click_here_btn": "Reset My Password →",
+  "reset_link_expires": "This link expires in {hours} hour(s)."
 }

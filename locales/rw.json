@@ -359,5 +359,9 @@
   "reset_email_greeting": "Muraho,",
   "reset_email_body": "Twakiriwe ubusabe bwo gusubiramo ijambo ry'ibanga rya konti yawe ya 27pips. Kanda hasi kugira ngo ushyireho ijambo rishya ry'ibanga:",
   "reset_email_expiry": "Utu rasho tuzarangira mu masaha {hours}.",
-  "reset_email_ignore": "Niba utasabye gusubiramo ijambo ry'ibanga, ushobora kwirengagiza iyi message."
+  "reset_email_ignore": "Niba utasabye gusubiramo ijambo ry'ibanga, ushobora kwirengagiza iyi message.",
+
+  "reset_link_direct_label": "Ubutumwa bwa imeri ntibushyizweho. Kanda buto hasi kugira ngo usubireho ijambo ry'ibanga yawe ako kanya:",
+  "reset_click_here_btn": "Subiramo Ijambo Ryanjye ry'Ibanga →",
+  "reset_link_expires": "Utu rasho tuzarangira mu masaha {hours}."
 }
