@@ -376,5 +376,9 @@
   "notify_update_time": "Time: {time}",
   "notify_security_note": "If you did not authorize this action, please contact our support team immediately at support@27pips.com or reply to this email.",
   "notify_change_password": "Your password was successfully updated.",
-  "notify_change_upgrade": "Your account has been upgraded to 27pips Premium. All institutional signals are now unlocked."
+  "notify_change_upgrade": "Your account has been upgraded to 27pips Premium. All institutional signals are now unlocked.",
+
+  "sandbox_email_notice": "Email notifications are currently in testing mode. You may not receive emails directly.",
+  "sandbox_reset_notice": "Your reset link has been processed. In testing mode, confirmation emails go to the site administrator. Use the button above if it appeared, or contact support.",
+  "sandbox_update_notice": "Email notifications are in testing mode. Security alerts are logged to the admin inbox rather than sent to your address directly."
 }

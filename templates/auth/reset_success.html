@@ -69,6 +69,11 @@
       <span class="success-icon">✅</span>
       <h1>{{ t('reset_success_title') }}</h1>
       <p>{{ t('reset_success_sub') }}</p>
+      {% if email_sandbox_mode %}
+      <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:20px;padding:10px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px">
+        ℹ️ {{ t('sandbox_update_notice') }}
+      </p>
+      {% endif %}
       <div class="btn-group">
         <button class="btn-primary full-width" onclick="openModal('login')"
                 style="padding:13px">

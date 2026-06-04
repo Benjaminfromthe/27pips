@@ -40,6 +40,11 @@
         <input type="password" id="signupPassword" placeholder="••••••••" required />
       </div>
       <button type="submit" class="btn-primary full-width" id="signupBtn">{{ t('auth_create_account') }}</button>
+      {% if email_sandbox_mode %}
+      <p class="modal-footer-text" style="margin-top:10px;padding:8px 10px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:0.78rem;color:var(--text-secondary)">
+        ℹ️ {{ t('sandbox_email_notice') }}
+      </p>
+      {% endif %}
       <p class="modal-footer-text">{{ t('auth_already_member') }} <a href="#" class="link-green" onclick="switchTab('login')">{{ t('auth_sign_in_link') }}</a></p>
     </form>
   </div>

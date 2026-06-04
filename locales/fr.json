@@ -376,5 +376,9 @@
   "notify_update_time": "Heure : {time}",
   "notify_security_note": "Si vous n'avez pas autorisé cette action, veuillez contacter notre équipe d'assistance immédiatement à support@27pips.com ou répondre à cet e-mail.",
   "notify_change_password": "Votre mot de passe a été mis à jour avec succès.",
-  "notify_change_upgrade": "Votre compte a été mis à niveau vers 27pips Premium. Tous les signaux institutionnels sont maintenant débloqués."
+  "notify_change_upgrade": "Votre compte a été mis à niveau vers 27pips Premium. Tous les signaux institutionnels sont maintenant débloqués.",
+
+  "sandbox_email_notice": "Les notifications par e-mail sont actuellement en mode test. Vous pourriez ne pas recevoir d'e-mails directement.",
+  "sandbox_reset_notice": "Votre lien de réinitialisation a été traité. En mode test, les e-mails de confirmation vont dans la boîte de l'administrateur. Utilisez le bouton ci-dessus s'il est apparu, ou contactez le support.",
+  "sandbox_update_notice": "Les notifications par e-mail sont en mode test. Les alertes de sécurité sont consignées dans la boîte de l'administrateur plutôt qu'envoyées directement à votre adresse."
 }

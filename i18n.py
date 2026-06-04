@@ -65,6 +65,7 @@ def register_i18n(app: Flask) -> None:
 
     @app.context_processor
     def _inject_i18n():
+        import os
         lang = session.get('lang', DEFAULT_LANG)
         strings = get_translations(lang)
 
@@ -77,12 +78,21 @@ def register_i18n(app: Flask) -> None:
                     return text
             return text
 
+        # email_sandbox_mode = True when RESEND_TEST_EMAIL is set AND
+        # RESEND_API_KEY is present. This means emails go to the owner's
+        # inbox only — users won't receive them directly.
+        from flask import current_app
+        resend_key        = current_app.config.get('RESEND_API_KEY',    '').strip()
+        resend_test_email = current_app.config.get('RESEND_TEST_EMAIL', '').strip()
+        email_sandbox_mode = bool(resend_key and resend_test_email)
+
         return dict(
             t=t,
             lang=lang,
             supported_langs=SUPPORTED_LANGS,
             lang_meta=LANG_META,
             current_lang_meta=LANG_META.get(lang, LANG_META[DEFAULT_LANG]),
+            email_sandbox_mode=email_sandbox_mode,
         )
 
     @app.route('/lang/<lang_code>')

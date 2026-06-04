@@ -376,5 +376,9 @@
   "notify_update_time": "Igihe: {time}",
   "notify_security_note": "Niba utabyemeye, nyamuneka twandikire vuba aha support@27pips.com cyangwa usubize iyi message.",
   "notify_change_password": "Ijambo ryawe ry'ibanga ryavuguruwe neza.",
-  "notify_change_upgrade": "Konti yawe yongerewe kuri 27pips Premium. Amakuru yose y'inzobere afunguwe."
+  "notify_change_upgrade": "Konti yawe yongerewe kuri 27pips Premium. Amakuru yose y'inzobere afunguwe.",
+
+  "sandbox_email_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Ushobora kutabona imeri muri make.",
+  "sandbox_reset_notice": "Uturasho twawe two gusubiramo twakiriwe. Mu buryo bwo kugerageza, imeri z'emeza zijya muri boîte ya munyamabwire. Koresha buto hejuru niba yabonekaga, cyangwa twandikire.",
+  "sandbox_update_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Imeri z'umutekano zandikwa muri boîte ya munyamabwire aho koherezwa kuri aderesi yawe."
 }
