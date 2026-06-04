@@ -153,6 +153,12 @@ p  { color: var(--muted); }
 .full-width { width: 100%; text-align: center; }
 
 /* ── HEADER ── */
+
+/* Single token controls the height of every interactive element in the header.
+   Changing this one value keeps logo, nav links, search, theme toggle,
+   lang switcher, and login button all perfectly aligned on the same axis. */
+:root { --header-ctrl-h: 38px; }
+
 .header {
   position: sticky;
   top: 0;
@@ -165,82 +171,110 @@ p  { color: var(--muted); }
 
 /*
   Three-zone layout (all on one row on desktop):
-    [logo]  [nav — takes remaining space]  [search — fixed]  [actions — fixed]
-  The nav zone is the only flex-shrinking zone; logo and actions never shrink.
+    [logo]  [nav — elastic]  [search — fixed]  [actions — fixed]
+  Only the nav zone shrinks; logo and actions are always anchored.
 */
 .header-inner {
   display: flex;
-  align-items: center;
+  align-items: center;          /* vertical centre of ALL children */
   padding: 0 24px;
-  height: 64px;           /* fixed header height — consistent across languages */
+  height: 64px;                 /* fixed row height — consistent across languages */
   gap: 12px;
-  min-width: 0;           /* allow children to shrink below their intrinsic size */
+  min-width: 0;
 }
 
-/* Logo — never shrinks, never grows */
+/* Logo — never shrinks, never grows; margin-right separates it from nav links */
 .header-inner .logo {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  margin-right: 8px;            /* breathing room between logo and first nav link */
 }
+.logo-icon { font-size: 1.4rem; line-height: 1; }
+.logo-text { font-size: 1.4rem; font-weight: 900; color: var(--text-primary); line-height: 1; }
+.logo-accent { color: var(--accent); }
 
-/* Nav — shrinks when translations are long, never wraps to a second line */
+/* Nav — elastic; takes all space between logo and the right-side controls */
 .nav {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   gap: 2px;
-  flex: 1 1 0;            /* takes all available space between logo and actions */
+  flex: 1 1 0;
   min-width: 0;
-  overflow: hidden;       /* hides any overflow instead of breaking layout */
+  overflow: hidden;
 }
 
-/* Nav links — relative padding so French/Kinyarwanda labels fit naturally */
+/* Nav links — same height token as every other control */
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  height: var(--header-ctrl-h);         /* matches btn, search, lang switcher */
   color: var(--text-secondary);
   text-decoration: none;
-  padding: 0.45rem 0.75rem;  /* rem-based — scales with font, not viewport */
+  padding: 0 0.75rem;                   /* vertical centring handled by height+flex */
   border-radius: 8px;
-  font-size: 0.84rem;         /* slightly tighter to give translations room */
+  font-size: 0.84rem;
   font-weight: 500;
   transition: color 0.2s, background 0.2s;
-  white-space: nowrap;        /* prevent individual link text from wrapping */
-  flex-shrink: 1;             /* links compress before disappearing */
+  white-space: nowrap;
+  flex-shrink: 1;
   min-width: 0;
+  box-sizing: border-box;
 }
 .nav-link:hover,
 .nav-link:focus-visible { color: var(--text-primary); background: var(--bg-card); }
 .nav-link--active,
 .nav-link.active { color: var(--accent) !important; background: rgba(16,185,129,0.08); }
 
-/* Search bar — fixed width, never shrinks into nav */
+/* Search bar — single canonical rule (resolves duplicate conflict) */
 .search-wrap {
-  flex: 0 0 auto;           /* overrides the earlier flex-shrink:1 rule */
+  position: relative;
+  flex: 0 0 auto;
   width: 200px;
   transition: width 0.25s ease;
+  align-self: center;
 }
 .search-wrap:focus-within { width: 260px; }
 
-/* Header actions — logo/login/avatar — fixed, never shrinks */
+/* Header actions — always anchored to the right */
 .header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 0 0 auto;           /* anchored to the right, always */
+  flex: 0 0 auto;
 }
 
-/* Login button — relative padding so translated label always fits */
+/* Login button — same height token as every other control */
 .btn-login {
+  display: inline-flex;
+  align-items: center;
+  height: var(--header-ctrl-h);
   background: var(--accent);
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
   border-radius: 8px;
   font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
   white-space: nowrap;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 .btn-login:hover { background: var(--accent-hover); }
+
+/* Theme toggle and lang button — height already set to 38px via their own rules;
+   --header-ctrl-h matches that value so everything is identical. */
+.theme-toggle,
+.theme-btn,
+.lang-btn,
+.btn-lang {
+  height: var(--header-ctrl-h);   /* enforce token — overrides any prior value */
+}
 
 /* Hamburger — hidden on desktop */
 .hamburger {
@@ -252,18 +286,12 @@ p  { color: var(--muted); }
   cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 /* ── HEADER RESPONSIVE BREAKPOINTS ── */
 
-/*
-  1100px: nav links compress, search stays, hamburger hidden.
-  980px:  hide nav links entirely, show hamburger — avoids overlap.
-  600px:  also hide search bar (mobile has hamburger menu only).
-*/
-
 @media (max-width: 980px) {
-  /* Hide nav links — replaced by hamburger menu */
   .header-inner .nav {
     display: none;
     position: absolute;
@@ -277,23 +305,21 @@ p  { color: var(--muted); }
     padding: 12px 16px;
     gap: 4px;
     z-index: 99;
+    overflow: visible;    /* restore so dropdown is visible */
   }
-  .header-inner .nav.open {
-    display: flex;
-  }
+  .header-inner .nav.open { display: flex; }
   .nav-link {
+    height: auto;
     padding: 10px 14px;
     font-size: 0.9rem;
     border-radius: 8px;
   }
   .hamburger { display: block; }
-  /* Give search a bit more room now nav is gone */
   .search-wrap { width: 180px; }
   .search-wrap:focus-within { width: 240px; }
 }
 
 @media (max-width: 600px) {
-  /* Hide search on mobile — hamburger gives full-screen nav */
   .search-wrap { display: none; }
   .header-actions { gap: 6px; }
 }
@@ -938,8 +964,8 @@ p  { color: var(--muted); }
 .theme-btn {
   position: relative;
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: var(--header-ctrl-h);
+  height: var(--header-ctrl-h);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -987,7 +1013,7 @@ html[data-theme="light"] .theme-toggle__icon--moon {
   border-radius: 8px;
   color: var(--text-primary);
   padding: 0 12px;
-  height: 38px;
+  height: var(--header-ctrl-h);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1031,14 +1057,12 @@ html[data-theme="light"] .theme-toggle__icon--moon {
 /* ============================================================
    SITE-WIDE SEARCH BAR
 ============================================================ */
+
+/* .search-wrap positioning/sizing is defined in the HEADER section above.
+   Only search-specific internal styles are here. */
 .search-wrap {
-  position: relative;
-  flex-shrink: 1;
-  width: 220px;
-  transition: width 0.25s ease;
-}
-.search-wrap:focus-within {
-  width: 280px;
+  position: relative;    /* needed for dropdown absolute positioning */
+  /* width, flex, and transition are set in the header section */
 }
 
 .search-input-row {
@@ -1048,7 +1072,7 @@ html[data-theme="light"] .theme-toggle__icon--moon {
   border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 0 10px;
-  height: 38px;
+  height: var(--header-ctrl-h);  /* same token as nav links, btn-login, lang-btn */
   gap: 6px;
   transition: border-color 0.2s;
 }
