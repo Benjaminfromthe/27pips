@@ -541,12 +541,24 @@ async function loadSignals() {
   const tbody = document.getElementById('signalsBody');
   if (!tbody) return;
 
+  // Safety timeout: if fetch takes >8s, show fallback instead of infinite spinner
+  const timeoutId = setTimeout(() => {
+    if (tbody.querySelector('td[data-loading]')) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">${i('noSignalsYet')}</td></tr>`;
+    }
+  }, 8000);
+
+  // Mark that we're loading so the timeout knows
+  tbody.innerHTML = `<tr><td colspan="7" data-loading="1" style="text-align:center;color:var(--text-secondary);padding:24px">${i('loading_signals') || 'Loading signals…'}</td></tr>`;
+
   try {
     const res  = await fetch('/signals/');
+    clearTimeout(timeoutId);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
 
-    // Support both old array format and new {signals, user_tier} format
-    const signals   = json.signals || json;
+    const signals   = Array.isArray(json) ? json : (json.signals || []);
     const user_tier = json.user_tier || window.USER_TIER || 'guest';
 
     if (!signals.length) {
@@ -567,21 +579,21 @@ async function loadSignals() {
       };
       const statusBadge = statusMap[s.status] || `<span class="status-badge">${s.status}</span>`;
 
-      const dotClass = s.pair.includes('XAU') || s.pair.includes('GOLD') ? 'asset-dot asset-gold'
-                     : s.pair.includes('NAS') || s.pair.includes('US30') ? 'asset-dot asset-blue'
-                     : 'asset-dot';
+      const dotClass = s.pair && (s.pair.includes('XAU') || s.pair.includes('GOLD'))
+        ? 'asset-dot asset-gold'
+        : s.pair && (s.pair.includes('NAS') || s.pair.includes('US30'))
+          ? 'asset-dot asset-blue'
+          : 'asset-dot';
 
-      // Premium gating
       const locked = '<span class="premium-lock">🔒 Premium</span>';
       const entry  = s.gated ? locked : (s.entry_price ?? '—');
       const sl     = s.gated ? locked : `<span class="text-red">${s.stop_loss ?? '—'}</span>`;
       const tp1    = s.gated ? locked : `<span class="text-green">${s.take_profit_1 ?? '—'}</span>`;
       const tp2    = s.gated ? locked : `<span class="text-green">${s.take_profit_2 ?? '—'}</span>`;
-
       const premiumBadge = s.is_premium ? '<span class="signal-premium-badge">👑</span>' : '';
 
       return `
-        <tr ${s.gated ? 'class="signal-gated"' : ''}>
+        <tr data-signal-id="${s.id}" ${s.gated ? 'class="signal-gated"' : ''}>
           <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}${premiumBadge}</td>
           <td>${actionBadge}</td>
           <td class="mono">${entry}</td>
@@ -593,16 +605,38 @@ async function loadSignals() {
       `;
     }).join('');
 
-  } catch {
+    // Reveal Load More button if there are more signals than shown
+    try {
+      const r = await fetch('/api/content/?type=signals&page=1');
+      const d = await r.json();
+      if (d.total > signals.length) {
+        const btn = document.getElementById('signalsLoadMoreBtn');
+        if (btn) { btn.dataset.page = '2'; btn.style.display = 'inline-flex'; }
+      }
+    } catch { /* silent — Load More is optional */ }
+
+  } catch (err) {
+    clearTimeout(timeoutId);
+    console.error('[SIGNALS] Load error:', err);
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px">${i('signalsError')}</td></tr>`;
   }
 }
 
-// Load signals on page load
+// Load signals on page load + refresh every 60s
 document.addEventListener('DOMContentLoaded', () => {
   loadSignals();
-  // Refresh signals every 60 seconds
   setInterval(loadSignals, 60000);
+
+  // Check if courses has more than the 3 shown on homepage
+  fetch('/api/content/?type=courses&page=1')
+    .then(r => r.json())
+    .then(d => {
+      if (d.total > 3) {
+        const btn = document.getElementById('eduLoadMoreBtn');
+        if (btn) btn.style.display = 'inline-flex';
+      }
+    })
+    .catch(() => { /* silent */ });
 });
 
 // ============================================================
@@ -1163,37 +1197,7 @@ function _appendCourseCards(data) {
 }
 
 // ── Wire up after initial loads ────────────────────────────
-// Patch loadSignals() to reveal the signals Load More button once data arrives.
-// We wrap it here so we don't modify the core loadSignals function.
-document.addEventListener('DOMContentLoaded', function () {
-  // Intercept the signals fetch result to know total count
-  const _origLoadSignals = window.loadSignals;
-  if (typeof _origLoadSignals === 'function') {
-    window.loadSignals = async function () {
-      await _origLoadSignals();
-      // After signals load, check total via a lightweight count endpoint
-      try {
-        const r = await fetch('/api/content/?type=signals&page=1');
-        const d = await r.json();
-        if (d.total > SIGNALS_PAGE_SIZE) {
-          const btn = document.getElementById('signalsLoadMoreBtn');
-          if (btn) btn.style.display = 'inline-flex';
-        }
-      } catch { /* silent */ }
-    };
-  }
-
-  // Check if courses has more than the 3 shown on homepage
-  fetch('/api/content/?type=courses&page=1')
-    .then(r => r.json())
-    .then(d => {
-      if (d.total > 3) {
-        const btn = document.getElementById('eduLoadMoreBtn');
-        if (btn) btn.style.display = 'inline-flex';
-      }
-    })
-    .catch(() => { /* silent */ });
-});
+// (Load More button visibility is now handled inside loadSignals() above)
 
 
 // ============================================================

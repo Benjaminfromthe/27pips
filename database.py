@@ -346,6 +346,39 @@ def _schema_sql():
         ]
 
 
+def _seed_signals(db):
+    """Seed 5 realistic demo forex signals. Works on both SQLite and PostgreSQL."""
+    demo_signals = [
+        ('EURUSD', 'BUY',  1.0845, 1.0800, 1.0890, 1.0930, 'Active',      0,
+         'Bullish momentum after CPI beat. Break above 1.0850 confirmed.'),
+        ('XAUUSD', 'BUY',  2318.50, 2295.00, 2345.00, 2370.00, 'Active',   0,
+         'Gold holding key support. Fed pivot expectations driving demand.'),
+        ('GBPUSD', 'SELL', 1.2720, 1.2760, 1.2680, 1.2640, 'Pending',      0,
+         'Cable rejecting 1.2720 resistance. Bearish engulfing on H4.'),
+        ('USDJPY', 'BUY',  149.80, 149.20, 150.50, 151.20, 'TP Hit',       1,
+         'BOJ intervention risk fading. Dollar strength resuming. ✅ TP1 hit.'),
+        ('NAS100', 'BUY',  17840,  17600,  18100,  18350,  'Active',       1,
+         'Tech sector breakout. Strong earnings season momentum.'),
+    ]
+    for pair, action, entry, sl, tp1, tp2, status, is_premium, notes in demo_signals:
+        if USE_POSTGRES:
+            db.execute(
+                '''INSERT INTO signals
+                   (pair, action, entry_price, stop_loss, take_profit_1,
+                    take_profit_2, status, is_premium, notes)
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)''',
+                (pair, action, entry, sl, tp1, tp2, status, is_premium, notes)
+            )
+        else:
+            db.execute(
+                '''INSERT INTO signals
+                   (pair, action, entry_price, stop_loss, take_profit_1,
+                    take_profit_2, status, is_premium, notes)
+                   VALUES (?,?,?,?,?,?,?,?,?)''',
+                (pair, action, entry, sl, tp1, tp2, status, is_premium, notes)
+            )
+
+
 def init_db():
     """Create all tables and seed curriculum if needed."""
     db = get_db()
@@ -368,6 +401,12 @@ def init_db():
         count = row[0] if row else 0
         if count == 0:
             _seed_curriculum(db)
+            db.commit()
+
+        # Seed signals if empty
+        sig_row = db.execute('SELECT COUNT(*) FROM signals').fetchone()
+        if (sig_row[0] if sig_row else 0) == 0:
+            _seed_signals(db)
             db.commit()
 
     finally:
