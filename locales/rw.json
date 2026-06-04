@@ -417,5 +417,11 @@
   "perf_sortino_inf": "Nta ngaruka mbi zaboneka — ibisubizo byose hejuru y'umupaka.",
   "perf_sortino_strong": "Inyungu nziza kandi ifitiwe ubuzima. Intambwe nke inyura munsi.",
   "perf_sortino_ok": "Yemewe. Ingaruka nke inyura munsi ugereranije n'inyungu.",
-  "perf_sortino_weak": "Inyungu mbi kandi ifitiwe ubuzima. Intambwe nyinshi inyura munsi ugereranije n'inyungu."
+  "perf_sortino_weak": "Inyungu mbi kandi ifitiwe ubuzima. Intambwe nyinshi inyura munsi ugereranije n'inyungu.",
+
+  "coach_alert_sent": "Ubutumwa bwo guhagarara bwoherejwe.",
+  "coach_subject": "Ni igihe cyo guhagarara",
+  "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
+  "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
 }

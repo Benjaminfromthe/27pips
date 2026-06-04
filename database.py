@@ -213,6 +213,14 @@ def _schema_sql():
                 net_pips REAL,
                 UNIQUE(user_id)
             )''',
+            '''CREATE TABLE IF NOT EXISTS coaching_alerts (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                alert_type TEXT NOT NULL DEFAULT 'COOL_DOWN',
+                consecutive_losses INTEGER NOT NULL DEFAULT 0,
+                lookback_hours INTEGER NOT NULL DEFAULT 4,
+                sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )''',
         ]
     else:
         # SQLite schema (original)
@@ -312,6 +320,14 @@ def _schema_sql():
                 risk_free_rate REAL DEFAULT 0.0,
                 net_pips REAL,
                 UNIQUE(user_id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS coaching_alerts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                alert_type TEXT NOT NULL DEFAULT 'COOL_DOWN',
+                consecutive_losses INTEGER NOT NULL DEFAULT 0,
+                lookback_hours INTEGER NOT NULL DEFAULT 4,
+                sent_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )''',
         ]
 

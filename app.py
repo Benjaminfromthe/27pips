@@ -40,6 +40,10 @@ def create_app():
     # (workaround for Resend's unverified-domain restriction).
     # Remove once your domain is verified at resend.com/domains.
     app.config['RESEND_TEST_EMAIL'] = os.environ.get('RESEND_TEST_EMAIL', '')
+    # Base URL used by coaching alerts for lesson deep-links in emails
+    app.config['APP_BASE_URL']      = os.environ.get(
+        'APP_BASE_URL', 'https://two7pips.onrender.com'
+    )
 
     # ── Database ──────────────────────────────────────────────
     with app.app_context():

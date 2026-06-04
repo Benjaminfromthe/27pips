@@ -118,15 +118,22 @@ def add_entry():
     finally:
         db.close()
 
-    # Trigger performance recompute in the background (non-blocking)
+    # Trigger performance recompute + coaching check in background (non-blocking)
     try:
         import threading
         from blueprints.analytics.performance import compute_and_store as _compute
+        from blueprints.analytics.coaching    import check_and_alert   as _coach
+        _app_config = dict(current_app.config)
+        _uid        = session['user_id']
+
+        def _background_tasks():
+            _compute(_uid)
+            _coach(_uid, _app_config)
+
         t = threading.Thread(
-            target=_compute,
-            args=(session['user_id'],),
+            target=_background_tasks,
             daemon=True,
-            name=f'perf-{session["user_id"]}'
+            name=f'post-trade-{_uid}'
         )
         t.start()
     except Exception:

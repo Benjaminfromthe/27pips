@@ -417,5 +417,11 @@
   "perf_sortino_inf": "No downside risk detected — all returns above threshold.",
   "perf_sortino_strong": "Excellent risk-adjusted return. Minimal downside volatility.",
   "perf_sortino_ok": "Acceptable. Some downside risk relative to returns.",
-  "perf_sortino_weak": "Poor risk-adjusted return. High downside relative to gains."
+  "perf_sortino_weak": "Poor risk-adjusted return. High downside relative to gains.",
+
+  "coach_alert_sent": "Cool-down alert sent.",
+  "coach_subject": "Time to Step Back",
+  "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
+  "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
 }

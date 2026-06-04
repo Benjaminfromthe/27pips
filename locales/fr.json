@@ -417,5 +417,11 @@
   "perf_sortino_inf": "Aucun risque baissier détecté — tous les rendements au-dessus du seuil.",
   "perf_sortino_strong": "Excellent rendement ajusté au risque. Volatilité baissière minimale.",
   "perf_sortino_ok": "Acceptable. Quelques risques baissiers par rapport aux rendements.",
-  "perf_sortino_weak": "Mauvais rendement ajusté au risque. Baisse élevée par rapport aux gains."
+  "perf_sortino_weak": "Mauvais rendement ajusté au risque. Baisse élevée par rapport aux gains.",
+
+  "coach_alert_sent": "Alerte de pause envoyée.",
+  "coach_subject": "Il est temps de faire une pause",
+  "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
+  "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
 }
