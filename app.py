@@ -33,7 +33,11 @@ def create_app():
         os.environ.get('MAIL_USERNAME', 'noreply@27pips.com')
     )
     # ── Resend API (preferred email provider for password reset) ──
-    app.config['RESEND_API_KEY'] = os.environ.get('RESEND_API_KEY', '')
+    app.config['RESEND_API_KEY']    = os.environ.get('RESEND_API_KEY',    '')
+    # Optional: redirect ALL outgoing emails to this address during testing
+    # (workaround for Resend's unverified-domain restriction).
+    # Remove once your domain is verified at resend.com/domains.
+    app.config['RESEND_TEST_EMAIL'] = os.environ.get('RESEND_TEST_EMAIL', '')
 
     # ── Database ──────────────────────────────────────────────
     with app.app_context():

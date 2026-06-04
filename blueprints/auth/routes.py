@@ -55,12 +55,13 @@ def _make_t(lang: str = 'en'):
 def _snapshot_mail_cfg(app_config: dict) -> dict:
     """Extract mail settings from app.config into a plain dict (thread-safe)."""
     return {
-        'resend_api_key': app_config.get('RESEND_API_KEY',       '').strip(),
-        'mail_user':      app_config.get('MAIL_USERNAME',        '').strip(),
-        'mail_pass':      app_config.get('MAIL_PASSWORD',        '').strip(),
-        'mail_server':    app_config.get('MAIL_SERVER',          'smtp.gmail.com'),
-        'mail_port':      int(app_config.get('MAIL_PORT',        587)),
-        'mail_sender':    app_config.get('MAIL_DEFAULT_SENDER',  'onboarding@resend.dev'),
+        'resend_api_key':   app_config.get('RESEND_API_KEY',       '').strip(),
+        'resend_test_email':app_config.get('RESEND_TEST_EMAIL',    '').strip(),
+        'mail_user':        app_config.get('MAIL_USERNAME',        '').strip(),
+        'mail_pass':        app_config.get('MAIL_PASSWORD',        '').strip(),
+        'mail_server':      app_config.get('MAIL_SERVER',          'smtp.gmail.com'),
+        'mail_port':        int(app_config.get('MAIL_PORT',        587)),
+        'mail_sender':      app_config.get('MAIL_DEFAULT_SENDER',  'onboarding@resend.dev'),
     }
 
 
@@ -75,27 +76,68 @@ def _dispatch_email(cfg: dict, to_email: str,
     Low-level send function.  Tries Resend first, then SMTP, then logs.
     Must be called from a background daemon thread only.
     Never raises — all exceptions are caught and logged.
+
+    IMPORTANT — Resend domain restriction:
+      When using onboarding@resend.dev as the sender (i.e. no custom domain
+      verified yet), Resend only delivers to the account owner's email.
+      To send to ANY recipient, either:
+        (a) Add + verify your domain at resend.com/domains  (recommended), OR
+        (b) Set RESEND_FROM_EMAIL to a verified sender domain address
+      Until then, set RESEND_TEST_EMAIL on Render to redirect all emails
+      to your own inbox as a temporary workaround.
     """
-    resend_key = cfg['resend_api_key']
-    mail_user  = cfg['mail_user']
-    mail_pass  = cfg['mail_pass']
+    resend_key      = cfg['resend_api_key']
+    mail_user       = cfg['mail_user']
+    mail_pass       = cfg['mail_pass']
+    # Optional override: redirect all emails to a single address during testing
+    test_override   = cfg.get('resend_test_email', '').strip()
+    actual_to       = test_override if test_override else to_email
 
     # ── Resend API (HTTPS, works on all cloud platforms) ──────────────
     if resend_key:
         try:
             import resend
             resend.api_key = resend_key
-            resend.Emails.send({
+
+            if test_override:
+                log.info('[%s] RESEND_TEST_EMAIL set — redirecting to %s '
+                         '(original: %s)', log_tag, test_override, to_email)
+
+            result = resend.Emails.send({
                 'from':    cfg['mail_sender'],
-                'to':      [to_email],
+                'to':      [actual_to],
                 'subject': subject,
                 'text':    body_text,
                 'html':    body_html,
             })
-            log.info('[%s] Sent via Resend to %s', log_tag, to_email)
+
+            # resend SDK returns a dict or object — check for error fields
+            if isinstance(result, dict):
+                if result.get('statusCode') and int(result.get('statusCode', 0)) >= 400:
+                    log.error(
+                        '[%s] Resend API error %s for %s: %s\n'
+                        'HINT: If using onboarding@resend.dev, you can only '
+                        'send to the Resend account owner email unless you '
+                        'verify a domain at resend.com/domains. '
+                        'Set RESEND_TEST_EMAIL env var to your own email as '
+                        'a temporary workaround.',
+                        log_tag,
+                        result.get('statusCode'),
+                        actual_to,
+                        result.get('message', result)
+                    )
+                    return
+                if result.get('id'):
+                    log.info('[%s] Sent via Resend id=%s to %s',
+                             log_tag, result['id'], actual_to)
+                    return
+            # If result has no recognisable error, assume success
+            log.info('[%s] Sent via Resend to %s (result: %s)',
+                     log_tag, actual_to, result)
             return
+
         except Exception:
-            log.error('[%s] Resend failed:\n%s', log_tag, traceback.format_exc())
+            log.error('[%s] Resend exception:\n%s', log_tag, traceback.format_exc())
             # Fall through to SMTP
 
     # ── SMTP fallback ─────────────────────────────────────────────────
