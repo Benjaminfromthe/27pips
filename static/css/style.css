@@ -159,47 +159,144 @@ p  { color: var(--muted); }
   z-index: 100;
   background: var(--header-bg);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
+
+/*
+  Three-zone layout (all on one row on desktop):
+    [logo]  [nav — takes remaining space]  [search — fixed]  [actions — fixed]
+  The nav zone is the only flex-shrinking zone; logo and actions never shrink.
+*/
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  gap: 16px;
+  padding: 0 24px;
+  height: 64px;           /* fixed header height — consistent across languages */
+  gap: 12px;
+  min-width: 0;           /* allow children to shrink below their intrinsic size */
 }
-.logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.logo-icon { font-size: 1.4rem; }
-.logo-text { font-size: 1.4rem; font-weight: 900; color: var(--text); }
-.logo-accent { color: var(--green); }
 
-.nav { display: flex; align-items: center; gap: 4px; }
+/* Logo — never shrinks, never grows */
+.header-inner .logo {
+  flex: 0 0 auto;
+}
+
+/* Nav — shrinks when translations are long, never wraps to a second line */
+.nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 2px;
+  flex: 1 1 0;            /* takes all available space between logo and actions */
+  min-width: 0;
+  overflow: hidden;       /* hides any overflow instead of breaking layout */
+}
+
+/* Nav links — relative padding so French/Kinyarwanda labels fit naturally */
 .nav-link {
-  color: var(--muted);
+  color: var(--text-secondary);
   text-decoration: none;
-  padding: 8px 14px;
+  padding: 0.45rem 0.75rem;  /* rem-based — scales with font, not viewport */
   border-radius: 8px;
-  font-size: 0.88rem;
+  font-size: 0.84rem;         /* slightly tighter to give translations room */
   font-weight: 500;
-  transition: all 0.2s;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;        /* prevent individual link text from wrapping */
+  flex-shrink: 1;             /* links compress before disappearing */
+  min-width: 0;
 }
-.nav-link:hover { color: var(--text); background: var(--card); }
+.nav-link:hover,
+.nav-link:focus-visible { color: var(--text-primary); background: var(--bg-card); }
+.nav-link--active,
+.nav-link.active { color: var(--accent) !important; background: rgba(16,185,129,0.08); }
 
-.header-actions { display: flex; align-items: center; gap: 12px; }
+/* Search bar — fixed width, never shrinks into nav */
+.search-wrap {
+  flex: 0 0 auto;           /* overrides the earlier flex-shrink:1 rule */
+  width: 200px;
+  transition: width 0.25s ease;
+}
+.search-wrap:focus-within { width: 260px; }
+
+/* Header actions — logo/login/avatar — fixed, never shrinks */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;           /* anchored to the right, always */
+}
+
+/* Login button — relative padding so translated label always fits */
 .btn-login {
-  background: var(--green);
+  background: var(--accent);
   color: #fff;
   border: none;
-  padding: 9px 20px;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s;
+  white-space: nowrap;
 }
-.btn-login:hover { background: #059669; }
+.btn-login:hover { background: var(--accent-hover); }
 
-.hamburger { display: none; background: none; border: none; color: var(--text); font-size: 1.4rem; cursor: pointer; }
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+/* ── HEADER RESPONSIVE BREAKPOINTS ── */
+
+/*
+  1100px: nav links compress, search stays, hamburger hidden.
+  980px:  hide nav links entirely, show hamburger — avoids overlap.
+  600px:  also hide search bar (mobile has hamburger menu only).
+*/
+
+@media (max-width: 980px) {
+  /* Hide nav links — replaced by hamburger menu */
+  .header-inner .nav {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    gap: 4px;
+    z-index: 99;
+  }
+  .header-inner .nav.open {
+    display: flex;
+  }
+  .nav-link {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+  .hamburger { display: block; }
+  /* Give search a bit more room now nav is gone */
+  .search-wrap { width: 180px; }
+  .search-wrap:focus-within { width: 240px; }
+}
+
+@media (max-width: 600px) {
+  /* Hide search on mobile — hamburger gives full-screen nav */
+  .search-wrap { display: none; }
+  .header-actions { gap: 6px; }
+}
 
 /* ── MODAL ── */
 .modal-overlay {
@@ -504,9 +601,7 @@ p  { color: var(--muted); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .nav { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); border-bottom: 1px solid var(--border); padding: 16px; }
-  .nav.open { display: flex; }
-  .hamburger { display: block; }
+  /* Nav handled by the header breakpoints above */
   .journal-wrap { grid-template-columns: 1fr; }
   .about-wrap { grid-template-columns: 1fr; }
   .hero-stats { gap: 24px; }
@@ -1101,14 +1196,7 @@ html[data-theme="light"] .theme-toggle__icon--moon {
   margin: 4px 0;
 }
 
-/* Responsive — hide on small screens, show as icon-only on medium */
+/* Responsive — handled by header breakpoints in the HEADER section above */
 @media (max-width: 900px) {
-  .search-wrap { width: 38px; }
-  .search-wrap:focus-within { width: 220px; }
-  .search-input { display: none; }
-  .search-wrap:focus-within .search-input { display: block; }
   .search-dropdown { left: auto; right: 0; min-width: 280px; }
-}
-@media (max-width: 600px) {
-  .search-wrap { display: none; }
 }
