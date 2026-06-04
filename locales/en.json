@@ -363,5 +363,18 @@
 
   "reset_link_direct_label": "Email delivery is not yet configured. Click the button below to reset your password directly:",
   "reset_click_here_btn": "Reset My Password →",
-  "reset_link_expires": "This link expires in {hours} hour(s)."
+  "reset_link_expires": "This link expires in {hours} hour(s).",
+
+  "notify_welcome_subject": "Welcome to 27pips — Your account is ready!",
+  "notify_welcome_greeting": "Hi {username}, welcome to 27pips!",
+  "notify_welcome_body": "Your account has been created successfully. You now have access to structured forex education, live trade signals, a trading journal, and prop firm challenge tracking.",
+  "notify_welcome_get_started": "Visit https://two7pips.onrender.com to get started.",
+  "notify_update_subject": "27pips — Account Activity Notification",
+  "notify_update_greeting": "Hi {username},",
+  "notify_update_body": "We're letting you know that the following change was made to your 27pips account: {change}",
+  "notify_update_change_label": "Change Made:",
+  "notify_update_time": "Time: {time}",
+  "notify_security_note": "If you did not authorize this action, please contact our support team immediately at support@27pips.com or reply to this email.",
+  "notify_change_password": "Your password was successfully updated.",
+  "notify_change_upgrade": "Your account has been upgraded to 27pips Premium. All institutional signals are now unlocked."
 }

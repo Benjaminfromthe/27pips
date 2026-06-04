@@ -1,20 +1,22 @@
 # ============================================================
 # 27pips — auth/routes.py  |  Registration, Login, Logout,
-#                              Forgot / Reset Password
+#                              Forgot / Reset Password,
+#                              Transactional Account Notifications
 # ============================================================
-import os
-import secrets
 import hashlib
-import smtplib
 import logging
+import secrets
+import smtplib
 import threading
 import traceback
-from email.mime.text import MIMEText
 from datetime import datetime, timezone, timedelta
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-from flask import (Blueprint, request, jsonify, session,
-                   render_template, redirect, url_for, current_app)
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import (Blueprint, current_app, jsonify, redirect,
+                   render_template, request, session, url_for)
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from database import get_db
 
 log = logging.getLogger(__name__)
@@ -22,17 +24,20 @@ log = logging.getLogger(__name__)
 auth_bp = Blueprint('auth', __name__)
 
 RESET_TOKEN_HOURS = 1
-SMTP_TIMEOUT      = 10   # seconds — only used if SMTP fallback is active
+SMTP_TIMEOUT      = 10   # seconds — used only in SMTP fallback
 
 
-# ── helpers ───────────────────────────────────────────────
+# ============================================================
+# CORE EMAIL ENGINE  (shared by all notification types)
+# ============================================================
+
 def _hash_token(raw_token: str) -> str:
     return hashlib.sha256(raw_token.encode()).hexdigest()
 
 
-def _make_t():
+def _make_t(lang: str = 'en'):
+    """Build a t() resolver for the given language (safe to call anywhere)."""
     from i18n import get_translations
-    lang    = session.get('lang', 'en')
     strings = get_translations(lang)
 
     def t(key, **kwargs):
@@ -47,143 +52,210 @@ def _make_t():
     return t
 
 
-# ── email worker (runs in daemon thread) ──────────────────
-def _email_worker(cfg: dict, to_email: str,
-                  subject: str, body_text: str, body_html: str) -> None:
-    """
-    Daemon thread: tries Resend API first (HTTPS, never blocked),
-    falls back to SMTP if Resend API key not set.
-    All exceptions are caught — this thread can never crash the app.
-    """
-    reset_url  = cfg['reset_url']
-    resend_key = cfg.get('resend_api_key', '').strip()
-    mail_user  = cfg.get('mail_user',  '').strip()
-    mail_pass  = cfg.get('mail_pass',  '').strip()
+def _snapshot_mail_cfg(app_config: dict) -> dict:
+    """Extract mail settings from app.config into a plain dict (thread-safe)."""
+    return {
+        'resend_api_key': app_config.get('RESEND_API_KEY',       '').strip(),
+        'mail_user':      app_config.get('MAIL_USERNAME',        '').strip(),
+        'mail_pass':      app_config.get('MAIL_PASSWORD',        '').strip(),
+        'mail_server':    app_config.get('MAIL_SERVER',          'smtp.gmail.com'),
+        'mail_port':      int(app_config.get('MAIL_PORT',        587)),
+        'mail_sender':    app_config.get('MAIL_DEFAULT_SENDER',  'onboarding@resend.dev'),
+    }
 
-    log.info('[RESET EMAIL] Thread started for %s', to_email)
 
-    # ── Path 1: Resend API (preferred — HTTPS, no SMTP port issues) ──
+def _is_provider_configured(cfg: dict) -> bool:
+    return bool(cfg['resend_api_key'] or (cfg['mail_user'] and cfg['mail_pass']))
+
+
+def _dispatch_email(cfg: dict, to_email: str,
+                    subject: str, body_text: str, body_html: str,
+                    log_tag: str = 'EMAIL') -> None:
+    """
+    Low-level send function.  Tries Resend first, then SMTP, then logs.
+    Must be called from a background daemon thread only.
+    Never raises — all exceptions are caught and logged.
+    """
+    resend_key = cfg['resend_api_key']
+    mail_user  = cfg['mail_user']
+    mail_pass  = cfg['mail_pass']
+
+    # ── Resend API (HTTPS, works on all cloud platforms) ──────────────
     if resend_key:
         try:
             import resend
             resend.api_key = resend_key
             resend.Emails.send({
-                'from':    cfg.get('mail_sender', 'onboarding@resend.dev'),
+                'from':    cfg['mail_sender'],
                 'to':      [to_email],
                 'subject': subject,
                 'text':    body_text,
                 'html':    body_html,
             })
-            log.info('[RESET EMAIL] Sent via Resend to %s', to_email)
+            log.info('[%s] Sent via Resend to %s', log_tag, to_email)
             return
         except Exception:
-            log.error('[RESET EMAIL] Resend send failed:\n%s\nReset link: %s',
-                      traceback.format_exc(), reset_url)
-            # Fall through to SMTP fallback
+            log.error('[%s] Resend failed:\n%s', log_tag, traceback.format_exc())
+            # Fall through to SMTP
 
-    # ── Path 2: SMTP fallback ──────────────────────────────
+    # ── SMTP fallback ─────────────────────────────────────────────────
     if mail_user and mail_pass:
-        mail_server = cfg.get('mail_server', 'smtp.gmail.com')
-        mail_port   = int(cfg.get('mail_port', 587))
-        mail_sender = cfg.get('mail_sender', 'noreply@27pips.com')
-
-        msg            = MIMEText(body_text, 'plain', 'utf-8')
+        msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From']    = mail_sender
+        msg['From']    = cfg['mail_sender']
         msg['To']      = to_email
+        msg.attach(MIMEText(body_text, 'plain', 'utf-8'))
+        msg.attach(MIMEText(body_html, 'html',  'utf-8'))
 
         try:
-            with smtplib.SMTP(mail_server, mail_port,
+            with smtplib.SMTP(cfg['mail_server'], cfg['mail_port'],
                               timeout=SMTP_TIMEOUT) as smtp:
                 smtp.ehlo()
                 smtp.starttls()
                 smtp.ehlo()
                 smtp.login(mail_user, mail_pass)
-                smtp.sendmail(mail_sender, [to_email], msg.as_string())
-            log.info('[RESET EMAIL] Sent via SMTP to %s', to_email)
+                smtp.sendmail(cfg['mail_sender'], [to_email], msg.as_string())
+            log.info('[%s] Sent via SMTP to %s', log_tag, to_email)
             return
         except smtplib.SMTPAuthenticationError:
-            log.warning('[RESET EMAIL] SMTP auth failed. '
-                        'Check MAIL_USERNAME / MAIL_PASSWORD. '
-                        'Reset link: %s', reset_url)
+            log.warning('[%s] SMTP auth failed — check MAIL_USERNAME/PASSWORD', log_tag)
         except OSError as exc:
-            log.warning('[RESET EMAIL] SMTP network error (%s). '
-                        'Reset link: %s', exc, reset_url)
+            log.warning('[%s] SMTP network error: %s', log_tag, exc)
         except Exception:
-            log.error('[RESET EMAIL] SMTP unexpected error:\n%s\n'
-                      'Reset link: %s', traceback.format_exc(), reset_url)
+            log.error('[%s] SMTP unexpected error:\n%s', log_tag, traceback.format_exc())
 
-    # ── Path 3: No provider configured — log reset link ───
-    log.info(
-        '[RESET EMAIL] No email provider configured '
-        '(set RESEND_API_KEY or MAIL_USERNAME+MAIL_PASSWORD on Render). '
-        'Reset link: %s', reset_url
+    # ── No provider configured ────────────────────────────────────────
+    log.info('[%s] No email provider configured (to=%s). '
+             'Set RESEND_API_KEY or MAIL_USERNAME+MAIL_PASSWORD on Render.',
+             log_tag, to_email)
+
+
+def _spawn_email(cfg: dict, to_email: str,
+                 subject: str, body_text: str, body_html: str,
+                 log_tag: str = 'EMAIL') -> None:
+    """Spawn a daemon thread to send one email. Returns immediately."""
+    t = threading.Thread(
+        target=_dispatch_email,
+        args=(cfg, to_email, subject, body_text, body_html, log_tag),
+        daemon=True,
+        name=f'{log_tag.lower()}-{to_email}',
     )
+    t.start()
 
 
-def _fire_reset_email(app_config: dict, to_email: str,
-                      reset_url: str, t_func) -> bool:
+# ============================================================
+# NOTIFICATION BUILDERS
+# ============================================================
+
+def _html_wrapper(content_html: str, support_note: str) -> str:
+    """Wrap email content in the 27pips branded dark-card layout."""
+    return f"""
+<div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;
+            padding:32px;background:#0f172a;color:#f1f5f9;border-radius:16px">
+  <h2 style="color:#10b981;margin:0 0 4px">
+    27<span style="color:#f1f5f9">pips</span>
+  </h2>
+  <p style="color:#475569;font-size:0.75rem;margin:0 0 24px">
+    Shema Trading Hub
+  </p>
+  {content_html}
+  <hr style="border:none;border-top:1px solid #334155;margin:24px 0">
+  <p style="color:#64748b;font-size:0.78rem">{support_note}</p>
+  <p style="color:#475569;font-size:0.72rem;margin-top:8px">
+    © 2025 27pips / Shema Trading Hub
+  </p>
+</div>"""
+
+
+def _send_account_created_email(to_email: str, username: str,
+                                app_config: dict, lang: str = 'en') -> None:
     """
-    Build email content on the request thread, then hand off to a
-    daemon thread.  Returns True if an email provider IS configured
-    (so the route knows whether to show the link inline or not).
-    Returns instantly — zero blocking on request worker.
+    Fire-and-forget welcome email after successful registration.
+    Called on the request thread; email is sent in a daemon thread.
+    Never blocks, never raises.
     """
-    subject   = t_func('reset_email_subject')
+    t   = _make_t(lang)
+    cfg = _snapshot_mail_cfg(app_config)
+
+    subject   = t('notify_welcome_subject')
     body_text = '\n\n'.join([
-        t_func('reset_email_greeting'),
-        t_func('reset_email_body'),
-        reset_url,
-        t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS),
-        t_func('reset_email_ignore'),
+        t('notify_welcome_greeting', username=username),
+        t('notify_welcome_body'),
+        t('notify_welcome_get_started'),
+        t('notify_security_note'),
         '— 27pips / Shema Trading Hub',
     ])
-    body_html = f"""
-<div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;padding:32px;background:#0f172a;color:#f1f5f9;border-radius:16px">
-  <h2 style="color:#10b981;margin-bottom:8px">27<span style="color:#f1f5f9">pips</span></h2>
-  <h3 style="margin-bottom:16px">{t_func('reset_email_subject')}</h3>
-  <p style="color:#94a3b8;margin-bottom:8px">{t_func('reset_email_greeting')}</p>
-  <p style="color:#94a3b8;margin-bottom:24px">{t_func('reset_email_body')}</p>
-  <a href="{reset_url}"
-     style="display:inline-block;background:#10b981;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;margin-bottom:24px">
-    {t_func('reset_update_password_btn')}
-  </a>
-  <p style="color:#64748b;font-size:0.8rem;margin-top:16px">{t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS)}</p>
-  <p style="color:#64748b;font-size:0.8rem">{t_func('reset_email_ignore')}</p>
-  <hr style="border-color:#334155;margin:24px 0">
-  <p style="color:#475569;font-size:0.75rem">© 2025 27pips / Shema Trading Hub</p>
-</div>
-"""
+    content_html = f"""
+  <h3 style="margin:0 0 12px;color:#f1f5f9">{t('notify_welcome_subject')}</h3>
+  <p style="color:#94a3b8;margin-bottom:12px">
+    {t('notify_welcome_greeting', username=username)}
+  </p>
+  <p style="color:#94a3b8;margin-bottom:20px">{t('notify_welcome_body')}</p>
+  <ul style="color:#94a3b8;padding-left:20px;margin-bottom:20px;line-height:1.9">
+    <li>📚 {t('nav_education')}</li>
+    <li>⚡ {t('nav_signals')}</li>
+    <li>📓 {t('nav_journal')}</li>
+    <li>🏆 {t('nav_tracker')}</li>
+  </ul>
+  <p style="color:#94a3b8;margin-bottom:24px">
+    {t('notify_welcome_get_started')}
+  </p>"""
 
-    # Snapshot all config before leaving request context
-    cfg = {
-        'resend_api_key': app_config.get('RESEND_API_KEY', '').strip(),
-        'mail_user':      app_config.get('MAIL_USERNAME',  '').strip(),
-        'mail_pass':      app_config.get('MAIL_PASSWORD',  '').strip(),
-        'mail_server':    app_config.get('MAIL_SERVER',    'smtp.gmail.com'),
-        'mail_port':      int(app_config.get('MAIL_PORT',  587)),
-        'mail_sender':    app_config.get('MAIL_DEFAULT_SENDER', 'onboarding@resend.dev'),
-        'reset_url':      reset_url,
-    }
+    body_html = _html_wrapper(content_html, t('notify_security_note'))
 
-    email_provider_configured = bool(
-        cfg['resend_api_key'] or (cfg['mail_user'] and cfg['mail_pass'])
-    )
+    log.info('[WELCOME] Spawning email thread for %s', to_email)
+    _spawn_email(cfg, to_email, subject, body_text, body_html, log_tag='WELCOME')
 
-    log.info('[RESET] Spawning email thread '
-             '(Resend: %s, SMTP: %s)',
-             bool(cfg['resend_api_key']),
-             bool(cfg['mail_user'] and cfg['mail_pass']))
 
-    thread = threading.Thread(
-        target=_email_worker,
-        args=(cfg, to_email, subject, body_text, body_html),
-        daemon=True,
-        name=f'reset-email-{to_email}',
-    )
-    thread.start()
-    return email_provider_configured
+def _send_account_update_email(to_email: str, username: str,
+                               change_description: str,
+                               app_config: dict, lang: str = 'en') -> None:
+    """
+    Fire-and-forget security notification after any account change
+    (password reset, email update, tier change, etc.).
+    Called on the request thread; email is sent in a daemon thread.
+    Never blocks, never raises.
+    """
+    t   = _make_t(lang)
+    cfg = _snapshot_mail_cfg(app_config)
 
+    subject   = t('notify_update_subject')
+    body_text = '\n\n'.join([
+        t('notify_update_greeting', username=username),
+        t('notify_update_body', change=change_description),
+        t('notify_update_time',
+          time=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')),
+        t('notify_security_note'),
+        '— 27pips / Shema Trading Hub',
+    ])
+    content_html = f"""
+  <h3 style="margin:0 0 12px;color:#f1f5f9">{t('notify_update_subject')}</h3>
+  <p style="color:#94a3b8;margin-bottom:12px">
+    {t('notify_update_greeting', username=username)}
+  </p>
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;
+              padding:16px;margin-bottom:20px">
+    <p style="color:#10b981;font-weight:700;margin:0 0 4px">
+      {t('notify_update_change_label')}
+    </p>
+    <p style="color:#f1f5f9;margin:0">{change_description}</p>
+  </div>
+  <p style="color:#64748b;font-size:0.82rem;margin-bottom:4px">
+    {t('notify_update_time',
+       time=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'))}
+  </p>"""
+
+    body_html = _html_wrapper(content_html, t('notify_security_note'))
+
+    log.info('[ACCOUNT UPDATE] Spawning email thread for %s (%s)',
+             to_email, change_description)
+    _spawn_email(cfg, to_email, subject, body_text, body_html,
+                 log_tag='ACCOUNT UPDATE')
+
+
+# ============================================================
+# AUTH ROUTES
+# ============================================================
 
 # ── REGISTER ──────────────────────────────────────────────
 @auth_bp.route('/register', methods=['POST'])
@@ -204,7 +276,8 @@ def register():
     ).fetchone()
     if existing:
         db.close()
-        return jsonify({'success': False, 'message': 'Email or username already registered.'}), 409
+        return jsonify({'success': False,
+                        'message': 'Email or username already registered.'}), 409
 
     pw_hash = generate_password_hash(password)
     db.execute(
@@ -214,9 +287,21 @@ def register():
     db.commit()
     user = db.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
     db.close()
+
     session['user_id']  = user['id']
     session['username'] = user['username']
-    return jsonify({'success': True, 'username': user['username'], 'message': 'Account created!'}), 201
+
+    # ── Welcome email (non-blocking) ──────────────────────
+    try:
+        lang = session.get('lang', 'en')
+        _send_account_created_email(
+            email, username, dict(current_app.config), lang
+        )
+    except Exception:
+        log.error('[WELCOME] Failed to spawn email:\n%s', traceback.format_exc())
+
+    return jsonify({'success': True, 'username': user['username'],
+                    'message': 'Account created!'}), 201
 
 
 # ── LOGIN ─────────────────────────────────────────────────
@@ -227,18 +312,21 @@ def login():
     password =  data.get('password') or ''
 
     if not email or not password:
-        return jsonify({'success': False, 'message': 'Email and password required.'}), 400
+        return jsonify({'success': False,
+                        'message': 'Email and password required.'}), 400
 
     db   = get_db()
     user = db.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
     db.close()
 
     if not user or not check_password_hash(user['password_hash'], password):
-        return jsonify({'success': False, 'message': 'Invalid email or password.'}), 401
+        return jsonify({'success': False,
+                        'message': 'Invalid email or password.'}), 401
 
     session['user_id']  = user['id']
     session['username'] = user['username']
-    return jsonify({'success': True, 'username': user['username'], 'message': 'Welcome back!'})
+    return jsonify({'success': True, 'username': user['username'],
+                    'message': 'Welcome back!'})
 
 
 # ── LOGOUT ────────────────────────────────────────────────
@@ -256,13 +344,58 @@ def me():
     return jsonify({'logged_in': False})
 
 
+# ============================================================
+# PASSWORD RESET FLOW
+# ============================================================
+
+def _fire_reset_email(app_config: dict, to_email: str,
+                      reset_url: str, t_func) -> bool:
+    """
+    Build reset email and spawn daemon thread.
+    Returns True if a provider is configured (email will be sent),
+    False if no provider (caller shows link inline instead).
+    """
+    subject   = t_func('reset_email_subject')
+    body_text = '\n\n'.join([
+        t_func('reset_email_greeting'),
+        t_func('reset_email_body'),
+        reset_url,
+        t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS),
+        t_func('reset_email_ignore'),
+        '— 27pips / Shema Trading Hub',
+    ])
+    content_html = f"""
+  <h3 style="margin:0 0 12px;color:#f1f5f9">{t_func('reset_email_subject')}</h3>
+  <p style="color:#94a3b8;margin-bottom:8px">{t_func('reset_email_greeting')}</p>
+  <p style="color:#94a3b8;margin-bottom:24px">{t_func('reset_email_body')}</p>
+  <a href="{reset_url}"
+     style="display:inline-block;background:#10b981;color:#fff;padding:14px 28px;
+            border-radius:10px;text-decoration:none;font-weight:700;
+            font-size:1rem;margin-bottom:24px">
+    {t_func('reset_update_password_btn')}
+  </a>
+  <p style="color:#64748b;font-size:0.8rem;margin-top:16px">
+    {t_func('reset_email_expiry', hours=RESET_TOKEN_HOURS)}
+  </p>"""
+
+    body_html = _html_wrapper(content_html, t_func('reset_email_ignore'))
+    cfg       = _snapshot_mail_cfg(app_config)
+
+    log.info('[RESET] Spawning email thread (Resend: %s, SMTP: %s)',
+             bool(cfg['resend_api_key']),
+             bool(cfg['mail_user'] and cfg['mail_pass']))
+
+    _spawn_email(cfg, to_email, subject, body_text, body_html, log_tag='RESET')
+    return _is_provider_configured(cfg)
+
+
 # ── FORGOT PASSWORD ────────────────────────────────────────
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
-    t            = _make_t()
+    t            = _make_t(session.get('lang', 'en'))
     message      = None
     message_type = 'success'
-    reset_url    = None   # shown inline when no email provider is configured
+    reset_url    = None
 
     if request.method == 'POST':
         email = (request.form.get('email') or '').strip().lower()
@@ -282,7 +415,6 @@ def forgot_password():
                 expires_at = (datetime.now(timezone.utc)
                               + timedelta(hours=RESET_TOKEN_HOURS))
 
-                # Invalidate prior unused tokens for this user
                 db.execute(
                     'UPDATE password_reset_tokens '
                     'SET used = 1 WHERE user_id = ? AND used = 0',
@@ -299,22 +431,14 @@ def forgot_password():
                 _reset_url = url_for('auth.reset_password',
                                      token=raw_token, _external=True)
 
-                log.info('[RESET] Token stored for user_id=%s — spawning email thread',
-                         row['id'])
-
+                log.info('[RESET] Token stored for user_id=%s', row['id'])
                 email_sent = _fire_reset_email(
                     dict(current_app.config), email, _reset_url, t
                 )
-
-                # If no email provider is configured, surface the link
-                # directly on the page so users can reset immediately.
                 if not email_sent:
                     reset_url = _reset_url
 
             db.close()
-
-            # Show success message regardless (prevents user enumeration).
-            # If reset_url is set the template also shows a clickable button.
             message = t('reset_request_sent')
 
     return render_template(
@@ -329,13 +453,13 @@ def forgot_password():
 # ── RESET PASSWORD ────────────────────────────────────────
 @auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    t          = _make_t()
+    t          = _make_t(session.get('lang', 'en'))
     token_hash = _hash_token(token)
     now        = datetime.now(timezone.utc)
 
     db  = get_db()
     row = db.execute(
-        'SELECT r.id, r.user_id, r.expires_at, r.used, u.email '
+        'SELECT r.id, r.user_id, r.expires_at, r.used, u.email, u.username '
         'FROM password_reset_tokens r '
         'JOIN users u ON u.id = r.user_id '
         'WHERE r.token_hash = ?',
@@ -354,7 +478,6 @@ def reset_password(token):
                                error=t('reset_error_token_used'),
                                token=None, user=None)
 
-    # Normalise expires_at to UTC-aware datetime
     expires_at = row['expires_at']
     if isinstance(expires_at, str):
         expires_at = (datetime.strptime(expires_at, '%Y-%m-%d %H:%M:%S')
@@ -377,20 +500,35 @@ def reset_password(token):
             return render_template('auth/reset_password.html',
                                    error=t('reset_error_password_short'),
                                    token=token, user=None)
-
         if password != password2:
             db.close()
             return render_template('auth/reset_password.html',
                                    error=t('reset_error_password_mismatch'),
                                    token=token, user=None)
 
-        pw_hash = generate_password_hash(password)
+        # Save new password + mark token used
+        pw_hash  = generate_password_hash(password)
+        user_email    = row['email']
+        user_username = row['username']
         db.execute('UPDATE users SET password_hash = ? WHERE id = ?',
                    (pw_hash, row['user_id']))
         db.execute('UPDATE password_reset_tokens SET used = 1 WHERE id = ?',
                    (row['id'],))
         db.commit()
         db.close()
+
+        # ── Security notification (non-blocking) ──────────
+        try:
+            lang = session.get('lang', 'en')
+            _send_account_update_email(
+                user_email, user_username,
+                _make_t(lang)('notify_change_password'),
+                dict(current_app.config), lang
+            )
+        except Exception:
+            log.error('[ACCOUNT UPDATE] Failed to spawn notification:\n%s',
+                      traceback.format_exc())
+
         return redirect(url_for('auth.reset_success'))
 
     db.close()

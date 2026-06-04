@@ -363,5 +363,18 @@
 
   "reset_link_direct_label": "L'envoi d'e-mails n'est pas encore configuré. Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe directement :",
   "reset_click_here_btn": "Réinitialiser mon mot de passe →",
-  "reset_link_expires": "Ce lien expire dans {hours} heure(s)."
+  "reset_link_expires": "Ce lien expire dans {hours} heure(s).",
+
+  "notify_welcome_subject": "Bienvenue sur 27pips — Votre compte est prêt !",
+  "notify_welcome_greeting": "Bonjour {username}, bienvenue sur 27pips !",
+  "notify_welcome_body": "Votre compte a été créé avec succès. Vous avez maintenant accès à la formation forex structurée, aux signaux de trading en direct, à un journal de trading et au suivi des challenges prop firm.",
+  "notify_welcome_get_started": "Visitez https://two7pips.onrender.com pour commencer.",
+  "notify_update_subject": "27pips — Notification d'activité du compte",
+  "notify_update_greeting": "Bonjour {username},",
+  "notify_update_body": "Nous vous informons que la modification suivante a été apportée à votre compte 27pips : {change}",
+  "notify_update_change_label": "Modification effectuée :",
+  "notify_update_time": "Heure : {time}",
+  "notify_security_note": "Si vous n'avez pas autorisé cette action, veuillez contacter notre équipe d'assistance immédiatement à support@27pips.com ou répondre à cet e-mail.",
+  "notify_change_password": "Votre mot de passe a été mis à jour avec succès.",
+  "notify_change_upgrade": "Votre compte a été mis à niveau vers 27pips Premium. Tous les signaux institutionnels sont maintenant débloqués."
 }

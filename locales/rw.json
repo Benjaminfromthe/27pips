@@ -363,5 +363,18 @@
 
   "reset_link_direct_label": "Ubutumwa bwa imeri ntibushyizweho. Kanda buto hasi kugira ngo usubireho ijambo ry'ibanga yawe ako kanya:",
   "reset_click_here_btn": "Subiramo Ijambo Ryanjye ry'Ibanga →",
-  "reset_link_expires": "Utu rasho tuzarangira mu masaha {hours}."
+  "reset_link_expires": "Utu rasho tuzarangira mu masaha {hours}.",
+
+  "notify_welcome_subject": "Murakaza neza kuri 27pips — Konti yawe iri guteguwa!",
+  "notify_welcome_greeting": "Muraho {username}, murakaza neza kuri 27pips!",
+  "notify_welcome_body": "Konti yawe yashinzwe neza. Ubu ufite uburenganzira bwo kwiga forex bihuriweho, amakuru y'ubucuruzi azima, ibitabo by'ubucuruzi, no gukurikirana imihigo ya prop firm.",
+  "notify_welcome_get_started": "Sura https://two7pips.onrender.com kugira ngo utangire.",
+  "notify_update_subject": "27pips — Itangazo ry'Ibikorwa bya Konti",
+  "notify_update_greeting": "Muraho {username},",
+  "notify_update_body": "Turababwira ko impinduka ikurikira yakozwe kuri konti yawe ya 27pips: {change}",
+  "notify_update_change_label": "Impinduka Yakozwe:",
+  "notify_update_time": "Igihe: {time}",
+  "notify_security_note": "Niba utabyemeye, nyamuneka twandikire vuba aha support@27pips.com cyangwa usubize iyi message.",
+  "notify_change_password": "Ijambo ryawe ry'ibanga ryavuguruwe neza.",
+  "notify_change_upgrade": "Konti yawe yongerewe kuri 27pips Premium. Amakuru yose y'inzobere afunguwe."
 }
