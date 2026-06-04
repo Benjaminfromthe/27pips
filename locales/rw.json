@@ -380,5 +380,12 @@
 
   "sandbox_email_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Ushobora kutabona imeri muri make.",
   "sandbox_reset_notice": "Uturasho twawe two gusubiramo twakiriwe. Mu buryo bwo kugerageza, imeri z'emeza zijya muri boîte ya munyamabwire. Koresha buto hejuru niba yabonekaga, cyangwa twandikire.",
-  "sandbox_update_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Imeri z'umutekano zandikwa muri boîte ya munyamabwire aho koherezwa kuri aderesi yawe."
+  "sandbox_update_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Imeri z'umutekano zandikwa muri boîte ya munyamabwire aho koherezwa kuri aderesi yawe.",
+
+  "search_placeholder": "Shakisha amasomo, amakuru…",
+  "search_no_results": "Nta bisubizo bibonetse kuri ",
+  "search_type_lesson": "Amasomo",
+  "search_type_course": "Ibizamini",
+  "search_type_signal": "Amakuru",
+  "search_type_tool": "Ibikoresho"
 }

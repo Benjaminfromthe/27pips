@@ -13,6 +13,7 @@ from blueprints.tracker.routes   import tracker_bp
 from blueprints.admin.routes     import admin_bp
 from blueprints.analytics.routes import analytics_bp
 from blueprints.upgrade.routes   import upgrade_bp
+from blueprints.search.routes    import search_bp
 
 
 def create_app():
@@ -52,6 +53,7 @@ def create_app():
     app.register_blueprint(admin_bp,      url_prefix='/admin')
     app.register_blueprint(analytics_bp,  url_prefix='/api/analytics')
     app.register_blueprint(upgrade_bp,    url_prefix='/upgrade')
+    app.register_blueprint(search_bp,     url_prefix='/search')
 
     register_i18n(app)
 

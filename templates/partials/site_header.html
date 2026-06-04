@@ -4,6 +4,7 @@
       <span class="logo-icon">📈</span>
       <span class="logo-text">27<span class="logo-accent">pips</span></span>
     </a>
+
     {% if show_nav %}
     <nav class="nav" id="nav">
       <a href="/" class="nav-link{% if active_nav == 'home' %} nav-link--active{% endif %}">{{ t('nav_home') }}</a>
@@ -12,6 +13,37 @@
       <a href="/#funded" class="nav-link">{{ t('nav_tracker') }}</a>
     </nav>
     {% endif %}
+
+    <!-- ── Search bar ── -->
+    <div class="search-wrap" id="searchWrap" role="search">
+      <div class="search-input-row">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <input
+          type="search"
+          id="siteSearchInput"
+          class="search-input"
+          placeholder="{{ t('search_placeholder') }}"
+          autocomplete="off"
+          aria-label="{{ t('search_placeholder') }}"
+          aria-autocomplete="list"
+          aria-controls="searchDropdown"
+          aria-expanded="false"
+        />
+        <button class="search-clear" id="searchClear"
+                aria-label="Clear search"
+                onclick="clearSearch()">✕</button>
+      </div>
+      <div class="search-dropdown" id="searchDropdown" role="listbox"
+           aria-label="{{ t('search_placeholder') }}">
+      </div>
+    </div>
+
     <div class="header-actions">
       {% include 'partials/theme_toggle.html' %}
       {% include 'partials/lang_switcher.html' %}

@@ -29,6 +29,37 @@
       <a href="#funded"    class="nav-link">{{ t('nav_funded') }}</a>
       <a href="#about"     class="nav-link">{{ t('nav_about') }}</a>
     </nav>
+
+    <!-- ── Search bar ── -->
+    <div class="search-wrap" id="searchWrap" role="search">
+      <div class="search-input-row">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <input
+          type="search"
+          id="siteSearchInput"
+          class="search-input"
+          placeholder="{{ t('search_placeholder') }}"
+          autocomplete="off"
+          aria-label="{{ t('search_placeholder') }}"
+          aria-autocomplete="list"
+          aria-controls="searchDropdown"
+          aria-expanded="false"
+        />
+        <button class="search-clear" id="searchClear"
+                aria-label="Clear search"
+                onclick="clearSearch()">✕</button>
+      </div>
+      <div class="search-dropdown" id="searchDropdown" role="listbox"
+           aria-label="{{ t('search_placeholder') }}">
+      </div>
+    </div>
+
     <div class="header-actions">
 
       {% include 'partials/theme_toggle.html' %}
@@ -690,7 +721,12 @@
     trackerTargetPct:  "{{ t('tracker_target_reached') }}",
     trackerKeepGoing:  "{{ t('tracker_keep_going') }}",
     equityTrades:      "{{ t('analytics_trades') }}",
-    eduProgressText:   "{{ t('edu_progress_lessons', done='{done}', total='{total}') }}"
+    eduProgressText:   "{{ t('edu_progress_lessons', done='{done}', total='{total}') }}",
+    search_no_results: "{{ t('search_no_results') }}",
+    search_type_lesson:"{{ t('search_type_lesson') }}",
+    search_type_course:"{{ t('search_type_course') }}",
+    search_type_signal:"{{ t('search_type_signal') }}",
+    search_type_tool:  "{{ t('search_type_tool') }}"
   };
 </script>
 <script src="/static/js/main.js"></script>

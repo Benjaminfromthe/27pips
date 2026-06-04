@@ -823,3 +823,186 @@ document.addEventListener('click', e => {
     if (menu) menu.classList.remove('open');
   }
 });
+
+
+// ============================================================
+// SITE-WIDE SEARCH  (debounced, keyboard-navigable dropdown)
+// ============================================================
+
+(function () {
+  'use strict';
+
+  const DEBOUNCE_MS = 300;
+  const MIN_CHARS   = 2;
+
+  let _debounceTimer = null;
+  let _lastQuery     = '';
+  let _focusedIndex  = -1;
+
+  // Translated strings injected server-side via window.I18N
+  function _t(key, fallback) {
+    return (window.I18N && window.I18N[key]) ? window.I18N[key] : fallback;
+  }
+
+  // ── DOM refs (lazy — elements may not exist on every page) ────────
+  function _el(id) { return document.getElementById(id); }
+
+  // ── Open / close dropdown ─────────────────────────────────────────
+  function _openDropdown(html) {
+    const dd    = _el('searchDropdown');
+    const input = _el('siteSearchInput');
+    if (!dd || !input) return;
+    dd.innerHTML = html;
+    dd.classList.add('open');
+    input.setAttribute('aria-expanded', 'true');
+    _focusedIndex = -1;
+  }
+
+  function _closeDropdown() {
+    const dd    = _el('searchDropdown');
+    const input = _el('siteSearchInput');
+    if (dd)    { dd.classList.remove('open'); dd.innerHTML = ''; }
+    if (input) { input.setAttribute('aria-expanded', 'false'); }
+    _focusedIndex = -1;
+  }
+
+  // ── Build result HTML ─────────────────────────────────────────────
+  function _renderResults(data) {
+    const results = data.results || [];
+
+    if (!results.length) {
+      return `<div class="search-empty">
+        <span>🔍</span>
+        ${_t('search_no_results', 'No results found')}
+        <strong style="color:var(--text-primary)">"${_escHtml(data.query)}"</strong>
+      </div>`;
+    }
+
+    // Group by type
+    const groups = {};
+    const typeLabels = {
+      lesson:  _t('search_type_lesson',    'Lesson'),
+      course:  _t('search_type_course',    'Course'),
+      signal:  _t('search_type_signal',    'Signal'),
+      tool:    _t('search_type_tool',      'Feature'),
+    };
+
+    results.forEach(r => {
+      if (!groups[r.type]) groups[r.type] = [];
+      groups[r.type].push(r);
+    });
+
+    let html = '';
+    let itemIndex = 0;
+    Object.entries(groups).forEach(([type, items]) => {
+      if (html) html += '<hr class="search-divider">';
+      html += `<div class="search-section-label">${typeLabels[type] || type}</div>`;
+      items.forEach(item => {
+        html += `<a href="${_escHtml(item.url)}"
+                    class="search-result-item"
+                    role="option"
+                    tabindex="-1"
+                    data-index="${itemIndex}"
+                    onclick="_closeSearch()">
+          <span class="search-result-icon">${item.icon}</span>
+          <span class="search-result-text">
+            <p class="search-result-title">${_escHtml(item.title)}</p>
+            ${item.subtitle ? `<p class="search-result-sub">${_escHtml(item.subtitle)}</p>` : ''}
+          </span>
+          ${item.meta ? `<span class="search-result-meta">${_escHtml(item.meta)}</span>` : ''}
+        </a>`;
+        itemIndex++;
+      });
+    });
+
+    return html;
+  }
+
+  function _escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Fetch results from backend ────────────────────────────────────
+  async function _fetchResults(q) {
+    try {
+      const res  = await fetch(`/search/?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      _openDropdown(_renderResults(data));
+    } catch {
+      _closeDropdown();
+    }
+  }
+
+  // ── Input handler (debounced) ─────────────────────────────────────
+  function _onInput(e) {
+    const q     = e.target.value.trim();
+    const clear = _el('searchClear');
+    if (clear) clear.classList.toggle('visible', q.length > 0);
+
+    if (q.length < MIN_CHARS) {
+      _closeDropdown();
+      _lastQuery = '';
+      return;
+    }
+    if (q === _lastQuery) return;
+    _lastQuery = q;
+
+    clearTimeout(_debounceTimer);
+    _openDropdown(`<div class="search-loading">${_t('loading', 'Loading…')}</div>`);
+    _debounceTimer = setTimeout(() => _fetchResults(q), DEBOUNCE_MS);
+  }
+
+  // ── Keyboard navigation ───────────────────────────────────────────
+  function _onKeydown(e) {
+    const dd    = _el('searchDropdown');
+    const items = dd ? dd.querySelectorAll('.search-result-item') : [];
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      _focusedIndex = Math.min(_focusedIndex + 1, items.length - 1);
+      if (items[_focusedIndex]) items[_focusedIndex].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      _focusedIndex = Math.max(_focusedIndex - 1, 0);
+      if (items[_focusedIndex]) items[_focusedIndex].focus();
+      else _el('siteSearchInput').focus();
+    } else if (e.key === 'Escape') {
+      _closeSearch();
+    }
+  }
+
+  // ── Clear & close helpers (global — called from HTML onclick) ─────
+  window.clearSearch = function () {
+    const input = _el('siteSearchInput');
+    const clear = _el('searchClear');
+    if (input) { input.value = ''; input.focus(); }
+    if (clear) clear.classList.remove('visible');
+    _closeDropdown();
+    _lastQuery = '';
+  };
+
+  window._closeSearch = function () {
+    _closeDropdown();
+  };
+
+  // ── Init ──────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    const input = _el('siteSearchInput');
+    if (!input) return;   // page has no search bar
+
+    input.addEventListener('input',   _onInput);
+    input.addEventListener('keydown', _onKeydown);
+
+    // Close when clicking outside the search widget
+    document.addEventListener('click', function (e) {
+      const wrap = _el('searchWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        _closeDropdown();
+      }
+    });
+  });
+}());

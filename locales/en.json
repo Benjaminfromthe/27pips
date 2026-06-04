@@ -380,5 +380,12 @@
 
   "sandbox_email_notice": "Email notifications are currently in testing mode. You may not receive emails directly.",
   "sandbox_reset_notice": "Your reset link has been processed. In testing mode, confirmation emails go to the site administrator. Use the button above if it appeared, or contact support.",
-  "sandbox_update_notice": "Email notifications are in testing mode. Security alerts are logged to the admin inbox rather than sent to your address directly."
+  "sandbox_update_notice": "Email notifications are in testing mode. Security alerts are logged to the admin inbox rather than sent to your address directly.",
+
+  "search_placeholder": "Search lessons, signals…",
+  "search_no_results": "No results found for ",
+  "search_type_lesson": "Lessons",
+  "search_type_course": "Courses",
+  "search_type_signal": "Signals",
+  "search_type_tool": "Features"
 }

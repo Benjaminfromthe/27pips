@@ -380,5 +380,12 @@
 
   "sandbox_email_notice": "Les notifications par e-mail sont actuellement en mode test. Vous pourriez ne pas recevoir d'e-mails directement.",
   "sandbox_reset_notice": "Votre lien de réinitialisation a été traité. En mode test, les e-mails de confirmation vont dans la boîte de l'administrateur. Utilisez le bouton ci-dessus s'il est apparu, ou contactez le support.",
-  "sandbox_update_notice": "Les notifications par e-mail sont en mode test. Les alertes de sécurité sont consignées dans la boîte de l'administrateur plutôt qu'envoyées directement à votre adresse."
+  "sandbox_update_notice": "Les notifications par e-mail sont en mode test. Les alertes de sécurité sont consignées dans la boîte de l'administrateur plutôt qu'envoyées directement à votre adresse.",
+
+  "search_placeholder": "Chercher leçons, signaux…",
+  "search_no_results": "Aucun résultat pour ",
+  "search_type_lesson": "Leçons",
+  "search_type_course": "Cours",
+  "search_type_signal": "Signaux",
+  "search_type_tool": "Fonctionnalités"
 }
