@@ -421,6 +421,38 @@
 {% endif %}
 
 <!-- ============================================================
+     LEAKING ALPHA AUDIT — Performance Metrics Dashboard
+============================================================ -->
+{% if user %}
+<section class="section" id="performance-audit">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">🔬 {{ t('perf_tag') }}</span>
+      <h2 class="section-title">{{ t('perf_title') }}</h2>
+      <p class="section-sub">{{ t('perf_sub') }}</p>
+    </div>
+
+    <!-- Insight cards grid — populated by JS -->
+    <div id="perfMetricsGrid" class="perf-grid">
+      <div class="perf-loading">
+        <div class="load-more-spinner" style="display:block;margin:0 auto 12px"></div>
+        <p style="color:var(--text-secondary);font-size:0.88rem">{{ t('loading') }}</p>
+      </div>
+    </div>
+
+    <!-- Recompute button -->
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn-outline" id="perfRecomputeBtn"
+              onclick="recomputeMetrics()"
+              style="font-size:0.85rem;padding:8px 20px">
+        🔄 {{ t('perf_recompute') }}
+      </button>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ============================================================
      PROP FIRM CHALLENGE TRACKER — Dynamic
 ============================================================ -->
 <section class="section section-dark" id="funded">
@@ -753,7 +785,31 @@
     load_more_end:     "{{ t('load_more_end') }}",
     edu_coming_soon:   "{{ t('edu_coming_soon') }}",
     edu_view_curriculum:"{{ t('edu_view_curriculum') }}",
-    edu_lessons_label: "{{ t('edu_lessons_label') }}"
+    edu_lessons_label: "{{ t('edu_lessons_label') }}",
+    perf_no_data:      "{{ t('perf_no_data') }}",
+    perf_trades:       "{{ t('perf_trades') }}",
+    perf_win_rate:     "{{ t('perf_win_rate') }}",
+    perf_net_pips:     "{{ t('perf_net_pips') }}",
+    perf_avg_win:      "{{ t('perf_avg_win') }}",
+    perf_avg_loss:     "{{ t('perf_avg_loss') }}",
+    perf_profit_factor:"{{ t('perf_profit_factor') }}",
+    perf_no_losses:    "{{ t('perf_no_losses') }}",
+    perf_pf_strong:    "{{ t('perf_pf_strong') }}",
+    perf_pf_ok:        "{{ t('perf_pf_ok') }}",
+    perf_pf_weak:      "{{ t('perf_pf_weak') }}",
+    perf_avg_mae:      "{{ t('perf_avg_mae') }}",
+    perf_mae_insight:  "{{ t('perf_mae_insight') }}",
+    perf_avg_mfe:      "{{ t('perf_avg_mfe') }}",
+    perf_mfe_insight:  "{{ t('perf_mfe_insight') }}",
+    perf_mae_efficiency:"{{ t('perf_mae_efficiency') }}",
+    perf_mae_eff_insight:"{{ t('perf_mae_eff_insight') }}",
+    perf_sortino:      "{{ t('perf_sortino') }}",
+    perf_sortino_na:   "{{ t('perf_sortino_na') }}",
+    perf_sortino_inf:  "{{ t('perf_sortino_inf') }}",
+    perf_sortino_strong:"{{ t('perf_sortino_strong') }}",
+    perf_sortino_ok:   "{{ t('perf_sortino_ok') }}",
+    perf_sortino_weak: "{{ t('perf_sortino_weak') }}",
+    perf_recompute:    "{{ t('perf_recompute') }}"
   };
 </script>
 <script src="/static/js/main.js"></script>

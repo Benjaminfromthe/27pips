@@ -1194,3 +1194,180 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(() => { /* silent */ });
 });
+
+
+// ============================================================
+// LEAKING ALPHA AUDIT — Performance Metrics Dashboard
+// ============================================================
+
+function _fmt(val, decimals) {
+  if (val === null || val === undefined) return '—';
+  return Number(val).toFixed(decimals ?? 2);
+}
+
+function _colorClass(val, goodAbove, dangerBelow) {
+  if (val === null || val === undefined) return 'neutral';
+  if (val >= goodAbove)  return 'good';
+  if (val <= dangerBelow) return 'danger';
+  return 'warn';
+}
+
+function _perfCardHtml(icon, label, value, valueClass, insight) {
+  return `
+    <div class="perf-card perf-card--${valueClass}">
+      <span class="perf-card__icon">${icon}</span>
+      <p class="perf-card__label">${label}</p>
+      <p class="perf-card__value perf-card__value--${valueClass}">${value}</p>
+      <p class="perf-card__insight">${insight}</p>
+    </div>`;
+}
+
+async function loadPerformanceMetrics() {
+  const grid = document.getElementById('perfMetricsGrid');
+  if (!grid) return;
+
+  try {
+    const res  = await fetch('/api/analytics/performance');
+    const data = await res.json();
+
+    if (!data.success || !data.has_data) {
+      const noDataLabel = (window.I18N && window.I18N.perf_no_data)
+        || 'No closed trades yet. Log trades with Win/Loss outcomes to see your Leaking Alpha analysis.';
+      grid.innerHTML = `
+        <div class="perf-no-data">
+          <span>🔬</span>
+          <p>${noDataLabel}</p>
+        </div>`;
+      return;
+    }
+
+    const m  = data.metrics;
+    const t_ = k => (window.I18N && window.I18N[k]) || k;
+    let html = '';
+
+    // ── Win Rate ──────────────────────────────────────────
+    const wrClass = _colorClass(m.win_rate, 55, 40);
+    html += _perfCardHtml(
+      '🎯',
+      t_('perf_win_rate'),
+      `${_fmt(m.win_rate, 1)}%`,
+      wrClass,
+      `${m.win_count}W / ${m.loss_count}L of ${m.trade_count} ${t_('perf_trades')}`
+    );
+
+    // ── Net Pips ──────────────────────────────────────────
+    const npClass = m.net_pips >= 0 ? 'good' : 'danger';
+    html += _perfCardHtml(
+      m.net_pips >= 0 ? '📈' : '📉',
+      t_('perf_net_pips'),
+      (m.net_pips >= 0 ? '+' : '') + _fmt(m.net_pips, 1),
+      npClass,
+      `${t_('perf_avg_win')}: +${_fmt(m.avg_win_pips, 1)} | ${t_('perf_avg_loss')}: -${_fmt(m.avg_loss_pips, 1)}`
+    );
+
+    // ── Profit Factor ─────────────────────────────────────
+    const pf      = m.profit_factor;
+    const pfClass = _colorClass(pf, 1.5, 0.9);
+    const pfInsight = pf === null
+      ? t_('perf_no_losses')
+      : pf >= 1.5
+        ? t_('perf_pf_strong')
+        : pf >= 1.0
+          ? t_('perf_pf_ok')
+          : t_('perf_pf_weak');
+    html += _perfCardHtml(
+      '⚖️',
+      t_('perf_profit_factor'),
+      pf !== null ? _fmt(pf, 2) : '∞',
+      pf !== null ? pfClass : 'good',
+      pfInsight
+    );
+
+    // ── Avg MAE (Maximum Adverse Excursion) ───────────────
+    const maeClass = _colorClass(-(m.avg_mae_pips), -5, -20); // lower is better
+    html += _perfCardHtml(
+      '🛑',
+      t_('perf_avg_mae'),
+      `-${_fmt(m.avg_mae_pips, 1)} pips`,
+      m.avg_mae_pips <= 5 ? 'good' : m.avg_mae_pips <= 20 ? 'warn' : 'danger',
+      t_('perf_mae_insight')
+    );
+
+    // ── Avg MFE (Maximum Favorable Excursion) ────────────
+    html += _perfCardHtml(
+      '🚀',
+      t_('perf_avg_mfe'),
+      `+${_fmt(m.avg_mfe_pips, 1)} pips`,
+      m.avg_mfe_pips > 0 ? 'good' : 'neutral',
+      t_('perf_mfe_insight')
+    );
+
+    // ── MAE Efficiency ────────────────────────────────────
+    if (m.mae_efficiency !== null) {
+      const maeEff    = m.mae_efficiency * 100;
+      const maeEffCls = _colorClass(maeEff, 70, 40);
+      html += _perfCardHtml(
+        '📊',
+        t_('perf_mae_efficiency'),
+        `${_fmt(maeEff, 1)}%`,
+        maeEffCls,
+        t_('perf_mae_eff_insight')
+      );
+    }
+
+    // ── Sortino Ratio ─────────────────────────────────────
+    const sr      = m.sortino_ratio;
+    const srClass = sr === null ? 'neutral'
+      : sr >= 2.0  ? 'good'
+      : sr >= 1.0  ? 'warn'
+      : 'danger';
+    const srInsight = sr === null
+      ? t_('perf_sortino_na')
+      : sr === 999 ? t_('perf_sortino_inf')
+      : sr >= 2.0  ? t_('perf_sortino_strong')
+      : sr >= 1.0  ? t_('perf_sortino_ok')
+      : t_('perf_sortino_weak');
+    html += _perfCardHtml(
+      '📐',
+      t_('perf_sortino'),
+      sr === null ? '—' : sr === 999 ? '∞' : _fmt(sr, 2),
+      srClass,
+      srInsight
+    );
+
+    grid.innerHTML = html;
+
+  } catch (err) {
+    console.error('[PERF] Error loading metrics:', err);
+    grid.innerHTML = '<div class="perf-no-data"><span>⚠️</span><p>Could not load metrics.</p></div>';
+  }
+}
+
+async function recomputeMetrics() {
+  const btn  = document.getElementById('perfRecomputeBtn');
+  const grid = document.getElementById('perfMetricsGrid');
+  if (!btn || !grid) return;
+
+  btn.disabled   = true;
+  btn.textContent = '⏳ Computing…';
+  grid.innerHTML  = '<div class="perf-loading"><div class="load-more-spinner" style="display:block;margin:0 auto 12px"></div></div>';
+
+  try {
+    const res  = await fetch('/api/analytics/performance/compute', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      await loadPerformanceMetrics();
+    }
+  } catch (err) {
+    console.error('[PERF] Recompute error:', err);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '🔄 ' + ((window.I18N && window.I18N.perf_recompute) || 'Recompute');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('perfMetricsGrid')) {
+    loadPerformanceMetrics();
+  }
+});

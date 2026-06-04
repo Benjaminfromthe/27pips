@@ -118,4 +118,18 @@ def add_entry():
     finally:
         db.close()
 
+    # Trigger performance recompute in the background (non-blocking)
+    try:
+        import threading
+        from blueprints.analytics.performance import compute_and_store as _compute
+        t = threading.Thread(
+            target=_compute,
+            args=(session['user_id'],),
+            daemon=True,
+            name=f'perf-{session["user_id"]}'
+        )
+        t.start()
+    except Exception:
+        pass  # never block the trade save
+
     return jsonify({'success': True, 'id': new_id}), 201

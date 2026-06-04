@@ -193,6 +193,26 @@ def _schema_sql():
                 used INTEGER NOT NULL DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )''',
+            '''CREATE TABLE IF NOT EXISTS performance_metrics (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                computed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                trade_count INTEGER NOT NULL DEFAULT 0,
+                win_count INTEGER NOT NULL DEFAULT 0,
+                loss_count INTEGER NOT NULL DEFAULT 0,
+                win_rate REAL,
+                avg_win_pips REAL,
+                avg_loss_pips REAL,
+                profit_factor REAL,
+                avg_mae_pips REAL,
+                avg_mfe_pips REAL,
+                mae_efficiency REAL,
+                mfe_efficiency REAL,
+                sortino_ratio REAL,
+                risk_free_rate REAL DEFAULT 0.0,
+                net_pips REAL,
+                UNIQUE(user_id)
+            )''',
         ]
     else:
         # SQLite schema (original)
@@ -273,6 +293,26 @@ def _schema_sql():
                 used INTEGER NOT NULL DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )''',
+            '''CREATE TABLE IF NOT EXISTS performance_metrics (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                computed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                trade_count INTEGER NOT NULL DEFAULT 0,
+                win_count INTEGER NOT NULL DEFAULT 0,
+                loss_count INTEGER NOT NULL DEFAULT 0,
+                win_rate REAL,
+                avg_win_pips REAL,
+                avg_loss_pips REAL,
+                profit_factor REAL,
+                avg_mae_pips REAL,
+                avg_mfe_pips REAL,
+                mae_efficiency REAL,
+                mfe_efficiency REAL,
+                sortino_ratio REAL,
+                risk_free_rate REAL DEFAULT 0.0,
+                net_pips REAL,
+                UNIQUE(user_id)
+            )''',
         ]
 
 
@@ -291,7 +331,6 @@ def init_db():
             ]:
                 try: db.execute(col_sql)
                 except: pass
-
         db.commit()
 
         # Seed curriculum if empty

@@ -76,3 +76,52 @@ def equity_curve():
         'is_profit':        is_profit,
         'total_trades':     len(trades)
     })
+
+
+# ── POST /api/analytics/performance/compute ────────────────
+# Triggers the Leaking Alpha engine for the logged-in user.
+# Called after every new trade is logged, or on demand.
+@analytics_bp.route('/performance/compute', methods=['POST'])
+def compute_performance():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Login required.'}), 401
+
+    from blueprints.analytics.performance import compute_and_store
+    try:
+        risk_free = float((session.get('risk_free_rate') or 0))
+    except (ValueError, TypeError):
+        risk_free = 0.0
+
+    result = compute_and_store(session['user_id'], risk_free_rate=risk_free)
+    if result is None:
+        return jsonify({
+            'success':  True,
+            'computed': False,
+            'message':  'No closed trades found. Log trades with Win/Loss outcomes to see metrics.',
+        })
+
+    return jsonify({'success': True, 'computed': True, 'metrics': result})
+
+
+# ── GET /api/analytics/performance ─────────────────────────
+# Returns the last-computed metrics for the dashboard.
+@analytics_bp.route('/performance')
+def get_performance():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Login required.', 'auth_required': True}), 401
+
+    from blueprints.analytics.performance import fetch_metrics, compute_and_store
+    metrics = fetch_metrics(session['user_id'])
+
+    # Auto-compute on first visit if no metrics exist yet
+    if metrics is None:
+        metrics = compute_and_store(session['user_id'])
+
+    if metrics is None:
+        return jsonify({
+            'success':    True,
+            'has_data':   False,
+            'message':    'No closed trades yet.',
+        })
+
+    return jsonify({'success': True, 'has_data': True, 'metrics': metrics})

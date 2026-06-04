@@ -1268,3 +1268,72 @@ html[data-theme="light"] .theme-toggle__icon--moon {
 .btn-load-more.loading .load-more-spinner { display: block; }
 .btn-load-more.loading .load-more-text    { opacity: 0.6; }
 @keyframes lmSpin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   LEAKING ALPHA AUDIT — Performance Metrics Cards
+============================================================ */
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.perf-loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 32px;
+}
+.perf-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.perf-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.perf-card--good   { border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.04); }
+.perf-card--warn   { border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.04); }
+.perf-card--danger { border-color: rgba(239,68,68,0.35);  background: rgba(239,68,68,0.04); }
+.perf-card--neutral{ border-color: var(--border); }
+
+.perf-card__icon {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  display: block;
+}
+.perf-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.perf-card__value {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.perf-card__value--good   { color: var(--accent); }
+.perf-card__value--warn   { color: var(--accent-yellow); }
+.perf-card__value--danger { color: var(--accent-red); }
+.perf-card__insight {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+.perf-no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+.perf-no-data span { font-size: 2.5rem; display: block; margin-bottom: 12px; }
+
+@media (max-width: 600px) {
+  .perf-grid { grid-template-columns: 1fr 1fr; }
+}
