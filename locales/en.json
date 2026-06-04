@@ -423,5 +423,27 @@
   "coach_subject": "Time to Step Back",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
-  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
+
+  "verify_page_title": "Verified Trader Profile | 27pips",
+  "verify_consistency": "Consistency Score",
+  "verify_readonly_notice": "This is a read-only public verification page. No private data is exposed.",
+  "verify_no_data": "This trader has not yet logged enough trades to display a public profile.",
+  "verify_wl_breakdown": "Win / Loss Breakdown",
+  "verify_wins": "Wins",
+  "verify_losses": "Losses",
+  "verify_top_pairs": "Most Traded Pairs",
+  "verify_active_since": "Active",
+  "verify_seal": "Verified by 27pips",
+  "verify_generated": "Link generated",
+  "verify_data_note": "Performance data is self-reported via the 27pips trading journal.",
+  "verify_join_cta": "Join 27pips — Trade Smarter",
+  "verify_not_found_title": "Verification Link Not Found",
+  "verify_not_found_sub": "This link may have been revoked or is invalid. Ask the trader to share a new link.",
+  "verify_generate_btn": "Create Public Link",
+  "verify_copy_btn": "Copy Link",
+  "verify_copy_tooltip": "Copy your public verification link to clipboard",
+  "verify_revoke_btn": "Revoke",
+  "verify_revoke_tooltip": "Remove your public profile link",
+  "verify_revoke_confirm": "Revoke your public verification link? Anyone with the old link will no longer be able to view your profile."
 }

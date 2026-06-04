@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>{{ t('verify_not_found_title') }}</title>
+  {% include 'partials/theme_head.html' %}
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .nf-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 24px; background: var(--hero-gradient); }
+    .nf-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 56px 40px; max-width: 420px; width: 100%; text-align: center; box-shadow: var(--shadow); }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
+      <div class="header-actions">{% include 'partials/theme_toggle.html' %}{% include 'partials/lang_switcher.html' %}</div>
+    </div>
+  </header>
+  <div class="nf-wrap">
+    <div class="nf-card">
+      <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+      <h1 style="color:var(--text-primary);font-size:1.3rem;margin-bottom:10px">{{ t('verify_not_found_title') }}</h1>
+      <p style="color:var(--text-secondary);margin-bottom:28px">{{ t('verify_not_found_sub') }}</p>
+      <a href="/" class="btn-primary" style="display:inline-block;padding:12px 28px">← {{ t('nav_home') }}</a>
+    </div>
+  </div>
+  <script src="/static/js/theme.js"></script>
+</body>
+</html>

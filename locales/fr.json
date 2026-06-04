@@ -423,5 +423,27 @@
   "coach_subject": "Il est temps de faire une pause",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
-  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
+
+  "verify_page_title": "Profil de Trader Vérifié | 27pips",
+  "verify_consistency": "Score de Cohérence",
+  "verify_readonly_notice": "Ceci est une page de vérification publique en lecture seule. Aucune donnée privée n'est exposée.",
+  "verify_no_data": "Ce trader n'a pas encore enregistré suffisamment de trades pour afficher un profil public.",
+  "verify_wl_breakdown": "Répartition Gains / Pertes",
+  "verify_wins": "Gains",
+  "verify_losses": "Pertes",
+  "verify_top_pairs": "Paires les Plus Tradées",
+  "verify_active_since": "Actif",
+  "verify_seal": "Vérifié par 27pips",
+  "verify_generated": "Lien généré",
+  "verify_data_note": "Les données de performance sont auto-déclarées via le journal de trading 27pips.",
+  "verify_join_cta": "Rejoindre 27pips — Tradez plus intelligemment",
+  "verify_not_found_title": "Lien de Vérification Introuvable",
+  "verify_not_found_sub": "Ce lien a peut-être été révoqué ou est invalide. Demandez au trader de partager un nouveau lien.",
+  "verify_generate_btn": "Créer un Lien Public",
+  "verify_copy_btn": "Copier le Lien",
+  "verify_copy_tooltip": "Copier votre lien de vérification public dans le presse-papiers",
+  "verify_revoke_btn": "Révoquer",
+  "verify_revoke_tooltip": "Supprimer votre lien de profil public",
+  "verify_revoke_confirm": "Révoquer votre lien de vérification public ? Toute personne ayant l'ancien lien ne pourra plus voir votre profil."
 }

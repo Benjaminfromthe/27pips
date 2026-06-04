@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>{{ username }} — {{ t('verify_page_title') }}</title>
+  <meta name="description" content="{{ username }}'s verified trading performance on 27pips." />
+  <!-- Open Graph for social sharing -->
+  <meta property="og:title"       content="{{ username }} — Verified Trader | 27pips" />
+  <meta property="og:description" content="Win Rate: {{ metrics.win_rate|round(1) if metrics.win_rate else '—' }}% | Sortino: {{ metrics.sortino_ratio if metrics.sortino_ratio else '—' }} | Trades: {{ metrics.trade_count or 0 }}" />
+  <meta property="og:type"        content="website" />
+  {% include 'partials/theme_head.html' %}
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .verify-hero {
+      background: var(--hero-gradient);
+      padding: 72px 0 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .verify-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #34d399);
+      color: #fff;
+      font-size: 2rem; font-weight: 900;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 0 0 4px rgba(16,185,129,0.2);
+    }
+    .verify-username {
+      font-size: 1.8rem; font-weight: 900;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .verify-badge {
+      display: inline-block;
+      padding: 4px 16px; border-radius: 20px;
+      font-size: 0.82rem; font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .badge-gold    { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
+    .badge-green   { background: rgba(16,185,129,0.12); color: var(--accent); border: 1px solid rgba(16,185,129,0.3); }
+    .badge-blue    { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+    .badge-neutral { background: rgba(148,163,184,0.1); color: var(--text-secondary); border: 1px solid var(--border); }
+
+    /* Consistency ring */
+    .consistency-wrap {
+      display: inline-flex; flex-direction: column;
+      align-items: center; gap: 4px; margin-top: 8px;
+    }
+    .consistency-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--accent) calc(var(--pct) * 1%),
+        var(--border) 0
+      );
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .consistency-ring::after {
+      content: '';
+      position: absolute;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--bg-card);
+    }
+    .consistency-score {
+      position: relative; z-index: 1;
+      font-size: 1rem; font-weight: 900;
+      color: var(--text-primary);
+    }
+    .consistency-label {
+      font-size: 0.72rem; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* Stats grid */
+    .verify-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+    .verify-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .verify-card:hover { transform: translateY(-2px); }
+    .verify-card__icon  { font-size: 1.4rem; margin-bottom: 6px; display: block; }
+    .verify-card__label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-secondary); margin-bottom: 4px; }
+    .verify-card__value { font-size: 1.5rem; font-weight: 900; color: var(--text-primary); }
+    .verify-card__value.green  { color: var(--accent); }
+    .verify-card__value.red    { color: var(--accent-red); }
+    .verify-card__value.yellow { color: var(--accent-yellow); }
+
+    /* Top pairs */
+    .pairs-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .pair-chip {
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; padding: 4px 12px;
+      font-size: 0.82rem; font-weight: 600; color: var(--text-primary);
+    }
+
+    /* Verified seal */
+    .verify-seal {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 10px; padding: 8px 16px;
+      font-size: 0.8rem; color: var(--accent); font-weight: 600;
+    }
+
+    /* Read-only notice */
+    .readonly-notice {
+      background: rgba(56,189,248,0.07);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 0.78rem; color: var(--text-secondary);
+      text-align: center; margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .verify-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal header — no nav, no user menu, no search -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">📈</span>
+        <span class="logo-text">27<span class="logo-accent">pips</span></span>
+      </a>
+      <div class="header-actions">
+        {% include 'partials/theme_toggle.html' %}
+        {% include 'partials/lang_switcher.html' %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="verify-hero">
+    <div class="container">
+      <div class="verify-avatar">{{ username[0].upper() }}</div>
+      <h1 class="verify-username">{{ username }}</h1>
+      <span class="verify-badge badge-{{ badge_color }}">{{ badge }}</span>
+      <br />
+      <div class="consistency-wrap">
+        <div class="consistency-ring" style="--pct:{{ consistency }}">
+          <span class="consistency-score">{{ consistency }}</span>
+        </div>
+        <span class="consistency-label">{{ t('verify_consistency') }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main style="flex:1;background:var(--bg-primary);padding:48px 0">
+    <div class="container" style="max-width:880px">
+
+      <div class="readonly-notice">
+        🔒 {{ t('verify_readonly_notice') }}
+      </div>
+
+      {% if not metrics %}
+        <div style="text-align:center;padding:40px;color:var(--text-secondary)">
+          <p style="font-size:1.1rem">{{ t('verify_no_data') }}</p>
+        </div>
+      {% else %}
+
+        <!-- Core metrics grid -->
+        <div class="verify-grid">
+
+          <div class="verify-card">
+            <span class="verify-card__icon">🎯</span>
+            <p class="verify-card__label">{{ t('perf_win_rate') }}</p>
+            <p class="verify-card__value {{ 'green' if (metrics.win_rate or 0) >= 55 else ('yellow' if (metrics.win_rate or 0) >= 45 else 'red') }}">
+              {{ '%.1f'|format(metrics.win_rate or 0) }}%
+            </p>
+          </div>
+
+          <div class="verify-card">
+            <span class="verify-card__icon">📊</span>
+            <p class="verify-card__label">{{ t('perf_trades') }}</p>
+            <p class="verify-card__value">{{ metrics.trade_count or 0 }}</p>
+          </div>
+
+          <div class="verify-card">
+            <span class="verify-card__icon">{{ '📈' if (metrics.net_pips or 0) >= 0 else '📉' }}</span>
+            <p class="verify-card__label">{{ t('perf_net_pips') }}</p>
+            <p class="verify-card__value {{ 'green' if (metrics.net_pips or 0) >= 0 else 'red' }}">
+              {{ '+' if (metrics.net_pips or 0) >= 0 else '' }}{{ '%.1f'|format(metrics.net_pips or 0) }}
+            </p>
+          </div>
+
+          <div class="verify-card">
+            <span class="verify-card__icon">⚖️</span>
+            <p class="verify-card__label">{{ t('perf_profit_factor') }}</p>
+            <p class="verify-card__value {{ 'green' if (metrics.profit_factor or 0) >= 1.5 else ('yellow' if (metrics.profit_factor or 0) >= 1.0 else 'red') }}">
+              {% if metrics.profit_factor %}{{ '%.2f'|format(metrics.profit_factor) }}{% else %}∞{% endif %}
+            </p>
+          </div>
+
+          <div class="verify-card">
+            <span class="verify-card__icon">📐</span>
+            <p class="verify-card__label">{{ t('perf_sortino') }}</p>
+            <p class="verify-card__value {{ 'green' if (metrics.sortino_ratio or 0) >= 2.0 else ('yellow' if (metrics.sortino_ratio or 0) >= 1.0 else 'red') }}">
+              {% if metrics.sortino_ratio == 999 %}∞
+              {% elif metrics.sortino_ratio %}{{ '%.2f'|format(metrics.sortino_ratio) }}
+              {% else %}—{% endif %}
+            </p>
+          </div>
+
+          <div class="verify-card">
+            <span class="verify-card__icon">📊</span>
+            <p class="verify-card__label">{{ t('perf_mae_efficiency') }}</p>
+            <p class="verify-card__value {{ 'green' if ((metrics.mae_efficiency or 0)*100) >= 70 else ('yellow' if ((metrics.mae_efficiency or 0)*100) >= 40 else 'red') }}">
+              {% if metrics.mae_efficiency %}{{ '%.1f'|format(metrics.mae_efficiency * 100) }}%{% else %}—{% endif %}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- W/L breakdown -->
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px">
+          <h3 style="color:var(--text-primary);margin-bottom:16px;font-size:1rem">{{ t('verify_wl_breakdown') }}</h3>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:120px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:14px;text-align:center">
+              <p style="color:var(--accent);font-size:1.4rem;font-weight:900;margin:0">{{ metrics.win_count or 0 }}</p>
+              <p style="color:var(--text-secondary);font-size:0.78rem;margin:0">{{ t('verify_wins') }}</p>
+            </div>
+            <div style="flex:1;min-width:120px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:14px;text-align:center">
+              <p style="color:var(--accent-red);font-size:1.4rem;font-weight:900;margin:0">{{ metrics.loss_count or 0 }}</p>
+              <p style="color:var(--text-secondary);font-size:0.78rem;margin:0">{{ t('verify_losses') }}</p>
+            </div>
+            <div style="flex:1;min-width:120px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+              <p style="color:var(--accent-yellow);font-size:1.4rem;font-weight:900;margin:0">
+                {{ '+%.1f'|format(metrics.avg_win_pips or 0) }}
+              </p>
+              <p style="color:var(--text-secondary);font-size:0.78rem;margin:0">{{ t('perf_avg_win') }}</p>
+            </div>
+            <div style="flex:1;min-width:120px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center">
+              <p style="color:var(--accent-red);font-size:1.4rem;font-weight:900;margin:0">
+                -{{ '%.1f'|format(metrics.avg_loss_pips or 0) }}
+              </p>
+              <p style="color:var(--text-secondary);font-size:0.78rem;margin:0">{{ t('perf_avg_loss') }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top traded pairs -->
+        {% if top_pairs %}
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px">
+          <h3 style="color:var(--text-primary);margin-bottom:12px;font-size:1rem">{{ t('verify_top_pairs') }}</h3>
+          <div class="pairs-list">
+            {% for p in top_pairs %}
+            <span class="pair-chip">{{ p.pair }} <span style="color:var(--text-secondary)">({{ p.cnt }})</span></span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Activity period -->
+        {% if journal.first_trade %}
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px">
+          <p style="color:var(--text-secondary);font-size:0.82rem;margin:0">
+            📅 {{ t('verify_active_since') }}
+            <strong style="color:var(--text-primary)">{{ journal.first_trade[:10] }}</strong>
+            → <strong style="color:var(--text-primary)">{{ journal.last_trade[:10] }}</strong>
+          </p>
+        </div>
+        {% endif %}
+
+      {% endif %}
+
+      <!-- Verified seal + timestamp -->
+      <div style="text-align:center;margin-top:32px">
+        <div class="verify-seal">
+          ✅ {{ t('verify_seal') }}
+          <span style="opacity:0.6">·</span>
+          27pips / Shema Trading Hub
+        </div>
+        {% if token_created %}
+        <p style="color:var(--text-secondary);font-size:0.72rem;margin-top:8px">
+          {{ t('verify_generated') }}: {{ token_created[:10] }}
+        </p>
+        {% endif %}
+        <p style="color:var(--text-secondary);font-size:0.72rem;margin-top:4px">
+          {{ t('verify_data_note') }}
+        </p>
+      </div>
+
+      <!-- CTA to 27pips -->
+      <div style="text-align:center;margin-top:28px">
+        <a href="/" class="btn-primary" style="display:inline-block;padding:12px 28px">
+          {{ t('verify_join_cta') }}
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-text">27<span class="logo-accent">pips</span></span>
+        <p>{{ t('footer_hub', tagline=t('footer_tagline')) }}</p>
+      </div>
+      <p class="footer-copy">{{ t('footer_copy') }}</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/theme.js"></script>
+</body>
+</html>

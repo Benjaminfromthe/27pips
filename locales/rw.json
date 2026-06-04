@@ -423,5 +423,27 @@
   "coach_subject": "Ni igihe cyo guhagarara",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
-  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H"
+  "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
+
+  "verify_page_title": "Umwirondoro w'Umucuruzi Wemejwe | 27pips",
+  "verify_consistency": "Amanota y'Ubuhoraho",
+  "verify_readonly_notice": "Iyi ni paji rusange yo gusoma gusa. Nta makuru bwite aemerwa.",
+  "verify_no_data": "Uyu mucuruzi ntaraandika ubucuruzi buhagije kugira ngo abone umwirondoro rusange.",
+  "verify_wl_breakdown": "Intsinzi / Gutakaza",
+  "verify_wins": "Intsinzi",
+  "verify_losses": "Gutakaza",
+  "verify_top_pairs": "Imbonerahamwe Zicuruzwa Cyane",
+  "verify_active_since": "Akora",
+  "verify_seal": "Wemejwe na 27pips",
+  "verify_generated": "Uturasho twakozwe",
+  "verify_data_note": "Amakuru y'imikorere yandikwa bwite mu ibitabo by'ubucuruzi bya 27pips.",
+  "verify_join_cta": "Injira 27pips — Curuza neza",
+  "verify_not_found_title": "Uturasho two Kwemeza Ntiboneka",
+  "verify_not_found_sub": "Utu rasho twashobora kuba twavanweho cyangwa ntabwo ari twa nyayo. Saba umucuruzi gutwongera uturasho tushya.",
+  "verify_generate_btn": "Shiraho Uturasho Rusange",
+  "verify_copy_btn": "Kopi Uturasho",
+  "verify_copy_tooltip": "Kopi uturasho twawe rusange mu bubiko",
+  "verify_revoke_btn": "Vanaho",
+  "verify_revoke_tooltip": "Kura uturasho tw'umwirondoro wawe rusange",
+  "verify_revoke_confirm": "Vanaho uturasho twawe rusange? Umuntu wese ufite uturasho twa kera ntazashobora kureba umwirondoro wawe."
 }

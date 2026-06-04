@@ -221,6 +221,13 @@ def _schema_sql():
                 lookback_hours INTEGER NOT NULL DEFAULT 4,
                 sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )''',
+            '''CREATE TABLE IF NOT EXISTS verify_tokens (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                token_hash TEXT NOT NULL UNIQUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id)
+            )''',
         ]
     else:
         # SQLite schema (original)
@@ -328,6 +335,13 @@ def _schema_sql():
                 consecutive_losses INTEGER NOT NULL DEFAULT 0,
                 lookback_hours INTEGER NOT NULL DEFAULT 4,
                 sent_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )''',
+            '''CREATE TABLE IF NOT EXISTS verify_tokens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                token_hash TEXT NOT NULL UNIQUE,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id)
             )''',
         ]
 

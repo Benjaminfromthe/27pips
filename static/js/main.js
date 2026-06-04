@@ -1371,3 +1371,104 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPerformanceMetrics();
   }
 });
+
+
+// ============================================================
+// PUBLIC VERIFICATION LINK — generate / copy / revoke
+// ============================================================
+
+let _verifyToken = null;   // raw token stored in memory only
+
+function _verifyBaseUrl() {
+  return window.location.origin + '/verify/';
+}
+
+async function _checkVerifyStatus() {
+  try {
+    const r = await fetch('/verify/status');
+    const d = await r.json();
+    if (d.has_token) {
+      // User already has a token — show copy + revoke, hide generate
+      document.getElementById('verifyGenerateBtn').style.display = 'none';
+      document.getElementById('verifyCopyBtn').style.display    = 'inline-flex';
+      document.getElementById('verifyRevokeBtn').style.display  = 'inline-flex';
+      const box = document.getElementById('verifyLinkBox');
+      if (box) {
+        box.textContent = _verifyBaseUrl() + '(your link is active — click Copy to get it)';
+        box.style.display = 'block';
+      }
+    }
+  } catch { /* silent */ }
+}
+
+async function generateVerifyLink() {
+  const btn = document.getElementById('verifyGenerateBtn');
+  if (btn) btn.disabled = true;
+  try {
+    const r = await fetch('/verify/generate', { method: 'POST' });
+    const d = await r.json();
+    if (d.success) {
+      _verifyToken = d.token;
+      const url = _verifyBaseUrl() + d.token;
+      const box = document.getElementById('verifyLinkBox');
+      if (box) { box.textContent = url; box.style.display = 'block'; }
+      document.getElementById('verifyGenerateBtn').style.display = 'none';
+      document.getElementById('verifyCopyBtn').style.display    = 'inline-flex';
+      document.getElementById('verifyRevokeBtn').style.display  = 'inline-flex';
+    }
+  } catch (err) {
+    console.error('[VERIFY] Generate error:', err);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function copyVerifyLink() {
+  let url;
+  if (_verifyToken) {
+    url = _verifyBaseUrl() + _verifyToken;
+  } else {
+    // Re-generate to get a fresh token (can't recover old raw token from DB hash)
+    await generateVerifyLink();
+    if (!_verifyToken) return;
+    url = _verifyBaseUrl() + _verifyToken;
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    const btn = document.getElementById('verifyCopyBtn');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    }
+  } catch {
+    // Fallback for browsers without clipboard API
+    const box = document.getElementById('verifyLinkBox');
+    if (box) { box.textContent = url; box.style.display = 'block'; }
+    alert('Copy this link: ' + url);
+  }
+}
+
+async function revokeVerifyLink() {
+  if (!confirm((window.I18N && window.I18N.verify_revoke_confirm) || 'Revoke your public verification link? Anyone with the old link will no longer be able to view your profile.')) return;
+  try {
+    const r = await fetch('/verify/revoke', { method: 'DELETE' });
+    const d = await r.json();
+    if (d.success) {
+      _verifyToken = null;
+      document.getElementById('verifyGenerateBtn').style.display = 'inline-flex';
+      document.getElementById('verifyCopyBtn').style.display    = 'none';
+      document.getElementById('verifyRevokeBtn').style.display  = 'none';
+      const box = document.getElementById('verifyLinkBox');
+      if (box) { box.textContent = ''; box.style.display = 'none'; }
+    }
+  } catch (err) {
+    console.error('[VERIFY] Revoke error:', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('verifyLinkWrap')) {
+    _checkVerifyStatus();
+  }
+});

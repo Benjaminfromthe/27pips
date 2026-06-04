@@ -441,12 +441,35 @@
     </div>
 
     <!-- Recompute button -->
-    <div style="text-align:center;margin-top:20px">
+    <div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn-outline" id="perfRecomputeBtn"
               onclick="recomputeMetrics()"
               style="font-size:0.85rem;padding:8px 20px">
         🔄 {{ t('perf_recompute') }}
       </button>
+      <!-- Public verification link -->
+      <div id="verifyLinkWrap" style="display:inline-flex;align-items:center;gap:8px">
+        <button class="btn-outline" id="verifyGenerateBtn"
+                onclick="generateVerifyLink()"
+                style="font-size:0.85rem;padding:8px 20px">
+          🔗 {{ t('verify_generate_btn') }}
+        </button>
+        <button class="btn-outline" id="verifyCopyBtn"
+                onclick="copyVerifyLink()"
+                style="font-size:0.85rem;padding:8px 14px;display:none"
+                title="{{ t('verify_copy_tooltip') }}">
+          📋 {{ t('verify_copy_btn') }}
+        </button>
+        <button class="btn-outline" id="verifyRevokeBtn"
+                onclick="revokeVerifyLink()"
+                style="font-size:0.85rem;padding:8px 14px;display:none;color:var(--accent-red);border-color:var(--accent-red)"
+                title="{{ t('verify_revoke_tooltip') }}">
+          🗑 {{ t('verify_revoke_btn') }}
+        </button>
+      </div>
+    </div>
+    <div id="verifyLinkBox"
+         style="display:none;margin-top:12px;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;font-size:0.78rem;color:var(--text-secondary);word-break:break-all;text-align:center">
     </div>
   </div>
 </section>
@@ -809,7 +832,8 @@
     perf_sortino_strong:"{{ t('perf_sortino_strong') }}",
     perf_sortino_ok:   "{{ t('perf_sortino_ok') }}",
     perf_sortino_weak: "{{ t('perf_sortino_weak') }}",
-    perf_recompute:    "{{ t('perf_recompute') }}"
+    perf_recompute:    "{{ t('perf_recompute') }}",
+    verify_revoke_confirm: "{{ t('verify_revoke_confirm') }}"
   };
 </script>
 <script src="/static/js/main.js"></script>
