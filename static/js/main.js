@@ -1006,3 +1006,191 @@ document.addEventListener('click', e => {
     });
   });
 }());
+
+
+// ============================================================
+// LOAD MORE  — paginated content appending
+// ============================================================
+
+// Initial page size for signals (must match what loadSignals() renders first)
+const SIGNALS_PAGE_SIZE = 10;
+
+/**
+ * Called after the initial signals load to decide whether to show the button.
+ * Compares rendered row count against the total returned by the API.
+ */
+function _updateSignalsLoadMore(total) {
+  const btn = document.getElementById('signalsLoadMoreBtn');
+  if (!btn) return;
+  const tbody = document.getElementById('signalsBody');
+  const rendered = tbody ? tbody.querySelectorAll('tr[data-signal-id]').length : 0;
+  if (total > rendered) {
+    btn.style.display = 'inline-flex';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+/**
+ * Master "Load More" handler.
+ * type: 'signals' | 'courses'
+ */
+async function loadMoreContent(type) {
+  const btnId  = type === 'signals' ? 'signalsLoadMoreBtn' : 'eduLoadMoreBtn';
+  const btn    = document.getElementById(btnId);
+  if (!btn) return;
+
+  const page   = parseInt(btn.dataset.page || '2', 10);
+
+  // Visual feedback
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch(`/api/content/?type=${type}&page=${page}`);
+    const data = await res.json();
+
+    if (type === 'signals') {
+      _appendSignalRows(data);
+    } else if (type === 'courses') {
+      _appendCourseCards(data);
+    }
+
+    if (data.has_more) {
+      btn.dataset.page = page + 1;
+      btn.style.display = 'inline-flex';
+    } else {
+      btn.style.display = 'none';   // nothing more to load
+    }
+
+  } catch (err) {
+    console.error('[LOAD MORE] Error:', err);
+    // On network error just show the button again so the user can retry
+    btn.style.display = 'inline-flex';
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+// ── Signals row renderer ───────────────────────────────────
+function _appendSignalRows(data) {
+  const tbody = document.getElementById('signalsBody');
+  if (!tbody || !data.items) return;
+  const user_tier = data.user_tier || window.USER_TIER || 'guest';
+
+  data.items.forEach(s => {
+    const actionBadge = s.action === 'BUY'
+      ? '<span class="badge-buy">BUY</span>'
+      : '<span class="badge-sell">SELL</span>';
+
+    const statusMap = {
+      'Active':      '<span class="status-badge status-active">ACTIVE</span>',
+      'Pending':     '<span class="status-badge status-pending">PENDING</span>',
+      'TP Hit':      '<span class="status-badge status-tp">TP HIT ✅</span>',
+      'Stopped Out': '<span class="status-badge status-stopped">STOPPED</span>',
+    };
+    const statusBadge = statusMap[s.status]
+      || `<span class="status-badge">${s.status}</span>`;
+
+    const dotClass = s.pair && (s.pair.includes('XAU') || s.pair.includes('GOLD'))
+      ? 'asset-dot asset-gold'
+      : s.pair && (s.pair.includes('NAS') || s.pair.includes('US30'))
+        ? 'asset-dot asset-blue'
+        : 'asset-dot';
+
+    const locked = '<span class="premium-lock">🔒 Premium</span>';
+    const entry  = s.gated ? locked : (s.entry_price ?? '—');
+    const sl     = s.gated ? locked : `<span class="text-red">${s.stop_loss ?? '—'}</span>`;
+    const tp1    = s.gated ? locked : `<span class="text-green">${s.take_profit_1 ?? '—'}</span>`;
+    const tp2    = s.gated ? locked : `<span class="text-green">${s.take_profit_2 ?? '—'}</span>`;
+    const premBadge = s.is_premium ? '<span class="signal-premium-badge">👑</span>' : '';
+
+    const tr = document.createElement('tr');
+    if (s.gated) tr.className = 'signal-gated';
+    tr.setAttribute('data-signal-id', s.id);
+    tr.innerHTML = `
+      <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}${premBadge}</td>
+      <td>${actionBadge}</td>
+      <td class="mono">${entry}</td>
+      <td class="mono">${sl}</td>
+      <td class="mono">${tp1}</td>
+      <td class="mono">${tp2}</td>
+      <td>${statusBadge}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Course card renderer ───────────────────────────────────
+function _appendCourseCards(data) {
+  const grid = document.querySelector('.edu-grid');
+  if (!grid || !data.items) return;
+
+  const loadMoreText   = (window.I18N && window.I18N.load_more)   || 'Load More';
+  const comingSoonText = (window.I18N && window.I18N.edu_coming_soon) || 'Coming Soon';
+  const viewCurr       = (window.I18N && window.I18N.edu_view_curriculum) || 'View Curriculum →';
+
+  data.items.forEach(course => {
+    const pct      = course.progress_pct || 0;
+    const done     = course.completed_lessons || 0;
+    const total    = course.total_lessons || 0;
+
+    const card = document.createElement('div');
+    card.className = 'edu-card';
+    card.innerHTML = `
+      <div class="edu-card-header">
+        <span class="edu-icon">🎓</span>
+        <div>
+          <h3 class="edu-module-title">${course.title}</h3>
+          <p class="edu-module-sub">${course.description || ''}</p>
+        </div>
+        <span class="edu-badge badge-locked">${total} ${(window.I18N && window.I18N.edu_lessons_label) || 'lessons'}</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" style="width:${pct}%"></div>
+      </div>
+      <p class="progress-text">${done} / ${total}</p>
+      <a href="/education/"
+         class="btn-outline full-width"
+         style="display:block;text-align:center;text-decoration:none;padding:10px">
+        ${viewCurr}
+      </a>
+    `;
+    // Insert before the Load More wrapper (last child of grid)
+    grid.appendChild(card);
+  });
+}
+
+// ── Wire up after initial loads ────────────────────────────
+// Patch loadSignals() to reveal the signals Load More button once data arrives.
+// We wrap it here so we don't modify the core loadSignals function.
+document.addEventListener('DOMContentLoaded', function () {
+  // Intercept the signals fetch result to know total count
+  const _origLoadSignals = window.loadSignals;
+  if (typeof _origLoadSignals === 'function') {
+    window.loadSignals = async function () {
+      await _origLoadSignals();
+      // After signals load, check total via a lightweight count endpoint
+      try {
+        const r = await fetch('/api/content/?type=signals&page=1');
+        const d = await r.json();
+        if (d.total > SIGNALS_PAGE_SIZE) {
+          const btn = document.getElementById('signalsLoadMoreBtn');
+          if (btn) btn.style.display = 'inline-flex';
+        }
+      } catch { /* silent */ }
+    };
+  }
+
+  // Check if courses has more than the 3 shown on homepage
+  fetch('/api/content/?type=courses&page=1')
+    .then(r => r.json())
+    .then(d => {
+      if (d.total > 3) {
+        const btn = document.getElementById('eduLoadMoreBtn');
+        if (btn) btn.style.display = 'inline-flex';
+      }
+    })
+    .catch(() => { /* silent */ });
+});

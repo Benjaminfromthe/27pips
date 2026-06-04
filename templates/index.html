@@ -196,6 +196,17 @@
 
     <!-- CTA to full education page -->
     <div style="text-align:center;margin-top:32px">
+      <!-- Load More courses button -->
+      <div id="eduLoadMoreWrap" style="margin-bottom:16px">
+        <button id="eduLoadMoreBtn"
+                class="btn-load-more"
+                onclick="loadMoreContent('courses')"
+                data-page="2"
+                style="display:none">
+          <span class="load-more-text">{{ t('load_more') }}</span>
+          <span class="load-more-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
       <a href="/education/" class="btn-primary" style="display:inline-block;padding:14px 36px;font-size:1rem">
         📚 {{ t('edu_cta') }}
       </a>
@@ -228,6 +239,17 @@
       </table>
     </div>
     <div class="signals-cta">
+      <!-- Load More signals button -->
+      <div id="signalsLoadMoreWrap" style="width:100%;text-align:center;margin-bottom:12px">
+        <button id="signalsLoadMoreBtn"
+                class="btn-load-more"
+                onclick="loadMoreContent('signals')"
+                data-page="2"
+                style="display:none">
+          <span class="load-more-text">{{ t('load_more') }}</span>
+          <span class="load-more-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
       <p class="text-muted">{{ t('signals_locked') }}</p>
       <button class="btn-primary" onclick="openModal()">{{ t('signals_cta') }}</button>
     </div>
@@ -726,7 +748,12 @@
     search_type_lesson:"{{ t('search_type_lesson') }}",
     search_type_course:"{{ t('search_type_course') }}",
     search_type_signal:"{{ t('search_type_signal') }}",
-    search_type_tool:  "{{ t('search_type_tool') }}"
+    search_type_tool:  "{{ t('search_type_tool') }}",
+    load_more:         "{{ t('load_more') }}",
+    load_more_end:     "{{ t('load_more_end') }}",
+    edu_coming_soon:   "{{ t('edu_coming_soon') }}",
+    edu_view_curriculum:"{{ t('edu_view_curriculum') }}",
+    edu_lessons_label: "{{ t('edu_lessons_label') }}"
   };
 </script>
 <script src="/static/js/main.js"></script>

@@ -387,5 +387,7 @@
   "search_type_lesson": "Lessons",
   "search_type_course": "Courses",
   "search_type_signal": "Signals",
-  "search_type_tool": "Features"
+  "search_type_tool": "Features",
+  "load_more": "Load More",
+  "load_more_end": "All content loaded"
 }

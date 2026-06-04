@@ -387,5 +387,7 @@
   "search_type_lesson": "Leçons",
   "search_type_course": "Cours",
   "search_type_signal": "Signaux",
-  "search_type_tool": "Fonctionnalités"
+  "search_type_tool": "Fonctionnalités",
+  "load_more": "Charger plus",
+  "load_more_end": "Tout le contenu est chargé"
 }

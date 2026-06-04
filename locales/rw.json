@@ -387,5 +387,7 @@
   "search_type_lesson": "Amasomo",
   "search_type_course": "Ibizamini",
   "search_type_signal": "Amakuru",
-  "search_type_tool": "Ibikoresho"
+  "search_type_tool": "Ibikoresho",
+  "load_more": "Shyiraho ibindi",
+  "load_more_end": "Ibintu byose byakiriwe"
 }
