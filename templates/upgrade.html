@@ -8,6 +8,10 @@
   {% include 'partials/theme_head.html' %}
   <link rel="stylesheet" href="/static/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Flutterwave Inline JS (loaded unconditionally; safe to include even without keys) -->
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+
   <style>
     .premium-hero{background:var(--hero-gradient);padding:80px 0 60px;text-align:center;position:relative;overflow:hidden}
     .premium-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.12),transparent 70%);pointer-events:none}
@@ -15,20 +19,48 @@
     .premium-title{font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--text-primary);margin-bottom:12px}
     .premium-title span{background:linear-gradient(90deg,var(--accent-yellow),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .premium-sub{color:var(--text-secondary);font-size:1.05rem;max-width:520px;margin:0 auto 32px}
-    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
-    .tier-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px}
-    .tier-card.featured{border-color:var(--accent-yellow);background:rgba(245,158,11,0.05);position:relative}
-    .tier-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--accent-yellow),#fbbf24);color:var(--bg-primary);padding:4px 18px;border-radius:20px;font-size:0.75rem;font-weight:800;white-space:nowrap}
+
+    /* Three-column plan grid */
+    .plans-compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
+    @media(max-width:900px){.plans-compare-grid{grid-template-columns:1fr}}
+
+    .tier-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative}
+    .tier-card.featured-pro{border-color:#f59e0b;background:rgba(245,158,11,0.04)}
+    .tier-card.featured-elite{border-color:#a78bfa;background:rgba(167,139,250,0.04)}
+    .tier-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:5px 20px;border-radius:20px;font-size:0.75rem;font-weight:800;white-space:nowrap}
+    .badge-pro{background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a}
+    .badge-elite{background:linear-gradient(90deg,#7c3aed,#a78bfa);color:#fff}
+
     .tier-name{font-size:0.85rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
-    .tier-price{font-size:2.5rem;font-weight:900;color:var(--text-primary);margin-bottom:4px}
+    .tier-price{font-size:2.4rem;font-weight:900;color:var(--text-primary);margin-bottom:4px;line-height:1.1}
     .tier-price span{font-size:1rem;color:var(--text-secondary);font-weight:400}
-    .tier-features{list-style:none;margin:20px 0 28px;display:flex;flex-direction:column;gap:10px}
-    .tier-features li{font-size:0.88rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px}
+    .tier-features{list-style:none;margin:20px 0 24px;display:flex;flex-direction:column;gap:10px}
+    .tier-features li{font-size:0.88rem;color:var(--text-secondary)}
     .tier-features li.yes{color:var(--text-primary)}
-    .btn-upgrade{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0f172a;border:none;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;font-family:inherit;transition:all 0.2s}
-    .btn-upgrade:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,0.4)}
-    .already-premium{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:24px;text-align:center;max-width:500px;margin:0 auto}
-    @media(max-width:600px){.compare-grid{grid-template-columns:1fr}}
+
+    .btn-upgrade-pro{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0f172a;border:none;padding:14px 24px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;font-family:inherit;transition:all 0.2s}
+    .btn-upgrade-pro:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,0.35)}
+
+    .btn-upgrade-elite{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none;padding:14px 24px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;font-family:inherit;transition:all 0.2s}
+    .btn-upgrade-elite:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,0.35)}
+
+    .btn-upgrade-pro:disabled,
+    .btn-upgrade-elite:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+    /* Current plan badge */
+    .current-plan-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:8px 16px;font-size:0.82rem;color:var(--accent);font-weight:700;margin-bottom:24px}
+
+    /* Payment status overlay */
+    .pay-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;align-items:center;justify-content:center}
+    .pay-overlay.active{display:flex}
+    .pay-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:40px;text-align:center;max-width:380px;width:100%;animation:slideUp 0.3s ease}
+    .pay-card h3{color:var(--text-primary);margin-bottom:8px}
+    .pay-card p{color:var(--text-secondary);margin-bottom:20px}
+
+    /* Test mode banner */
+    .test-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:12px 20px;text-align:center;font-size:0.82rem;color:var(--accent-yellow);margin-bottom:32px;max-width:760px;margin-left:auto;margin-right:auto}
+
+    .already-active{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:24px;text-align:center;max-width:500px;margin:0 auto}
   </style>
 </head>
 <body>
@@ -37,6 +69,23 @@
 <header class="header" id="header">
   <div class="container header-inner">
     <a href="/" class="logo"><span class="logo-icon">📈</span><span class="logo-text">27<span class="logo-accent">pips</span></span></a>
+
+    <!-- Search bar -->
+    <div class="search-wrap" id="searchWrap" role="search">
+      <div class="search-input-row">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <input type="search" id="siteSearchInput" class="search-input"
+               placeholder="{{ t('search_placeholder') }}" autocomplete="off"
+               aria-label="{{ t('search_placeholder') }}" />
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+
     <div class="header-actions">
       {% include 'partials/theme_toggle.html' %}
       {% include 'partials/lang_switcher.html' %}
@@ -64,25 +113,28 @@
     <span class="crown">👑</span>
     <h1 class="premium-title">{{ t('upgrade_hero_title') }} <span>{{ t('upgrade_hero_brand') }}</span></h1>
     <p class="premium-sub">{{ t('upgrade_page_sub') }}</p>
+
+    {% if tier not in ['free', None, ''] %}
+    <div class="current-plan-badge">
+      ✅ {{ t('upgrade_active_plan') }}: <strong>{{ tier | title }}</strong>
+    </div>
+    {% endif %}
   </div>
 </div>
 
-<!-- COMPARISON -->
+<!-- PLAN CARDS -->
 <section style="background:var(--bg-primary);padding:60px 0">
   <div class="container">
 
-    {% if tier == 'premium' %}
-    <div class="already-premium">
-      <div style="font-size:2.5rem;margin-bottom:12px">🎉</div>
-      <h2 style="color:var(--accent);margin-bottom:8px">{{ t('upgrade_already_title') }}</h2>
-      <p style="color:var(--text-secondary);margin-bottom:20px">{{ t('upgrade_already_sub') }}</p>
-      <a href="/" class="btn-primary" style="display:inline-block">← {{ t('upgrade_back_dashboard') }}</a>
+    {% if is_test_mode %}
+    <div class="test-banner">
+      🧪 {{ t('upgrade_test_mode_notice') }}
     </div>
+    {% endif %}
 
-    {% else %}
-    <div class="compare-grid">
+    <div class="plans-compare-grid">
 
-      <!-- Free tier -->
+      <!-- ── FREE ── -->
       <div class="tier-card">
         <p class="tier-name">{{ t('plan_free') }}</p>
         <p class="tier-price">$0<span>{{ t('plan_price_forever') }}</span></p>
@@ -95,16 +147,19 @@
           <li>❌ {{ t('upgrade_free_no2') }}</li>
           <li>❌ {{ t('upgrade_free_no3') }}</li>
           <li>❌ {{ t('plan_starter_no2') }}</li>
-          <li>❌ {{ t('plan_starter_no1') }}</li>
         </ul>
-        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">{{ t('upgrade_current_plan') }}</button>
+        <button class="btn-outline full-width" disabled style="opacity:0.5;cursor:default">
+          {% if tier == 'free' or not tier %}{{ t('upgrade_current_plan') }}{% else %}{{ t('plan_free') }}{% endif %}
+        </button>
       </div>
 
-      <!-- Premium tier -->
-      <div class="tier-card featured">
-        <div class="tier-badge">👑 {{ t('upgrade_recommended') }}</div>
-        <p class="tier-name" style="color:var(--accent-yellow)">{{ t('upgrade_tier_premium') }}</p>
-        <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$29<span style="-webkit-text-fill-color:#94a3b8">{{ t('plan_per_month') }}</span></p>
+      <!-- ── PRO ── -->
+      <div class="tier-card featured-pro">
+        <div class="tier-badge badge-pro">⭐ {{ t('plan_most_popular') }}</div>
+        <p class="tier-name" style="color:#f59e0b">{{ t('plan_pro') }}</p>
+        <p class="tier-price" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent">
+          $29<span style="-webkit-text-fill-color:var(--text-secondary)">{{ t('plan_per_month') }}</span>
+        </p>
         <ul class="tier-features">
           <li class="yes">✅ {{ t('upgrade_premium_feat1') }}</li>
           <li class="yes">✅ <strong style="color:#f59e0b">{{ t('upgrade_premium_feat2') }}</strong></li>
@@ -113,19 +168,77 @@
           <li class="yes">✅ {{ t('plan_pro_feat1') }}</li>
           <li class="yes">✅ {{ t('plan_pro_feat4') }}</li>
           <li class="yes">✅ {{ t('upgrade_premium_feat7') }}</li>
-          <li class="yes">✅ {{ t('plan_pro_feat5') }}</li>
           <li class="yes">✅ {{ t('plan_pro_feat6') }}</li>
         </ul>
-        {% if user %}
-        <form method="POST" action="/upgrade/simulate">
-          <button type="submit" class="btn-upgrade">🚀 {{ t('upgrade_cta') }}</button>
-        </form>
-        <p style="text-align:center;font-size:0.75rem;color:var(--text-secondary);margin-top:10px">{{ t('upgrade_demo_note') }}</p>
+
+        {% if tier in ['pro', 'premium', 'elite'] %}
+          <button class="btn-upgrade-pro" disabled>✅ {{ t('upgrade_current_plan') }}</button>
+        {% elif user %}
+          <button class="btn-upgrade-pro" onclick="startPayment('pro')">
+            🚀 {{ t('plan_start_pro') }} — $29{{ t('plan_per_month') }}
+          </button>
+          {% if is_test_mode %}
+          <form method="POST" action="/upgrade/simulate" style="margin-top:8px">
+            <button type="submit" class="btn-outline full-width" style="font-size:0.8rem;padding:8px">
+              🧪 {{ t('upgrade_test_simulate') }}
+            </button>
+          </form>
+          {% endif %}
         {% else %}
-        <button class="btn-upgrade" onclick="openModal('signup')">🚀 {{ t('upgrade_cta_signup') }}</button>
+          <button class="btn-upgrade-pro" onclick="openModal('signup')">
+            🚀 {{ t('upgrade_cta_signup') }}
+          </button>
         {% endif %}
       </div>
 
+      <!-- ── ELITE ── -->
+      <div class="tier-card featured-elite">
+        <div class="tier-badge badge-elite">💎 {{ t('plan_elite') }}</div>
+        <p class="tier-name" style="color:#a78bfa">{{ t('plan_elite') }}</p>
+        <p class="tier-price" style="background:linear-gradient(90deg,#7c3aed,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">
+          $79<span style="-webkit-text-fill-color:var(--text-secondary)">{{ t('plan_per_month') }}</span>
+        </p>
+        <ul class="tier-features">
+          <li class="yes">✅ {{ t('plan_elite_feat1') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat2') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat3') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat4') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat5') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat6') }}</li>
+          <li class="yes">✅ {{ t('plan_elite_feat7') }}</li>
+        </ul>
+
+        {% if tier == 'elite' %}
+          <button class="btn-upgrade-elite" disabled>✅ {{ t('upgrade_current_plan') }}</button>
+        {% elif user %}
+          <button class="btn-upgrade-elite" onclick="startPayment('elite')">
+            💎 {{ t('plan_go_elite') }} — $79{{ t('plan_per_month') }}
+          </button>
+          {% if is_test_mode %}
+          <p style="text-align:center;font-size:0.75rem;color:var(--text-secondary);margin-top:8px">
+            {{ t('upgrade_demo_note') }}
+          </p>
+          {% endif %}
+        {% else %}
+          <button class="btn-upgrade-elite" onclick="openModal('signup')">
+            💎 {{ t('upgrade_cta_signup') }}
+          </button>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- Payment methods note -->
+    <div style="text-align:center;margin-top:36px">
+      <p style="color:var(--text-secondary);font-size:0.82rem;margin-bottom:12px">
+        {{ t('upgrade_payment_methods') }}
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary)">💳 {{ t('upgrade_pay_card') }}</span>
+        <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary)">📱 MTN Mobile Money</span>
+        <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary)">📱 Airtel Money</span>
+        <span style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:0.8rem;color:var(--text-secondary)">🏦 {{ t('upgrade_pay_bank') }}</span>
+      </div>
     </div>
 
     <!-- Social proof -->
@@ -137,14 +250,126 @@
         <div style="text-align:center"><p style="font-size:1.8rem;font-weight:900;color:var(--accent-yellow)">12</p><p style="color:var(--text-secondary);font-size:0.8rem">{{ t('about_stat_countries') }}</p></div>
       </div>
     </div>
-    {% endif %}
 
   </div>
 </section>
+
+<!-- Payment status overlay -->
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-card" id="payCard">
+    <div style="font-size:2.5rem;margin-bottom:12px" id="payIcon">⏳</div>
+    <h3 id="payTitle">{{ t('upgrade_processing') }}</h3>
+    <p id="payMsg">{{ t('upgrade_processing_sub') }}</p>
+    <div id="payActions" style="display:none;margin-top:16px">
+      <a href="/" class="btn-primary" style="display:inline-block;padding:12px 28px">
+        {{ t('upgrade_go_dashboard') }}
+      </a>
+    </div>
+  </div>
+</div>
 
 {% include 'partials/auth_modal.html' %}
 
 <script src="/static/js/theme.js"></script>
 <script src="/static/js/main.js"></script>
+<script>
+// ── Flutterwave Payment Integration ──────────────────────
+const FLW_PUBLIC_KEY = "{{ flw_public_key }}";
+const USER_EMAIL     = "{{ user_email | e }}";
+const USER_NAME      = "{{ user.username | e if user else '' }}";
+
+function showPayOverlay(icon, title, msg, showActions) {
+  document.getElementById('payIcon').textContent    = icon;
+  document.getElementById('payTitle').textContent   = title;
+  document.getElementById('payMsg').textContent     = msg;
+  document.getElementById('payActions').style.display = showActions ? 'block' : 'none';
+  document.getElementById('payOverlay').classList.add('active');
+}
+
+function hidePayOverlay() {
+  document.getElementById('payOverlay').classList.remove('active');
+}
+
+async function startPayment(plan) {
+  if (!FLW_PUBLIC_KEY) {
+    alert('Payment not configured yet. Please try again later.');
+    return;
+  }
+  if (!USER_EMAIL) {
+    openModal('login');
+    return;
+  }
+
+  // Step 1: Create pending payment record, get tx_ref
+  showPayOverlay('⏳', '{{ t("upgrade_processing") }}', '{{ t("upgrade_processing_sub") }}', false);
+
+  let txRef, amount, currency, planName;
+  try {
+    const res  = await fetch('/upgrade/init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || 'Init failed');
+    txRef    = data.tx_ref;
+    amount   = data.amount;
+    currency = data.currency;
+    planName = data.plan_name;
+  } catch (err) {
+    hidePayOverlay();
+    alert('Could not start payment: ' + err.message);
+    return;
+  }
+
+  hidePayOverlay();
+
+  // Step 2: Open Flutterwave modal
+  FlutterwaveCheckout({
+    public_key: FLW_PUBLIC_KEY,
+    tx_ref:     txRef,
+    amount:     amount,
+    currency:   currency,
+    payment_options: 'card,mobilemoney,ussd,banktransfer',
+    customer: {
+      email:      USER_EMAIL,
+      name:       USER_NAME || USER_EMAIL,
+    },
+    customizations: {
+      title:       '27pips — ' + planName + ' Plan',
+      description: 'Monthly subscription to 27pips ' + planName,
+      logo:        '{{ request.host_url }}static/uploads/.gitkeep',
+    },
+    callback: async function(response) {
+      // Step 3: Notify backend of payment result
+      showPayOverlay('⏳', '{{ t("upgrade_activating") }}', '{{ t("upgrade_activating_sub") }}', false);
+      try {
+        const r = await fetch('/upgrade/confirm/' + txRef, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            flw_ref: response.flw_ref || '',
+            status:  response.status  || '',
+          })
+        });
+        const d = await r.json();
+        if (d.success) {
+          showPayOverlay('🎉', '{{ t("upgrade_success_title") }}',
+            '{{ t("upgrade_success_sub") }}', true);
+        } else {
+          showPayOverlay('⚠️', '{{ t("upgrade_verify_pending") }}',
+            '{{ t("upgrade_verify_pending_sub") }}', true);
+        }
+      } catch {
+        showPayOverlay('⚠️', '{{ t("upgrade_verify_pending") }}',
+          '{{ t("upgrade_verify_pending_sub") }}', true);
+      }
+    },
+    onclose: function() {
+      hidePayOverlay();
+    }
+  });
+}
+</script>
 </body>
 </html>

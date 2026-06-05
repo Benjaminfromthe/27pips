@@ -45,6 +45,12 @@ def create_app():
     app.config['APP_BASE_URL']      = os.environ.get(
         'APP_BASE_URL', 'https://two7pips.onrender.com'
     )
+    # ── Flutterwave Payment ───────────────────────────────────
+    # Get these from https://dashboard.flutterwave.com/settings/apis
+    # Use FLWPUBK_TEST / FLWSECK_TEST keys for sandbox; live keys when ready
+    app.config['FLW_PUBLIC_KEY']  = os.environ.get('FLW_PUBLIC_KEY',  '')
+    app.config['FLW_SECRET_KEY']  = os.environ.get('FLW_SECRET_KEY',  '')
+    app.config['FLW_SECRET_HASH'] = os.environ.get('FLW_SECRET_HASH', '')
 
     # ── Database ──────────────────────────────────────────────
     with app.app_context():
