@@ -251,7 +251,6 @@
   "upgrade_demo_note": "Iyongera ry'igerageza — nta wishyura",
   "upgrade_social_proof": "Byizewe n'abacuruzi mu Afrika n'ahandi",
   "upgrade_members": "Abanyamuryango bakora",
-
   "admin_page_title": "27pips Admin",
   "admin_signals_page_title": "27pips — Gucunga Amakuru",
   "admin_access_title": "Kwinjira nk'Umunyamabwire",
@@ -280,7 +279,6 @@
   "admin_btn_update": "Vugurura",
   "admin_confirm_delete": "Gusiba iki makuru?",
   "admin_no_signals": "Nta makuru arahari. Ohereza ibya mbere hejuru.",
-
   "auth_signing_in": "Birimo kwinjira…",
   "auth_creating_account": "Birimo gufungura konti…",
   "error_network": "Ikibazo cy'aho gutumanaho. Gerageza nanone.",
@@ -304,31 +302,22 @@
   "tracker_limit_breached": "UMUPAKA WARENGEJE",
   "tracker_target_reached": "Intego Igezweho!",
   "tracker_keep_going": "y'intego igezweho — Komeza",
-
   "course_title_beginner": "Ishuri rya Mbere: Intangiriro ya Forex",
   "course_desc_beginner": "Tangira kuva ku ntangiriro. Menya forex ni iki, uburyo imbonerahamwe z'inzinge zikoraho, no gusoma ikirangantego.",
   "course_title_intermediate": "Amashuri Abanza: Gusoma Ikirangantego",
   "course_desc_intermediate": "Menya gusoma ibirangantego by'igiciro, kumenya ingano z'ibanze, no gusobanukirwa imiterere y'ibishusho.",
-
   "lesson_title_what_is_forex": "Forex ni iki?",
   "lesson_title_currency_pairs": "Imbonerahamwe z'Inzinge Zisobanurwa",
   "lesson_title_what_is_pip": "Pip ni iki?",
   "lesson_title_support_resistance": "Gushyigikira no Guhangana",
   "lesson_title_candlesticks": "Imiterere y'Ibishusho",
   "lesson_title_trend_lines": "Imirongo y'Iterambere no Imiterere y'Isoko",
-
-  "lesson_content_what_is_forex": "<h2>Isoko rya Forex ni iki?</h2><p><strong>Isoko ry'inzinge (Forex cyangwa FX)</strong> ni isoko rinini cyane ry'imari ku isi, gifite amafaranga arenga <strong>trillion $7.5</strong> acuruziwa buri munsi. Ntirimeze nka isoko ry'imigabane — rirakora amasaha 24 ku munsi, iminsi 5 mu cyumweru mu bikomoka bitandukanye by'imari ku isi.</p><h3>Kuki Gucuruza Forex?</h3><ul><li>✅ Isoko ryuzuye — injira kandi usohooke ako kanya</li><li>✅ Ingano nto zo gutangiriraho — tangira na $100 gusa</li><li>✅ Curuza mu nzira zombi — unguke isoko rizamuka NO rigwa</li><li>✅ Leverage iboneka — genzura ingano nini hakoreshejwe capital nto</li></ul><h3>Ni bande Bacuruza Forex?</h3><p>Banki nkuru, banki z'ubucuruzi, inganda z'imari, sosiyete, n'abacuruzi nk'iwe bose bafatanya mu isoko rya forex.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Forex ni guhindura inzinge imwe ukayindura indi. Iyo ugiye hanze y'igihugu ukajya guhindura amafaranga, uri gufatanya mu isoko rya forex.</blockquote>",
-
-  "lesson_content_currency_pairs": "<h2>Gusobanukirwa Imbonerahamwe z'Inzinge</h2><p>Muri forex, inzinge zicuruziwa buri gihe mu <strong>mbonerahamwe</strong>. Ugura inzinge imwe kandi ugurisha indi mu gihe kimwe.</p><h3>Imiterere y'Imbonerahamwe y'Inzinge</h3><p>Reba <strong>EUR/USD = 1.0850</strong>:</p><ul><li><strong>EUR</strong> = Inzinge y'ibanze (iyo ugura)</li><li><strong>USD</strong> = Inzinge igereranywa (iyo ugurisha)</li><li><strong>1.0850</strong> = Bitwara $1.0850 kugura €1</li></ul><h3>Imbonerahamwe Nkuru</h3><table style=\"width:100%;border-collapse:collapse;margin:16px 0\"><tr style=\"background:rgba(16,185,129,0.1)\"><th style=\"padding:8px;text-align:left\">Imbonerahamwe</th><th style=\"padding:8px;text-align:left\">Izina</th></tr><tr><td style=\"padding:8px\">EUR/USD</td><td style=\"padding:8px\">Euro</td></tr><tr><td style=\"padding:8px\">GBP/USD</td><td style=\"padding:8px\">Cable</td></tr><tr><td style=\"padding:8px\">USD/JPY</td><td style=\"padding:8px\">Yen</td></tr><tr><td style=\"padding:8px\">XAU/USD</td><td style=\"padding:8px\">Zahabu</td></tr></table><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Menya inzinge y'ibanze n'iyo igereranywa buri gihe. Igiciro kikubereza ingano y'inzinge igereranywa ukeneye kugura igice kimwe cy'inzinge y'ibanze.</blockquote>",
-
+  "lesson_content_what_is_forex": "<h2>Intangiriro</h2><p><strong>Isoko rya Forex</strong> ni isoko rinini cyane ry'imari ku isi, gifite amafaranga arenga <strong>trillion $7.5</strong> acuruziwa buri munsi. Rirakora amasaha 24 ku munsi, iminsi 5 mu cyumweru.</p><h2>Igitekerezo cy'Ibanze 1 — Ni iki gicuruzwa?</h2><p>Muri Forex, <strong>uhindura inzinge imwe ukayindura indi</strong>. Inzinge zicuruzwa mu <strong>mbonerahamwe</strong> nka EUR/USD cyangwa GBP/JPY.</p><h2>Igitekerezo cy'Ibanze 2 — Ni bande bacuruza Forex?</h2><ul><li>🏦 <strong>Banki Nkuru</strong> — gucunga imfungo</li><li>🏢 <strong>Banki z'Ubucuruzi</strong> — gufasha ubucuruzi mpuzamahanga</li><li>👤 <strong>Abacuruzi Bwite (wowe)</strong> — bacuruza binyuze kuri broker</li></ul><h2>Igitekerezo cy'Ibanze 3 — Kuki Gucuruza Forex?</h2><ul><li>✅ <strong>Isoko ryuzuye</strong> — injira kandi usohooke ako kanya</li><li>✅ <strong>Tangira na $100</strong> — ingano nto zo gutangiriraho</li><li>✅ <strong>Curuza inzira zombi</strong> — unguke iyo igiciro kizamuka CYANGWA kigwa</li><li>✅ <strong>Leverage</strong> — genzura ingano nini hakoreshejwe capital nto</li></ul><hr style='border-color:#334155;margin:32px 0'><h2>Ibyo Wiga Vuba</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 1: Ingano y'ubucuruzi bwa Forex buri munsi ni ehe?</p><p style='color:#94a3b8'>A) $250 miliyari</p><p style='color:#10b981;font-weight:700'>B) $7.5 trillion ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 2: Gusangira London–New York bikomeye ryari?</p><p style='color:#94a3b8'>A) Tokyo–Sydney</p><p style='color:#10b981;font-weight:700'>B) London–New York ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 3: Muri Forex ushobora kunyakira gusa iyo igiciro kizamuka. Ni ukuri cyangwa Ni ikinyoma?</p><p style='color:#94a3b8'>A) Ni ukuri</p><p style='color:#10b981;font-weight:700'>B) Ni ikinyoma — ushobora kunyakira inzira zombi ✅</p></div>",
+  "lesson_content_currency_pairs": "<h2>Intangiriro</h2><p>Muri Forex, buri gihe ucuruza <strong>imbonerahamwe y'inzinge</strong> — ugura inzinge imwe kandi ugurisha indi mu gihe kimwe.</p><h2>Igitekerezo cy'Ibanze 1 — Imiterere y'Imbonerahamwe</h2><ul><li><strong>Inzinge y'Ibanze</strong> — iya mbere (iyo ugura)</li><li><strong>Inzinge Igereranywa</strong> — iya kabiri (iyo ugurisha)</li></ul><p>Urugero: <strong>EUR/USD = 1.0850</strong> — bitwara $1.0850 kugura €1.00.</p><blockquote>💡 Niba EUR/USD izamuka kuva 1.0850 kugeza 1.0900, Euro yakomeye — iterambere ry'hejuru.</blockquote><h2>Igitekerezo cy'Ibanze 2 — Ubwoko Bune bw'Imbonerahamwe</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Ubwoko</th><th style='padding:8px;text-align:left'>Urugero</th><th style='padding:8px;text-align:left'>Ibiranga</th></tr><tr><td style='padding:8px'><strong>Nkuru</strong></td><td style='padding:8px'>EUR/USD, GBP/USD</td><td style='padding:8px'>Isoko ryuzuye, spread nto</td></tr><tr><td style='padding:8px'><strong>Gato</strong></td><td style='padding:8px'>EUR/GBP, GBP/JPY</td><td style='padding:8px'>Isoko ryiza, nta USD</td></tr><tr><td style='padding:8px'><strong>Bidasanzwe</strong></td><td style='padding:8px'>USD/TRY, USD/NGN</td><td style='padding:8px'>Isoko nkeya, spread nini</td></tr><tr><td style='padding:8px'><strong>Metale</strong></td><td style='padding:8px'>XAU/USD (Zahabu)</td><td style='padding:8px'>Ihinduka rinini</td></tr></table><h2>Igitekerezo cy'Ibanze 3 — Bid, Ask na Spread</h2><ul><li><strong>Bid</strong> — igiciro broker agurisha (igiciro cyawe cyo kugurisha)</li><li><strong>Ask</strong> — igiciro broker acuruza (igiciro cyawe cyo kugura)</li></ul><p>Itandukaniro = <strong>Spread</strong> — umusoro wa broker.</p><blockquote>💡 Injira mu KUGURA ku Ask. Sohooka ku Bid. Spread ni igiciro buri bucuruzi.</blockquote><hr style='border-color:#334155;margin:32px 0'><h2>Ibyo Wiga Vuba</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 1: Muri EUR/USD, iyihe inzinge y'IBANZE?</p><p style='color:#94a3b8'>A) USD</p><p style='color:#10b981;font-weight:700'>B) EUR ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 2: SPREAD isobanurwa nk'iki?</p><p style='color:#94a3b8'>A) Inyungu y'ubucuruzi</p><p style='color:#10b981;font-weight:700'>B) Itandukaniro hagati ya Bid na Ask ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 3: Ubwoko bwafite spread nini ni ubuhe?</p><p style='color:#94a3b8'>A) Nkuru</p><p style='color:#94a3b8'>B) Gato</p><p style='color:#10b981;font-weight:700'>C) Bidasanzwe ✅</p></div>",
   "lesson_content_what_is_pip": "<h2>Pips, Lots, n'Ingano y'Ubucuruzi</h2><p><strong>Pip</strong> (Percentage in Point) ni ingano nto ya standard y'igiciro muri forex. Ku mbonerahamwe nyinshi, pip 1 = 0.0001.</p><h3>Urugero</h3><p>Niba EUR/USD igenda kuva <strong>1.0850 → 1.0860</strong>, ni <strong>pips 10</strong> zo gukomeza.</p><h3>Ingano za Lot</h3><ul><li><strong>Standard Lot</strong> = ingano 100,000 → pip 1 = $10</li><li><strong>Mini Lot</strong> = ingano 10,000 → pip 1 = $1</li><li><strong>Micro Lot</strong> = ingano 1,000 → pip 1 = $0.10</li></ul><h3>Impamvu Pips Ari Ingenzi</h3><p>Pips ni uburyo abacuruzi bagereranya inyungu n'amafaranga batakaje. Niba uguriye lot standard imwe ya EUR/USD kandi igakomeza pips 50 mu nyungu yawe, wungutse <strong>$500</strong>.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Menya neza kubara pips mbere yo gukoresha amafaranga nyayo. Buri gihe menya agaciro ka pip yawe mbere yo kwinjira mu bucuruzi.</blockquote>",
-
   "lesson_content_support_resistance": "<h2>Gushyigikira no Guhangana — Ishingiro ry'Isesengura Rya Tekiniki</h2><p><strong>Gushyigikira</strong> ni ingano y'igiciro aho ingufu zo kugura zihagije kugira ngo zizuze igiciro kudagwa. <strong>Guhangana</strong> ni aho ingufu zo kugurisha zizuza igiciro kudazamuka.</p><h3>Uburyo bwo Kumenya Ingano z'Ibanze</h3><ul><li>Reba akarere k'igiciro aho isoko <strong>ryagarutse inshuro nyinshi</strong></li><li>Imibare izengurutse (1.1000, 1.0500) ikenera gukoraho nka S/R y'igitekerezo</li><li>Ingano za mbere n'iz'aho igiciro cyageze hose ni akarere ka S/R kameze</li></ul><h3>Inama y'Ihinduka ry'Inshingano</h3><p>Iyo igiciro cimura ingano y'guhangana, iyo ngano kenera kuba inshyigikiranye mushya — no gusubira. Ibi bita <strong>ihinduka ry'inshingano</strong> kandi ni kimwe mu bisobanuro bikomeye mu bucuruzi.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Gushyigikira no guhangana ni akarere, si imirongo nyayo. Buri gihe reba confluence — impamvu nyinshi zituma igiciro gisubira kuri ingano.</blockquote>",
-
   "lesson_content_candlesticks": "<h2>Gusoma Imiterere y'Ibishusho</h2><p>Ibishusho bigaragaza ibiciro bine by'ibanze: <strong>Gufungura, Hejuru, Hasi, Gufunga</strong>. Umubiri ugaragaza urwego hagati yo gufungura no gufunga. Intore zigaragaza uburemere.</p><h3>Imiterere Nkuru y'Ihinduka</h3><ul><li>🕯️ <strong>Doji</strong> — Gufungura ≈ Gufunga. Isoko ntirimenyereye. Tegereza inzira.</li><li>🔨 <strong>Nyundo</strong> — Intore nderebera hasi kuri gushyigikira. Ikimenyetso cy'ihinduka ry'hejuru.</li><li>⭐ <strong>Inyenyeri Yaguye</strong> — Intore nderebera hejuru kuri guhangana. Ikimenyetso cy'ihinduka ry'hasi.</li><li>🌙 <strong>Gukwikira</strong> — Igishusho kimwe kikwikira ikindi. Ihinduka ryanguruye.</li></ul><h3>Uburyo bwo Kuzikoresha</h3><p>Ntucuruze imiterere y'igishusho wenyine. Buri gihe emeza na:</p><ul><li>Ingano nkuru y'gushyigikira/guhangana</li><li>Inzira y'iterambere</li><li>Ingano cyangwa ikimenyetso cy'ingufu</li></ul><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Imiterere y'ibishusho ni ibimenyetso, si ingwate. Ikoresha nk'emeza, si nk'ikimenyetso cy'ubwenge.</blockquote>",
-
   "lesson_content_trend_lines": "<h2>Imirongo y'Iterambere no Imiterere y'Isoko</h2><p>Igitekerezo cy'ibanze cyane mu bucuruzi: <strong>iterambere ni inshuti yawe</strong>. Gusobanukirwa imiterere y'isoko bigira ngo ubone niba ugomba kugura, kugurisha, cyangwa kureka.</p><h3>Imiterere y'Isoko</h3><ul><li>📈 <strong>Iterambere ry'hejuru</strong> = Ingano z'Hejuru (HH) + Ingano z'Hasi z'Hejuru (HL)</li><li>📉 <strong>Iterambere ry'hasi</strong> = Ingano z'Hejuru z'Hasi (LH) + Ingano z'Hasi z'Hasi (LL)</li><li>↔️ <strong>Kongereza</strong> = Igiciro gisubira hagati y'ingano ebyiri</li></ul><h3>Gushushanya Imirongo y'Iterambere</h3><p>Mu iterambere ry'hejuru, huza <strong>ingano z'hasi z'hejuru</strong>. Mu iterambere ry'hasi, huza <strong>ingano z'hejuru z'hasi</strong>. Gucimura umurongo w'iterambere bigaragaza impinduka iyo ari yo yose.</p><h3>Gucuruza na Iterambere</h3><p>Buri gihe curuza mu nzira y'iterambere ry'igihe kinini. Niba ikirangantego cy'umunsi gifite iterambere ry'hejuru, reba igenamiterere ryo kugura kuri ikirangantego cy'isaha 1.</p><blockquote>💡 <strong>Icyigwa Cy'ingenzi:</strong> Banza usesengure iterambere ku gihe kinini, hanyuma ugwe ku gihe gito kugira ngo ubone injira yawe. Ibi bita isesengura ryo hejuru ugakaguka hasi.</blockquote>",
-
   "reset_forgot_page_title": "27pips — Wibagiwe Ijambo ry'Ibanga",
   "reset_forgot_title": "Wibagiwe Ijambo ry'Ibanga?",
   "reset_forgot_sub": "Andika imeli ya konti yawe kandi tuzakoherereza uturasho two gusubiramo ijambo ry'ibanga ryawe mu buryo bwizewe.",
@@ -336,7 +325,6 @@
   "reset_send_link_btn": "Ohereza Uturasho two Gusubiramo",
   "reset_request_sent": "Niba iyo imeli yanditswe, uturasho two gusubiramo two tuoherejwe. Reba ahabwa ubutumwa (na spam).",
   "reset_error_email_required": "Injiza imeli yawe.",
-
   "reset_new_password_page_title": "27pips — Shyiraho Ijambo Rishya ry'Ibanga",
   "reset_new_password_title": "Shyiraho Ijambo Rishya ry'Ibanga",
   "reset_new_password_sub": "Hitamo ijambo ry'ibanga rikomeye kuri konti yawe.",
@@ -350,21 +338,17 @@
   "reset_error_token_expired": "Utu rasho two gusubiramo twarangiye. Saba bishya.",
   "reset_invalid_title": "Uturasho Two Gusubiramo Ntibiringanye",
   "reset_request_new_link": "Saba Uturasho Tushya",
-
   "reset_success_page_title": "27pips — Ijambo ry'Ibanga Rivuguruwe",
   "reset_success_title": "Ijambo ry'Ibanga Rivuguruwe!",
   "reset_success_sub": "Ijambo ryawe ry'ibanga ryahinduwe neza. Ubu ushobora kwinjira hakoreshejwe amakuru yawe mashya.",
-
   "reset_email_subject": "27pips — Gusaba Gusubiramo Ijambo ry'Ibanga",
   "reset_email_greeting": "Muraho,",
   "reset_email_body": "Twakiriwe ubusabe bwo gusubiramo ijambo ry'ibanga rya konti yawe ya 27pips. Kanda hasi kugira ngo ushyireho ijambo rishya ry'ibanga:",
   "reset_email_expiry": "Utu rasho tuzarangira mu masaha {hours}.",
   "reset_email_ignore": "Niba utasabye gusubiramo ijambo ry'ibanga, ushobora kwirengagiza iyi message.",
-
   "reset_link_direct_label": "Ubutumwa bwa imeri ntibushyizweho. Kanda buto hasi kugira ngo usubireho ijambo ry'ibanga yawe ako kanya:",
   "reset_click_here_btn": "Subiramo Ijambo Ryanjye ry'Ibanga →",
   "reset_link_expires": "Utu rasho tuzarangira mu masaha {hours}.",
-
   "notify_welcome_subject": "Murakaza neza kuri 27pips — Konti yawe iri guteguwa!",
   "notify_welcome_greeting": "Muraho {username}, murakaza neza kuri 27pips!",
   "notify_welcome_body": "Konti yawe yashinzwe neza. Ubu ufite uburenganzira bwo kwiga forex bihuriweho, amakuru y'ubucuruzi azima, ibitabo by'ubucuruzi, no gukurikirana imihigo ya prop firm.",
@@ -377,11 +361,9 @@
   "notify_security_note": "Niba utabyemeye, nyamuneka twandikire vuba aha support@27pips.com cyangwa usubize iyi message.",
   "notify_change_password": "Ijambo ryawe ry'ibanga ryavuguruwe neza.",
   "notify_change_upgrade": "Konti yawe yongerewe kuri 27pips Premium. Amakuru yose y'inzobere afunguwe.",
-
   "sandbox_email_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Ushobora kutabona imeri muri make.",
   "sandbox_reset_notice": "Uturasho twawe two gusubiramo twakiriwe. Mu buryo bwo kugerageza, imeri z'emeza zijya muri boîte ya munyamabwire. Koresha buto hejuru niba yabonekaga, cyangwa twandikire.",
   "sandbox_update_notice": "Ubutumwa bwa imeri buriho mu buryo bwo kugerageza. Imeri z'umutekano zandikwa muri boîte ya munyamabwire aho koherezwa kuri aderesi yawe.",
-
   "search_placeholder": "Shakisha amasomo, amakuru…",
   "search_no_results": "Nta bisubizo bibonetse kuri ",
   "search_type_lesson": "Amasomo",
@@ -390,7 +372,6 @@
   "search_type_tool": "Ibikoresho",
   "load_more": "Shyiraho ibindi",
   "load_more_end": "Ibintu byose byakiriwe",
-
   "perf_tag": "Isuzuma ry'Alpha",
   "perf_title": "Isesengura rya Leaking Alpha",
   "perf_sub": "Reba imikorere yawe y'ubucuruzi mu buryo bwimbitse. Menya aho utatanga amafaranga.",
@@ -418,13 +399,11 @@
   "perf_sortino_strong": "Inyungu nziza kandi ifitiwe ubuzima. Intambwe nke inyura munsi.",
   "perf_sortino_ok": "Yemewe. Ingaruka nke inyura munsi ugereranije n'inyungu.",
   "perf_sortino_weak": "Inyungu mbi kandi ifitiwe ubuzima. Intambwe nyinshi inyura munsi ugereranije n'inyungu.",
-
   "coach_alert_sent": "Ubutumwa bwo guhagarara bwoherejwe.",
   "coach_subject": "Ni igihe cyo guhagarara",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
   "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
-
   "verify_page_title": "Umwirondoro w'Umucuruzi Wemejwe | 27pips",
   "verify_consistency": "Amanota y'Ubuhoraho",
   "verify_readonly_notice": "Iyi ni paji rusange yo gusoma gusa. Nta makuru bwite aemerwa.",
@@ -445,5 +424,7 @@
   "verify_copy_tooltip": "Kopi uturasho twawe rusange mu bubiko",
   "verify_revoke_btn": "Vanaho",
   "verify_revoke_tooltip": "Kura uturasho tw'umwirondoro wawe rusange",
-  "verify_revoke_confirm": "Vanaho uturasho twawe rusange? Umuntu wese ufite uturasho twa kera ntazashobora kureba umwirondoro wawe."
+  "verify_revoke_confirm": "Vanaho uturasho twawe rusange? Umuntu wese ufite uturasho twa kera ntazashobora kureba umwirondoro wawe.",
+  "lesson_title_read_chart": "Uburyo bwo Gusoma Ikirangantego",
+  "lesson_content_read_chart": "<h2>Intangiriro</h2><p>Ikirangantego ni idirishya ryawe ku isoko. Ibyemezo byawe byose byo gucuruza bizashingira ku byo ubona kuri ikirangantego. Ugomba gusobanukirwa uburyo bwo <strong>gusoma ibyo ikirangantego kikubwira</strong>.</p><h2>Igitekerezo cy'Ibanze 1 — Ubwoko Butatu bw'Ibirangantego</h2><ul><li>📊 <strong>Imirongo</strong> — igiciro cyo gufunga gusa. Yoroshye ariko gifisha amakuru.</li><li>📉 <strong>Bar Chart (OHLC)</strong> — Gufungura, Hejuru, Hasi, Gufunga.</li><li>🕯️ <strong>Ibishusho (Candlestick)</strong> — amakuru amwe nka OHLC, buryo bworoshye. Standard ya 27pips.</li></ul><blockquote>💡 Buri gihe koresha ibirangantego by'ibishusho.</blockquote><h2>Igitekerezo cy'Ibanze 2 — Imiterere y'Igishusho</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Icara</th><th style='padding:8px;text-align:left'>Ibisobanuro</th><th style='padding:8px;text-align:left'>Gufunga vs Gufungura</th></tr><tr><td style='padding:8px'>🟢 Icyatsi (Hejuru)</td><td style='padding:8px'>Abagunzi batsinze</td><td style='padding:8px'>Gufunga kuruta Gufungura</td></tr><tr><td style='padding:8px'>🔴 Umutuku (Hasi)</td><td style='padding:8px'>Abagurishaji batsinze</td><td style='padding:8px'>Gufunga guri hasi y'Gufungura</td></tr></table><h2>Igitekerezo cy'Ibanze 3 — Igihe</h2><ul><li>⚡ M1, M5, M15 — Scalping</li><li>📈 H1, H4 — Ubucuruzi bw'umunsi (ibikunda)</li><li>📅 Buri Munsi (D1) — Ibimenyetso bisobanutse</li><li>🗓️ Buri Cyumweru (W1) — Iterambere ry'igihe kirekire</li></ul><blockquote>💡 Buri gihe reba ikirangantego cy'igihe kinini mbere — ni isesengura ryo hejuru ugakaguka hasi.</blockquote><h2>Igitekerezo cy'Ibanze 4 — Kumenya Iterambere</h2><ul><li>📈 Ingano z'Hejuru na Hasi zireba hejuru = <strong>Iterambere ry'hejuru</strong></li><li>📉 Ingano z'Hejuru na Hasi zireba hasi = <strong>Iterambere ry'hasi</strong></li><li>↔️ Nta nzira yihariye = <strong>Kongereza</strong></li></ul><hr style='border-color:#334155;margin:32px 0'><h2>Ibyo Wiga Vuba</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 1: Igishusho ICYATSI bivuze ko gufunga KURUTA gufungura.</p><p style='color:#94a3b8'>A) Ni ikinyoma</p><p style='color:#10b981;font-weight:700'>B) Ni ukuri ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 2: Kumenya iterambere ry'ingenzi, ni ikihe gihe kureba MBERE?</p><p style='color:#94a3b8'>A) M5</p><p style='color:#10b981;font-weight:700'>B) Ikirangantego cy'umunsi cyangwa cya buri cyumweru ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Ikibazo 3: Ingano z'Hejuru na Hasi zireba hejuru bigaragaza:</p><p style='color:#94a3b8'>A) Iterambere ry'hasi</p><p style='color:#10b981;font-weight:700'>C) Iterambere ry'hejuru ✅</p></div>"
 }

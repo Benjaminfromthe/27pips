@@ -251,7 +251,6 @@
   "upgrade_demo_note": "Mise à niveau simulée — pas de paiement pour la démo",
   "upgrade_social_proof": "Approuvé par des traders en Afrique et au-delà",
   "upgrade_members": "Membres actifs",
-
   "admin_page_title": "27pips Admin",
   "admin_signals_page_title": "27pips — Admin Signaux",
   "admin_access_title": "Accès Administrateur",
@@ -280,7 +279,6 @@
   "admin_btn_update": "Mettre à jour",
   "admin_confirm_delete": "Supprimer ce signal ?",
   "admin_no_signals": "Aucun signal pour l'instant. Diffusez votre premier setup ci-dessus.",
-
   "auth_signing_in": "Connexion en cours…",
   "auth_creating_account": "Création du compte…",
   "error_network": "Erreur réseau. Veuillez réessayer.",
@@ -304,31 +302,22 @@
   "tracker_limit_breached": "LIMITE DÉPASSÉE",
   "tracker_target_reached": "Objectif atteint !",
   "tracker_keep_going": "de l'objectif atteint — Continuez",
-
   "course_title_beginner": "Pré-École : Bases du Forex",
   "course_desc_beginner": "Partez de zéro. Apprenez ce qu'est le forex, comment fonctionnent les paires de devises et comment lire un graphique.",
   "course_title_intermediate": "Élémentaire : Lecture des Graphiques",
   "course_desc_intermediate": "Apprenez à lire les graphiques de prix, identifier les niveaux clés et comprendre les figures en chandeliers.",
-
   "lesson_title_what_is_forex": "Qu'est-ce que le Forex ?",
   "lesson_title_currency_pairs": "Les Paires de Devises Expliquées",
   "lesson_title_what_is_pip": "Qu'est-ce qu'un Pip ?",
   "lesson_title_support_resistance": "Support et Résistance",
   "lesson_title_candlesticks": "Figures en Chandeliers",
   "lesson_title_trend_lines": "Lignes de Tendance et Structure du Marché",
-
-  "lesson_content_what_is_forex": "<h2>Qu'est-ce que le marché Forex ?</h2><p>Le <strong>marché des changes (Forex ou FX)</strong> est le plus grand marché financier au monde, avec plus de <strong>7 500 milliards de dollars</strong> échangés chaque jour. Contrairement aux marchés boursiers, le forex n'a pas de bourse centrale — il fonctionne 24h/24, 5 jours sur 7 dans les grandes places financières mondiales.</p><h3>Pourquoi trader le Forex ?</h3><ul><li>✅ Haute liquidité — entrez et sortez des trades instantanément</li><li>✅ Faibles barrières à l'entrée — commencez avec seulement 100$</li><li>✅ Tradez dans les deux sens — profitez des marchés haussiers ET baissiers</li><li>✅ Effet de levier disponible — contrôlez de grandes positions avec peu de capital</li></ul><h3>Qui trade le Forex ?</h3><p>Les banques centrales, banques commerciales, fonds spéculatifs, entreprises et traders particuliers comme vous participent tous au marché forex.</p><blockquote>💡 <strong>Point clé :</strong> Le forex, c'est l'échange d'une devise contre une autre. Quand vous voyagez à l'étranger et changez de l'argent, vous participez déjà au marché forex.</blockquote>",
-
-  "lesson_content_currency_pairs": "<h2>Comprendre les Paires de Devises</h2><p>Dans le forex, les devises sont toujours échangées en <strong>paires</strong>. Vous achetez simultanément une devise et en vendez une autre.</p><h3>Anatomie d'une Paire de Devises</h3><p>Prenons <strong>EUR/USD = 1,0850</strong> :</p><ul><li><strong>EUR</strong> = Devise de base (ce que vous achetez)</li><li><strong>USD</strong> = Devise cotée (ce que vous vendez)</li><li><strong>1,0850</strong> = Il faut 1,0850 $ pour acheter 1 €</li></ul><h3>Les Principales Paires</h3><table style=\"width:100%;border-collapse:collapse;margin:16px 0\"><tr style=\"background:rgba(16,185,129,0.1)\"><th style=\"padding:8px;text-align:left\">Paire</th><th style=\"padding:8px;text-align:left\">Surnom</th></tr><tr><td style=\"padding:8px\">EUR/USD</td><td style=\"padding:8px\">L'Euro</td></tr><tr><td style=\"padding:8px\">GBP/USD</td><td style=\"padding:8px\">Le Cable</td></tr><tr><td style=\"padding:8px\">USD/JPY</td><td style=\"padding:8px\">Le Yen</td></tr><tr><td style=\"padding:8px\">XAU/USD</td><td style=\"padding:8px\">Or</td></tr></table><blockquote>💡 <strong>Point clé :</strong> Identifiez toujours la devise de base et la devise cotée. Le prix indique combien de devise cotée il faut pour acheter une unité de la devise de base.</blockquote>",
-
+  "lesson_content_what_is_forex": "<h2>Introduction</h2><p>Le <strong>marché des changes (Forex ou FX)</strong> est le plus grand marché financier au monde, avec plus de <strong>7 500 milliards de dollars</strong> échangés chaque jour. Il fonctionne 24h/24, 5 jours sur 7 à travers Sydney, Tokyo, Londres et New York.</p><h2>Concept Clé 1 — Qu'échange-t-on ?</h2><p>En Forex, vous <strong>échangez une devise contre une autre</strong>. Les devises sont toujours négociées en <strong>paires</strong> comme EUR/USD ou GBP/JPY.</p><h2>Concept Clé 2 — Qui trade le Forex ?</h2><ul><li>🏦 <strong>Banques Centrales</strong> — gèrent les réserves nationales</li><li>🏢 <strong>Banques Commerciales</strong> — facilitent le commerce international</li><li>📊 <strong>Fonds Spéculatifs</strong> — spéculent avec un grand capital</li><li>👤 <strong>Traders Particuliers (vous)</strong> — tradent via des courtiers en ligne</li></ul><h2>Concept Clé 3 — Pourquoi trader le Forex ?</h2><ul><li>✅ <strong>Liquidité maximale</strong> — entrez et sortez instantanément</li><li>✅ <strong>Faible capital de départ</strong> — commencez avec 100$</li><li>✅ <strong>Profitez dans les deux sens</strong> — hausse ET baisse</li><li>✅ <strong>Effet de levier</strong> — contrôlez de grandes positions</li><li>✅ <strong>Accès 24/5</strong> — tradez à tout moment en semaine</li></ul><h2>Concept Clé 4 — Les Quatre Sessions de Trading</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Session</th><th style='padding:8px;text-align:left'>Horaires (UTC)</th><th style='padding:8px;text-align:left'>Paires Clés</th></tr><tr><td style='padding:8px'>Sydney</td><td style='padding:8px'>22h – 7h</td><td style='padding:8px'>AUD/USD</td></tr><tr><td style='padding:8px'>Tokyo</td><td style='padding:8px'>0h – 9h</td><td style='padding:8px'>USD/JPY</td></tr><tr><td style='padding:8px'>Londres</td><td style='padding:8px'>8h – 17h</td><td style='padding:8px'>EUR/USD, GBP/USD</td></tr><tr><td style='padding:8px'>New York</td><td style='padding:8px'>13h – 22h</td><td style='padding:8px'>USD/CAD</td></tr></table><blockquote>💡 Le chevauchement Londres–New York (13h–17h UTC) est la période la plus volatile.</blockquote><h2>Concept Clé 5 — Avertissement sur le Risque</h2><p>Le trading Forex comporte des risques importants. Ne tradez jamais de l'argent que vous ne pouvez pas vous permettre de perdre. Commencez toujours sur un compte démo.</p><hr style='border-color:#334155;margin:32px 0'><h2>Quiz Rapide</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1 : Volume quotidien approximatif du Forex ?</p><p style='color:#94a3b8'>A) 250 milliards $</p><p style='color:#10b981;font-weight:700'>B) 7 500 milliards $ ✅</p><p style='color:#94a3b8'>C) 500 millions $</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2 : Quel chevauchement a la liquidité la plus élevée ?</p><p style='color:#94a3b8'>A) Tokyo–Sydney</p><p style='color:#10b981;font-weight:700'>B) Londres–New York ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3 : On ne peut profiter qu'en hausse. Vrai ou Faux ?</p><p style='color:#94a3b8'>A) Vrai</p><p style='color:#10b981;font-weight:700'>B) Faux — on profite dans les deux sens ✅</p></div>",
+  "lesson_content_currency_pairs": "<h2>Introduction</h2><p>En Forex, vous tradez toujours une <strong>paire de devises</strong> — en achetant une devise et en vendant une autre simultanément.</p><h2>Concept Clé 1 — Anatomie d'une Paire</h2><ul><li><strong>Devise de Base</strong> — la première (ce que vous achetez)</li><li><strong>Devise Cotée</strong> — la deuxième (ce que vous vendez)</li></ul><p>Exemple : <strong>EUR/USD = 1,0850</strong> — il faut 1,0850 $ pour acheter 1 €.</p><blockquote>💡 Si EUR/USD monte de 1,0850 à 1,0900, l'Euro s'est renforcé — mouvement haussier.</blockquote><h2>Concept Clé 2 — Les Quatre Catégories</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Catégorie</th><th style='padding:8px;text-align:left'>Exemples</th><th style='padding:8px;text-align:left'>Caractéristiques</th></tr><tr><td style='padding:8px'><strong>Majeures</strong></td><td style='padding:8px'>EUR/USD, GBP/USD</td><td style='padding:8px'>Liquidité maximale, spreads serrés</td></tr><tr><td style='padding:8px'><strong>Mineures</strong></td><td style='padding:8px'>EUR/GBP, GBP/JPY</td><td style='padding:8px'>Bonne liquidité, sans USD</td></tr><tr><td style='padding:8px'><strong>Exotiques</strong></td><td style='padding:8px'>USD/TRY, USD/NGN</td><td style='padding:8px'>Faible liquidité, spreads larges</td></tr><tr><td style='padding:8px'><strong>Métaux</strong></td><td style='padding:8px'>XAU/USD (Or)</td><td style='padding:8px'>Très volatile, valeur refuge</td></tr></table><h2>Concept Clé 3 — Bid, Ask et le Spread</h2><ul><li><strong>Bid</strong> — prix auquel le courtier vous achète (votre prix de vente)</li><li><strong>Ask</strong> — prix auquel le courtier vous vend (votre prix d'achat)</li></ul><p>La différence est le <strong>Spread</strong> — la commission du courtier.</p><blockquote>💡 Entrez un ACHAT au prix Ask et vendez au prix Bid. Le spread est votre coût de transaction.</blockquote><hr style='border-color:#334155;margin:32px 0'><h2>Quiz Rapide</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1 : Dans EUR/USD, quelle est la devise de BASE ?</p><p style='color:#94a3b8'>A) USD</p><p style='color:#10b981;font-weight:700'>B) EUR ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2 : Le SPREAD est défini comme :</p><p style='color:#94a3b8'>A) Le profit d'un trade</p><p style='color:#10b981;font-weight:700'>B) La différence entre le Bid et l'Ask ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3 : Quelle catégorie a les spreads les plus larges ?</p><p style='color:#94a3b8'>A) Majeures</p><p style='color:#94a3b8'>B) Mineures</p><p style='color:#10b981;font-weight:700'>C) Exotiques ✅</p></div>",
   "lesson_content_what_is_pip": "<h2>Pips, Lots et Taille de Position</h2><p>Un <strong>pip</strong> (Percentage in Point) est le plus petit mouvement de prix standard en forex. Pour la plupart des paires, 1 pip = 0,0001.</p><h3>Exemple</h3><p>Si EUR/USD passe de <strong>1,0850 → 1,0860</strong>, c'est un mouvement de <strong>10 pips</strong>.</p><h3>Tailles de Lots</h3><ul><li><strong>Lot Standard</strong> = 100 000 unités → 1 pip = 10 $</li><li><strong>Mini Lot</strong> = 10 000 unités → 1 pip = 1 $</li><li><strong>Micro Lot</strong> = 1 000 unités → 1 pip = 0,10 $</li></ul><h3>Pourquoi les Pips sont importants</h3><p>Les pips sont la façon dont les traders mesurent les profits et pertes. Si vous achetez 1 lot standard EUR/USD et qu'il monte de 50 pips en votre faveur, vous avez gagné <strong>500 $</strong>.</p><blockquote>💡 <strong>Point clé :</strong> Maîtrisez le calcul des pips avant de risquer de l'argent réel. Connaissez toujours la valeur de votre pip avant d'entrer dans un trade.</blockquote>",
-
   "lesson_content_support_resistance": "<h2>Support et Résistance — La Base de l'Analyse Technique</h2><p>Le <strong>support</strong> est un niveau de prix où la pression d'achat est suffisamment forte pour empêcher le prix de baisser davantage. La <strong>résistance</strong> est l'endroit où la pression de vente empêche le prix de monter.</p><h3>Comment identifier les niveaux clés</h3><ul><li>Cherchez les zones de prix où le marché s'est <strong>retourné plusieurs fois</strong></li><li>Les chiffres ronds (1,1000, 1,0500) agissent souvent comme des S/R psychologiques</li><li>Les anciens sommets et creux sont des zones S/R naturelles</li></ul><h3>Le Concept de Renversement des Rôles</h3><p>Quand le prix franchit un niveau de résistance, ce niveau devient souvent un nouveau support — et vice versa. C'est le <strong>renversement des rôles</strong>, l'un des concepts les plus puissants en trading.</p><blockquote>💡 <strong>Point clé :</strong> Le support et la résistance sont des zones, pas des lignes exactes. Cherchez toujours la confluence — plusieurs raisons pour que le prix réagisse à un niveau.</blockquote>",
-
   "lesson_content_candlesticks": "<h2>Lire les Figures en Chandeliers</h2><p>Les chandeliers montrent quatre prix clés : <strong>Ouverture, Haut, Bas, Clôture</strong>. Le corps montre la plage entre l'ouverture et la clôture. Les mèches montrent les extrêmes.</p><h3>Figures de Retournement Clés</h3><ul><li>🕯️ <strong>Doji</strong> — Ouverture ≈ Clôture. Indécision du marché. Attendez la direction.</li><li>🔨 <strong>Marteau</strong> — Longue mèche inférieure au support. Signal de retournement haussier.</li><li>⭐ <strong>Étoile Filante</strong> — Longue mèche supérieure à la résistance. Signal de retournement baissier.</li><li>🌙 <strong>Englobant</strong> — Une bougie englobe complètement la précédente. Fort retournement.</li></ul><h3>Comment les utiliser</h3><p>Ne tradez jamais une figure en chandelier isolément. Confirmez toujours avec :</p><ul><li>Un niveau de support/résistance clé</li><li>La direction de la tendance</li><li>Un indicateur de volume ou de momentum</li></ul><blockquote>💡 <strong>Point clé :</strong> Les figures en chandeliers sont des indices, pas des garanties. Utilisez-les comme confirmation, pas comme signaux isolés.</blockquote>",
-
   "lesson_content_trend_lines": "<h2>Lignes de Tendance et Structure du Marché</h2><p>Le concept le plus fondamental en trading : <strong>la tendance est votre amie</strong>. Comprendre la structure du marché vous indique s'il faut chercher à acheter, vendre, ou rester à l'écart.</p><h3>Structure du Marché</h3><ul><li>📈 <strong>Tendance haussière</strong> = Sommets plus hauts (HH) + Creux plus hauts (HL)</li><li>📉 <strong>Tendance baissière</strong> = Sommets plus bas (LH) + Creux plus bas (LL)</li><li>↔️ <strong>Range</strong> = Prix rebondissant entre deux niveaux</li></ul><h3>Tracer des Lignes de Tendance</h3><p>En tendance haussière, reliez les <strong>creux plus hauts</strong>. En tendance baissière, reliez les <strong>sommets plus bas</strong>. Une rupture de la ligne de tendance signale un retournement potentiel.</p><h3>Trader avec la Tendance</h3><p>Tradez toujours dans la direction de la tendance du timeframe supérieur. Si le graphique journalier est haussier, cherchez des configurations d'achat sur le graphique 1 heure.</p><blockquote>💡 <strong>Point clé :</strong> Identifiez d'abord la tendance sur un timeframe supérieur, puis descendez sur un timeframe inférieur pour trouver votre entrée. C'est l'analyse top-down.</blockquote>",
-
   "reset_forgot_page_title": "27pips — Mot de passe oublié",
   "reset_forgot_title": "Mot de passe oublié ?",
   "reset_forgot_sub": "Entrez l'adresse e-mail de votre compte et nous vous enverrons un lien sécurisé pour réinitialiser votre mot de passe.",
@@ -336,7 +325,6 @@
   "reset_send_link_btn": "Envoyer le lien de réinitialisation",
   "reset_request_sent": "Si cet e-mail est enregistré, un lien de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception (et les spams).",
   "reset_error_email_required": "Veuillez entrer votre adresse e-mail.",
-
   "reset_new_password_page_title": "27pips — Nouveau mot de passe",
   "reset_new_password_title": "Définir un nouveau mot de passe",
   "reset_new_password_sub": "Choisissez un mot de passe fort pour votre compte.",
@@ -350,21 +338,17 @@
   "reset_error_token_expired": "Ce lien a expiré. Veuillez en demander un nouveau.",
   "reset_invalid_title": "Lien de réinitialisation invalide",
   "reset_request_new_link": "Demander un nouveau lien",
-
   "reset_success_page_title": "27pips — Mot de passe mis à jour",
   "reset_success_title": "Mot de passe mis à jour !",
   "reset_success_sub": "Votre mot de passe a été modifié avec succès. Vous pouvez maintenant vous connecter avec vos nouveaux identifiants.",
-
   "reset_email_subject": "27pips — Demande de réinitialisation du mot de passe",
   "reset_email_greeting": "Bonjour,",
   "reset_email_body": "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte 27pips. Cliquez sur le lien ci-dessous pour définir un nouveau mot de passe :",
   "reset_email_expiry": "Ce lien expirera dans {hours} heure(s).",
   "reset_email_ignore": "Si vous n'avez pas demandé de réinitialisation, vous pouvez ignorer cet e-mail en toute sécurité.",
-
   "reset_link_direct_label": "L'envoi d'e-mails n'est pas encore configuré. Cliquez sur le bouton ci-dessous pour réinitialiser votre mot de passe directement :",
   "reset_click_here_btn": "Réinitialiser mon mot de passe →",
   "reset_link_expires": "Ce lien expire dans {hours} heure(s).",
-
   "notify_welcome_subject": "Bienvenue sur 27pips — Votre compte est prêt !",
   "notify_welcome_greeting": "Bonjour {username}, bienvenue sur 27pips !",
   "notify_welcome_body": "Votre compte a été créé avec succès. Vous avez maintenant accès à la formation forex structurée, aux signaux de trading en direct, à un journal de trading et au suivi des challenges prop firm.",
@@ -377,11 +361,9 @@
   "notify_security_note": "Si vous n'avez pas autorisé cette action, veuillez contacter notre équipe d'assistance immédiatement à support@27pips.com ou répondre à cet e-mail.",
   "notify_change_password": "Votre mot de passe a été mis à jour avec succès.",
   "notify_change_upgrade": "Votre compte a été mis à niveau vers 27pips Premium. Tous les signaux institutionnels sont maintenant débloqués.",
-
   "sandbox_email_notice": "Les notifications par e-mail sont actuellement en mode test. Vous pourriez ne pas recevoir d'e-mails directement.",
   "sandbox_reset_notice": "Votre lien de réinitialisation a été traité. En mode test, les e-mails de confirmation vont dans la boîte de l'administrateur. Utilisez le bouton ci-dessus s'il est apparu, ou contactez le support.",
   "sandbox_update_notice": "Les notifications par e-mail sont en mode test. Les alertes de sécurité sont consignées dans la boîte de l'administrateur plutôt qu'envoyées directement à votre adresse.",
-
   "search_placeholder": "Chercher leçons, signaux…",
   "search_no_results": "Aucun résultat pour ",
   "search_type_lesson": "Leçons",
@@ -390,7 +372,6 @@
   "search_type_tool": "Fonctionnalités",
   "load_more": "Charger plus",
   "load_more_end": "Tout le contenu est chargé",
-
   "perf_tag": "Audit Alpha",
   "perf_title": "Analyse Leaking Alpha",
   "perf_sub": "Plongez dans vos performances de trading. Identifiez où vous laissez de l'argent sur la table.",
@@ -418,13 +399,11 @@
   "perf_sortino_strong": "Excellent rendement ajusté au risque. Volatilité baissière minimale.",
   "perf_sortino_ok": "Acceptable. Quelques risques baissiers par rapport aux rendements.",
   "perf_sortino_weak": "Mauvais rendement ajusté au risque. Baisse élevée par rapport aux gains.",
-
   "coach_alert_sent": "Alerte de pause envoyée.",
   "coach_subject": "Il est temps de faire une pause",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
   "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
-
   "verify_page_title": "Profil de Trader Vérifié | 27pips",
   "verify_consistency": "Score de Cohérence",
   "verify_readonly_notice": "Ceci est une page de vérification publique en lecture seule. Aucune donnée privée n'est exposée.",
@@ -445,5 +424,7 @@
   "verify_copy_tooltip": "Copier votre lien de vérification public dans le presse-papiers",
   "verify_revoke_btn": "Révoquer",
   "verify_revoke_tooltip": "Supprimer votre lien de profil public",
-  "verify_revoke_confirm": "Révoquer votre lien de vérification public ? Toute personne ayant l'ancien lien ne pourra plus voir votre profil."
+  "verify_revoke_confirm": "Révoquer votre lien de vérification public ? Toute personne ayant l'ancien lien ne pourra plus voir votre profil.",
+  "lesson_title_read_chart": "Comment Lire un Graphique",
+  "lesson_content_read_chart": "<h2>Introduction</h2><p>Un graphique est votre fenêtre sur le marché. Toutes vos décisions de trading seront influencées par ce que vous y voyez. Vous devez savoir <strong>lire ce que le graphique vous dit</strong>.</p><h2>Concept Clé 1 — Les Trois Types de Graphiques</h2><ul><li>📊 <strong>Graphique en Ligne</strong> — prix de clôture uniquement. Simple.</li><li>📉 <strong>Graphique en Barres (OHLC)</strong> — Ouverture, Haut, Bas, Clôture.</li><li>🕯️ <strong>Graphique en Chandeliers</strong> — mêmes données OHLC, format visuel. Standard chez 27pips.</li></ul><blockquote>💡 Utilisez toujours les chandeliers — standard de l'industrie.</blockquote><h2>Concept Clé 2 — Anatomie d'un Chandelier</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Couleur</th><th style='padding:8px;text-align:left'>Signification</th><th style='padding:8px;text-align:left'>Clôture vs Ouverture</th></tr><tr><td style='padding:8px'>🟢 Vert (Haussier)</td><td style='padding:8px'>Acheteurs ont gagné</td><td style='padding:8px'>Clôture supérieure à l'Ouverture</td></tr><tr><td style='padding:8px'>🔴 Rouge (Baissier)</td><td style='padding:8px'>Vendeurs ont gagné</td><td style='padding:8px'>Clôture inférieure à l'Ouverture</td></tr></table><h2>Concept Clé 3 — Unités de Temps</h2><ul><li>⚡ M1, M5, M15 — Scalping</li><li>📈 H1, H4 — Day trading (plus populaires)</li><li>📅 Journalier (D1) — Signaux les plus clairs</li><li>🗓️ Hebdomadaire (W1) — Tendance long terme</li></ul><blockquote>💡 Analysez toujours le timeframe supérieur en premier — c'est l'analyse Top-Down.</blockquote><h2>Concept Clé 4 — Reconnaissance de Tendance</h2><ul><li>📈 Sommets et creux de plus en plus hauts = <strong>Tendance haussière</strong></li><li>📉 Sommets et creux de plus en plus bas = <strong>Tendance baissière</strong></li><li>↔️ Aucune direction claire = <strong>Range</strong></li></ul><hr style='border-color:#334155;margin:32px 0'><h2>Quiz Rapide</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1 : Un chandelier vert signifie que la clôture est supérieure à l'ouverture.</p><p style='color:#94a3b8'>A) Faux</p><p style='color:#10b981;font-weight:700'>B) Vrai ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2 : Pour identifier la tendance dominante, quel timeframe consulter en premier ?</p><p style='color:#94a3b8'>A) M5</p><p style='color:#10b981;font-weight:700'>B) Graphique Journalier ou Hebdomadaire ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3 : Sommets et creux de plus en plus hauts décrivent :</p><p style='color:#94a3b8'>A) Tendance baissière</p><p style='color:#10b981;font-weight:700'>C) Tendance haussière ✅</p></div>"
 }

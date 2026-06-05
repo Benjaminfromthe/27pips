@@ -11,6 +11,7 @@ education_bp = Blueprint('education', __name__)
 LESSON_KEY_MAP = {
     'What is Forex?':                 ('lesson_title_what_is_forex',      'lesson_content_what_is_forex'),
     'Currency Pairs Explained':       ('lesson_title_currency_pairs',     'lesson_content_currency_pairs'),
+    'How to Read a Chart':            ('lesson_title_read_chart',         'lesson_content_read_chart'),
     'What is a Pip?':                 ('lesson_title_what_is_pip',        'lesson_content_what_is_pip'),
     'Support and Resistance':         ('lesson_title_support_resistance', 'lesson_content_support_resistance'),
     'Candlestick Patterns':           ('lesson_title_candlesticks',       'lesson_content_candlesticks'),

@@ -251,7 +251,6 @@
   "upgrade_demo_note": "Simulated upgrade — no payment required for demo",
   "upgrade_social_proof": "Trusted by traders across Africa and beyond",
   "upgrade_members": "Active Members",
-
   "admin_page_title": "27pips Admin",
   "admin_signals_page_title": "27pips — Signal Admin",
   "admin_access_title": "Admin Access",
@@ -280,7 +279,6 @@
   "admin_btn_update": "Update",
   "admin_confirm_delete": "Delete this signal?",
   "admin_no_signals": "No signals yet. Broadcast your first setup above.",
-
   "auth_signing_in": "Signing in…",
   "auth_creating_account": "Creating account…",
   "error_network": "Network error. Please try again.",
@@ -304,31 +302,22 @@
   "tracker_limit_breached": "LIMIT BREACHED",
   "tracker_target_reached": "Target Reached!",
   "tracker_keep_going": "of target reached — Keep going",
-
   "course_title_beginner": "Pre-School: Forex Basics",
   "course_desc_beginner": "Start from zero. Learn what forex is, how currency pairs work, and how to read a chart.",
   "course_title_intermediate": "Elementary: Chart Reading",
   "course_desc_intermediate": "Learn to read price charts, identify key levels, and understand candlestick patterns.",
-
   "lesson_title_what_is_forex": "What is Forex?",
   "lesson_title_currency_pairs": "Currency Pairs Explained",
   "lesson_title_what_is_pip": "What is a Pip?",
   "lesson_title_support_resistance": "Support and Resistance",
   "lesson_title_candlesticks": "Candlestick Patterns",
   "lesson_title_trend_lines": "Trend Lines & Market Structure",
-
-  "lesson_content_what_is_forex": "<h2>What is the Forex Market?</h2><p>The <strong>foreign exchange market (Forex or FX)</strong> is the largest financial market in the world, with over <strong>$7.5 trillion</strong> traded daily. Unlike stock markets, forex has no central exchange — it operates 24 hours a day, 5 days a week across global financial centers.</p><h3>Why Trade Forex?</h3><ul><li>✅ High liquidity — you can enter and exit trades instantly</li><li>✅ Low barriers to entry — start with as little as $100</li><li>✅ Trade in both directions — profit from rising AND falling markets</li><li>✅ Leverage available — control large positions with small capital</li></ul><h3>Who Trades Forex?</h3><p>Central banks, commercial banks, hedge funds, corporations, and retail traders like you all participate in the forex market.</p><blockquote>💡 <strong>Key Takeaway:</strong> Forex is the exchange of one currency for another. When you travel abroad and exchange money, you're participating in the forex market.</blockquote>",
-
-  "lesson_content_currency_pairs": "<h2>Understanding Currency Pairs</h2><p>In forex, currencies are always traded in <strong>pairs</strong>. You're simultaneously buying one currency and selling another.</p><h3>Anatomy of a Currency Pair</h3><p>Take <strong>EUR/USD = 1.0850</strong>:</p><ul><li><strong>EUR</strong> = Base currency (what you're buying)</li><li><strong>USD</strong> = Quote currency (what you're selling)</li><li><strong>1.0850</strong> = It costs $1.0850 to buy €1</li></ul><h3>The Major Pairs</h3><table style=\"width:100%;border-collapse:collapse;margin:16px 0\"><tr style=\"background:rgba(16,185,129,0.1)\"><th style=\"padding:8px;text-align:left\">Pair</th><th style=\"padding:8px;text-align:left\">Nickname</th></tr><tr><td style=\"padding:8px\">EUR/USD</td><td style=\"padding:8px\">The Euro</td></tr><tr><td style=\"padding:8px\">GBP/USD</td><td style=\"padding:8px\">Cable</td></tr><tr><td style=\"padding:8px\">USD/JPY</td><td style=\"padding:8px\">The Yen</td></tr><tr><td style=\"padding:8px\">XAU/USD</td><td style=\"padding:8px\">Gold</td></tr></table><blockquote>💡 <strong>Key Takeaway:</strong> Always know which currency is the base and which is the quote. The price tells you how much of the quote currency you need to buy one unit of the base.</blockquote>",
-
+  "lesson_content_what_is_forex": "<h2>Introduction</h2><p>The <strong>foreign exchange market (Forex or FX)</strong> is the largest and most liquid financial market on Earth — with over <strong>$7.5 trillion</strong> traded every single day. Unlike stock markets, Forex has no central exchange and no physical location. It runs 24 hours a day, 5 days a week across Sydney, Tokyo, London, and New York.</p><h2>Key Concept 1 — What Is Being Traded?</h2><p>In Forex you are <strong>exchanging one currency for another</strong>. Currencies are traded in <strong>pairs</strong> such as EUR/USD or GBP/JPY. The price tells you how much of one currency you need to buy one unit of the other.</p><h2>Key Concept 2 — Who Trades Forex?</h2><ul><li>🏦 <strong>Central Banks</strong> — manage national reserves and monetary policy</li><li>🏢 <strong>Commercial Banks</strong> — facilitate international trade</li><li>📊 <strong>Hedge Funds</strong> — speculate for profit using large capital</li><li>👤 <strong>Retail Traders (you)</strong> — trade via online brokers</li></ul><h2>Key Concept 3 — Why Trade Forex?</h2><ul><li>✅ <strong>Highest liquidity</strong> — enter and exit positions instantly</li><li>✅ <strong>Low barriers to entry</strong> — start with as little as $100</li><li>✅ <strong>Trade both directions</strong> — profit when prices rise OR fall</li><li>✅ <strong>Leverage</strong> — control large positions with a small deposit</li><li>✅ <strong>24/5 access</strong> — trade any time during the week</li></ul><h2>Key Concept 4 — The Four Trading Sessions</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Session</th><th style='padding:8px;text-align:left'>Hours (UTC)</th><th style='padding:8px;text-align:left'>Key Pairs</th></tr><tr><td style='padding:8px'>Sydney</td><td style='padding:8px'>10pm – 7am</td><td style='padding:8px'>AUD/USD</td></tr><tr><td style='padding:8px'>Tokyo</td><td style='padding:8px'>12am – 9am</td><td style='padding:8px'>USD/JPY</td></tr><tr><td style='padding:8px'>London</td><td style='padding:8px'>8am – 5pm</td><td style='padding:8px'>EUR/USD, GBP/USD</td></tr><tr><td style='padding:8px'>New York</td><td style='padding:8px'>1pm – 10pm</td><td style='padding:8px'>USD/CAD</td></tr></table><blockquote>💡 The London–New York overlap (1pm–5pm UTC) is the most volatile and liquid window.</blockquote><h2>Key Concept 5 — Risk Warning</h2><p>Forex trading carries significant risk. Leverage amplifies both profits and losses. <strong>Never trade money you cannot afford to lose.</strong> Always start on a demo account.</p><hr style='border-color:#334155;margin:32px 0'><h2>Quick Quiz</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1: Approximate daily Forex trading volume?</p><p style='color:#94a3b8'>A) $250 billion</p><p style='color:#10b981;font-weight:700'>B) $7.5 trillion ✅</p><p style='color:#94a3b8'>C) $500 million</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2: Which session overlap has the highest liquidity?</p><p style='color:#94a3b8'>A) Tokyo–Sydney</p><p style='color:#10b981;font-weight:700'>B) London–New York ✅</p><p style='color:#94a3b8'>C) Sydney–Tokyo</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3: In Forex you can profit ONLY when prices go up. True or False?</p><p style='color:#94a3b8'>A) True</p><p style='color:#10b981;font-weight:700'>B) False — you can profit in both directions ✅</p></div>",
+  "lesson_content_currency_pairs": "<h2>Introduction</h2><p>In Forex you always trade a <strong>currency pair</strong> — simultaneously buying one currency and selling another. Understanding pairs is the foundation of everything in Forex.</p><h2>Key Concept 1 — Anatomy of a Currency Pair</h2><p>Every pair has two parts:</p><ul><li><strong>Base Currency</strong> — the first (what you are buying)</li><li><strong>Quote Currency</strong> — the second (what you are selling)</li></ul><p>Example: <strong>EUR/USD = 1.0850</strong> — it costs $1.0850 to buy exactly €1.00.</p><blockquote>💡 If EUR/USD rises from 1.0850 to 1.0900, the Euro got stronger — a bullish move.</blockquote><h2>Key Concept 2 — The Four Categories of Pairs</h2><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Category</th><th style='padding:8px;text-align:left'>Examples</th><th style='padding:8px;text-align:left'>Characteristics</th></tr><tr><td style='padding:8px'><strong>Majors</strong></td><td style='padding:8px'>EUR/USD, GBP/USD, USD/JPY</td><td style='padding:8px'>Highest liquidity, tightest spreads</td></tr><tr><td style='padding:8px'><strong>Minors</strong></td><td style='padding:8px'>EUR/GBP, GBP/JPY</td><td style='padding:8px'>Good liquidity, no USD</td></tr><tr><td style='padding:8px'><strong>Exotics</strong></td><td style='padding:8px'>USD/TRY, USD/NGN</td><td style='padding:8px'>Lower liquidity, wider spreads</td></tr><tr><td style='padding:8px'><strong>Metals</strong></td><td style='padding:8px'>XAU/USD (Gold)</td><td style='padding:8px'>Highly volatile, safe-haven</td></tr></table><h2>Key Concept 3 — Bid, Ask, and the Spread</h2><ul><li><strong>Bid</strong> — the price the broker buys from you (your sell price)</li><li><strong>Ask</strong> — the price the broker sells to you (your buy price)</li></ul><p>The difference is the <strong>Spread</strong> — the broker's fee. EUR/USD typically: 0.5–2 pips. Exotics: 20–50 pips.</p><blockquote>💡 Always enter a BUY at the Ask and exit at the Bid. The spread is the cost on every trade.</blockquote><h2>Key Concept 4 — Correlation Between Pairs</h2><ul><li>EUR/USD and GBP/USD usually move together (~80% positive correlation)</li><li>EUR/USD and USD/CHF usually move opposite (~-90% negative correlation)</li><li>USD/JPY and XAU/USD often move opposite (risk sentiment)</li></ul><h2>Key Concept 5 — Reading a Quote</h2><p>On any trading platform: <code>EUR/USD 1.08520 / 1.08534</code></p><ul><li>1.08520 = Bid (sell here)</li><li>1.08534 = Ask (buy here)</li><li>Spread = 1.4 pips</li></ul><hr style='border-color:#334155;margin:32px 0'><h2>Quick Quiz</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1: In EUR/USD, which is the BASE currency?</p><p style='color:#94a3b8'>A) USD</p><p style='color:#10b981;font-weight:700'>B) EUR ✅</p><p style='color:#94a3b8'>C) Both equally</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2: The SPREAD is best described as:</p><p style='color:#94a3b8'>A) Profit on a trade</p><p style='color:#10b981;font-weight:700'>B) Difference between Bid and Ask price ✅</p><p style='color:#94a3b8'>C) Overnight swap fee</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3: Which pair category has the WIDEST spreads?</p><p style='color:#94a3b8'>A) Majors</p><p style='color:#94a3b8'>B) Minors</p><p style='color:#10b981;font-weight:700'>C) Exotics ✅</p></div>",
   "lesson_content_what_is_pip": "<h2>Pips, Lots, and Position Sizing</h2><p>A <strong>pip</strong> (Percentage in Point) is the smallest standard price movement in forex. For most pairs, 1 pip = 0.0001.</p><h3>Example</h3><p>If EUR/USD moves from <strong>1.0850 → 1.0860</strong>, that's a <strong>10 pip</strong> move.</p><h3>Lot Sizes</h3><ul><li><strong>Standard Lot</strong> = 100,000 units → 1 pip = $10</li><li><strong>Mini Lot</strong> = 10,000 units → 1 pip = $1</li><li><strong>Micro Lot</strong> = 1,000 units → 1 pip = $0.10</li></ul><h3>Why Pips Matter</h3><p>Pips are how traders measure profit and loss. If you buy 1 standard lot of EUR/USD and it moves 50 pips in your favor, you made <strong>$500</strong>.</p><blockquote>💡 <strong>Key Takeaway:</strong> Master pip calculation before risking real money. Always know your pip value before entering a trade.</blockquote>",
-
   "lesson_content_support_resistance": "<h2>Support and Resistance — The Foundation of Technical Analysis</h2><p><strong>Support</strong> is a price level where buying pressure is strong enough to prevent the price from falling further. <strong>Resistance</strong> is where selling pressure prevents the price from rising further.</p><h3>How to Identify Key Levels</h3><ul><li>Look for price areas where the market has <strong>reversed multiple times</strong></li><li>Round numbers (1.1000, 1.0500) often act as psychological S/R</li><li>Previous highs and lows are natural S/R zones</li></ul><h3>The Role Reversal Concept</h3><p>When price breaks through a resistance level, that level often becomes new support — and vice versa. This is called <strong>role reversal</strong> and is one of the most powerful concepts in trading.</p><blockquote>💡 <strong>Key Takeaway:</strong> Support and resistance are zones, not exact lines. Always look for confluence — multiple reasons for price to react at a level.</blockquote>",
-
   "lesson_content_candlesticks": "<h2>Reading Candlestick Patterns</h2><p>Candlesticks show four key prices: <strong>Open, High, Low, Close</strong>. The body shows the range between open and close. The wicks show the extremes.</p><h3>Key Reversal Patterns</h3><ul><li>🕯️ <strong>Doji</strong> — Open ≈ Close. Market indecision. Watch for direction after.</li><li>🔨 <strong>Hammer</strong> — Long lower wick at support. Bullish reversal signal.</li><li>⭐ <strong>Shooting Star</strong> — Long upper wick at resistance. Bearish reversal signal.</li><li>🌙 <strong>Engulfing</strong> — One candle completely engulfs the previous. Strong reversal.</li></ul><h3>How to Use Them</h3><p>Never trade a candlestick pattern in isolation. Always confirm with:</p><ul><li>Key support/resistance level</li><li>Trend direction</li><li>Volume or momentum indicator</li></ul><blockquote>💡 <strong>Key Takeaway:</strong> Candlestick patterns are clues, not guarantees. Use them as confirmation, not as standalone signals.</blockquote>",
-
   "lesson_content_trend_lines": "<h2>Trend Lines and Market Structure</h2><p>The most fundamental concept in trading: <strong>the trend is your friend</strong>. Understanding market structure tells you whether to look for buys, sells, or to stay out.</p><h3>Market Structure</h3><ul><li>📈 <strong>Uptrend</strong> = Higher Highs (HH) + Higher Lows (HL)</li><li>📉 <strong>Downtrend</strong> = Lower Highs (LH) + Lower Lows (LL)</li><li>↔️ <strong>Ranging</strong> = Price bouncing between two levels</li></ul><h3>Drawing Trend Lines</h3><p>In an uptrend, connect the <strong>higher lows</strong>. In a downtrend, connect the <strong>lower highs</strong>. A break of the trend line signals a potential reversal.</p><h3>Trading With the Trend</h3><p>Always trade in the direction of the higher timeframe trend. If the daily chart is bullish, look for buy setups on the 1-hour chart.</p><blockquote>💡 <strong>Key Takeaway:</strong> Identify the trend on a higher timeframe first, then drop to a lower timeframe to find your entry. This is called top-down analysis.</blockquote>",
-
   "reset_forgot_page_title": "27pips — Forgot Password",
   "reset_forgot_title": "Forgot Your Password?",
   "reset_forgot_sub": "Enter your account email address and we'll send you a secure link to reset your password.",
@@ -336,7 +325,6 @@
   "reset_send_link_btn": "Send Reset Link",
   "reset_request_sent": "If that email is registered, a reset link has been sent. Please check your inbox (and spam folder).",
   "reset_error_email_required": "Please enter your email address.",
-
   "reset_new_password_page_title": "27pips — Set New Password",
   "reset_new_password_title": "Set a New Password",
   "reset_new_password_sub": "Choose a strong password for your account.",
@@ -350,21 +338,17 @@
   "reset_error_token_expired": "This reset link has expired. Please request a new one.",
   "reset_invalid_title": "Invalid Reset Link",
   "reset_request_new_link": "Request a New Link",
-
   "reset_success_page_title": "27pips — Password Updated",
   "reset_success_title": "Password Updated!",
   "reset_success_sub": "Your password has been changed successfully. You can now sign in with your new credentials.",
-
   "reset_email_subject": "27pips — Password Reset Request",
   "reset_email_greeting": "Hi there,",
   "reset_email_body": "We received a request to reset your 27pips account password. Click the link below to set a new password:",
   "reset_email_expiry": "This link will expire in {hours} hour(s).",
   "reset_email_ignore": "If you did not request a password reset, you can safely ignore this email.",
-
   "reset_link_direct_label": "Email delivery is not yet configured. Click the button below to reset your password directly:",
   "reset_click_here_btn": "Reset My Password →",
   "reset_link_expires": "This link expires in {hours} hour(s).",
-
   "notify_welcome_subject": "Welcome to 27pips — Your account is ready!",
   "notify_welcome_greeting": "Hi {username}, welcome to 27pips!",
   "notify_welcome_body": "Your account has been created successfully. You now have access to structured forex education, live trade signals, a trading journal, and prop firm challenge tracking.",
@@ -377,11 +361,9 @@
   "notify_security_note": "If you did not authorize this action, please contact our support team immediately at support@27pips.com or reply to this email.",
   "notify_change_password": "Your password was successfully updated.",
   "notify_change_upgrade": "Your account has been upgraded to 27pips Premium. All institutional signals are now unlocked.",
-
   "sandbox_email_notice": "Email notifications are currently in testing mode. You may not receive emails directly.",
   "sandbox_reset_notice": "Your reset link has been processed. In testing mode, confirmation emails go to the site administrator. Use the button above if it appeared, or contact support.",
   "sandbox_update_notice": "Email notifications are in testing mode. Security alerts are logged to the admin inbox rather than sent to your address directly.",
-
   "search_placeholder": "Search lessons, signals…",
   "search_no_results": "No results found for ",
   "search_type_lesson": "Lessons",
@@ -390,7 +372,6 @@
   "search_type_tool": "Features",
   "load_more": "Load More",
   "load_more_end": "All content loaded",
-
   "perf_tag": "Alpha Audit",
   "perf_title": "Leaking Alpha Analysis",
   "perf_sub": "Deep-dive into your trading performance. Identify where you're leaving money on the table.",
@@ -418,13 +399,11 @@
   "perf_sortino_strong": "Excellent risk-adjusted return. Minimal downside volatility.",
   "perf_sortino_ok": "Acceptable. Some downside risk relative to returns.",
   "perf_sortino_weak": "Poor risk-adjusted return. High downside relative to gains.",
-
   "coach_alert_sent": "Cool-down alert sent.",
   "coach_subject": "Time to Step Back",
   "coach_env_loss_threshold": "COACH_LOSS_THRESHOLD",
   "coach_env_lookback_hours": "COACH_LOOKBACK_HOURS",
   "coach_env_cooldown_resend": "COACH_COOLDOWN_RESEND_H",
-
   "verify_page_title": "Verified Trader Profile | 27pips",
   "verify_consistency": "Consistency Score",
   "verify_readonly_notice": "This is a read-only public verification page. No private data is exposed.",
@@ -445,5 +424,7 @@
   "verify_copy_tooltip": "Copy your public verification link to clipboard",
   "verify_revoke_btn": "Revoke",
   "verify_revoke_tooltip": "Remove your public profile link",
-  "verify_revoke_confirm": "Revoke your public verification link? Anyone with the old link will no longer be able to view your profile."
+  "verify_revoke_confirm": "Revoke your public verification link? Anyone with the old link will no longer be able to view your profile.",
+  "lesson_title_read_chart": "How to Read a Chart",
+  "lesson_content_read_chart": "<h2>Introduction</h2><p>A price chart is your window into the market. Every decision you make will be influenced by what you see on a chart. Before you can analyse markets, spot setups, or manage trades, you need to understand how to <strong>read what the chart is telling you</strong>.</p><h2>Key Concept 1 — The Three Chart Types</h2><ul><li>📊 <strong>Line Chart</strong> — plots only the closing price. Simple but hides detail.</li><li>📉 <strong>Bar Chart (OHLC)</strong> — shows Open, High, Low, Close as vertical bars.</li><li>🕯️ <strong>Candlestick Chart</strong> — same OHLC data in a visual, easy-to-read format. Used exclusively at 27pips.</li></ul><blockquote>💡 Always use candlestick charts — the industry standard for retail traders.</blockquote><h2>Key Concept 2 — Anatomy of a Candlestick</h2><p>Each candle represents one time period and shows four prices: <strong>Open, Close, High, Low</strong>.</p><table style='width:100%;border-collapse:collapse;margin:16px 0'><tr style='background:rgba(16,185,129,0.1)'><th style='padding:8px;text-align:left'>Colour</th><th style='padding:8px;text-align:left'>Meaning</th><th style='padding:8px;text-align:left'>Close vs Open</th></tr><tr><td style='padding:8px'>🟢 Green (Bullish)</td><td style='padding:8px'>Buyers won</td><td style='padding:8px'>Close higher than Open</td></tr><tr><td style='padding:8px'>🔴 Red (Bearish)</td><td style='padding:8px'>Sellers won</td><td style='padding:8px'>Close lower than Open</td></tr></table><h2>Key Concept 3 — Timeframes</h2><ul><li>⚡ <strong>M1, M5, M15</strong> — Scalping (very short-term, very noisy)</li><li>📈 <strong>H1, H4</strong> — Day trading and swing trading (most popular)</li><li>📅 <strong>Daily (D1)</strong> — Clearest signals, swing trading</li><li>🗓️ <strong>Weekly (W1)</strong> — Long-term trend identification</li></ul><blockquote>💡 Always check the Daily or Weekly chart first to find the dominant trend, then drop to H1/H4 for your entry. This is <strong>Top-Down Analysis</strong>.</blockquote><h2>Key Concept 4 — Support and Resistance on a Chart</h2><p>Train your eye to spot <strong>support</strong> (price floors) and <strong>resistance</strong> (price ceilings):</p><ul><li>Areas where price has reversed multiple times</li><li>Round numbers (1.1000, 1.0500) act as magnets</li><li>Previous swing highs become resistance; lows become support</li></ul><h2>Key Concept 5 — Trend Recognition in 10 Seconds</h2><ul><li>📈 Higher Highs + Higher Lows = <strong>Uptrend</strong> (look for buys)</li><li>📉 Lower Highs + Lower Lows = <strong>Downtrend</strong> (look for sells)</li><li>↔️ No clear direction = <strong>Range</strong> (wait for a breakout)</li></ul><blockquote>💡 Never fight a strong trend. Wait for pullbacks in the trend direction.</blockquote><hr style='border-color:#334155;margin:32px 0'><h2>Quick Quiz</h2><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:16px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q1: A GREEN candlestick means the Close is HIGHER than the Open.</p><p style='color:#94a3b8'>A) False</p><p style='color:#10b981;font-weight:700'>B) True ✅</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q2: To identify the dominant trend, check which timeframe FIRST?</p><p style='color:#94a3b8'>A) M5 (5-minute)</p><p style='color:#10b981;font-weight:700'>B) Daily or Weekly chart ✅</p><p style='color:#94a3b8'>C) M15 (15-minute)</p></div><div style='background:#1e293b;border-radius:12px;padding:24px;margin-top:12px'><p style='color:#f1f5f9;font-weight:700;margin-bottom:12px'>Q3: Higher Highs and Higher Lows describe which market condition?</p><p style='color:#94a3b8'>A) Downtrend</p><p style='color:#94a3b8'>B) Ranging market</p><p style='color:#10b981;font-weight:700'>C) Uptrend ✅</p></div>"
 }

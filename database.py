@@ -409,9 +409,59 @@ def init_db():
             _seed_signals(db)
             db.commit()
 
+        # Migration: ensure "How to Read a Chart" lesson exists
+        _ensure_read_chart_lesson(db)
+        db.commit()
+
     finally:
         db.close()
     print(f"Database ready — {'PostgreSQL' if USE_POSTGRES else 'SQLite (pips.db)'}")
+
+
+def _ensure_read_chart_lesson(db):
+    """
+    Migration: add 'How to Read a Chart' to the beginner course if it
+    doesn't already exist. Safe to call on every startup — no-op if present.
+    """
+    existing = db.execute(
+        "SELECT id FROM lessons WHERE title = 'How to Read a Chart' LIMIT 1"
+    ).fetchone()
+    if existing:
+        return
+
+    # Find the beginner course id
+    course = db.execute(
+        "SELECT id FROM courses WHERE slug = 'beginner' LIMIT 1"
+    ).fetchone()
+    if not course:
+        return
+
+    course_id = course['id']
+    content   = '<p>See lesson content in locale files.</p>'
+
+    if USE_POSTGRES:
+        db.execute(
+            'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) '
+            'VALUES (%s,%s,%s,%s,%s)',
+            (course_id, 'How to Read a Chart', content, 3, 12)
+        )
+        # Shift "What is a Pip?" to order 4 if it exists
+        db.execute(
+            "UPDATE lessons SET order_number = 4 "
+            "WHERE course_id = %s AND title = 'What is a Pip?'",
+            (course_id,)
+        )
+    else:
+        db.execute(
+            'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) '
+            'VALUES (?,?,?,?,?)',
+            (course_id, 'How to Read a Chart', content, 3, 12)
+        )
+        db.execute(
+            "UPDATE lessons SET order_number = 4 "
+            "WHERE course_id = ? AND title = 'What is a Pip?'",
+            (course_id,)
+        )
 
 
 def _seed_curriculum(db):
@@ -442,14 +492,17 @@ def _seed_curriculum(db):
 
     beginner_lessons = [
         (beginner_id, 'What is Forex?',
-         '<h2>What is the Forex Market?</h2><p>The <strong>foreign exchange market (Forex)</strong> is the largest financial market in the world, with over <strong>$7.5 trillion</strong> traded daily. It operates 24 hours a day, 5 days a week.</p><h3>Why Trade Forex?</h3><ul><li>✅ High liquidity</li><li>✅ Low barriers to entry</li><li>✅ Trade in both directions</li><li>✅ Leverage available</li></ul><blockquote>💡 <strong>Key Takeaway:</strong> Forex is the exchange of one currency for another.</blockquote>',
-         1, 5),
+         '<p>See lesson content in locale files.</p>',
+         1, 8),
         (beginner_id, 'Currency Pairs Explained',
-         '<h2>Understanding Currency Pairs</h2><p>In forex, currencies are always traded in <strong>pairs</strong>. Take <strong>EUR/USD = 1.0850</strong>: EUR is the base currency, USD is the quote currency.</p><h3>The Major Pairs</h3><ul><li>EUR/USD — The Euro</li><li>GBP/USD — Cable</li><li>USD/JPY — The Yen</li><li>XAU/USD — Gold</li></ul><blockquote>💡 <strong>Key Takeaway:</strong> The price tells you how much of the quote currency you need to buy one unit of the base.</blockquote>',
-         2, 7),
+         '<p>See lesson content in locale files.</p>',
+         2, 10),
+        (beginner_id, 'How to Read a Chart',
+         '<p>See lesson content in locale files.</p>',
+         3, 12),
         (beginner_id, 'What is a Pip?',
-         '<h2>Pips, Lots, and Position Sizing</h2><p>A <strong>pip</strong> is the smallest standard price movement. For most pairs, 1 pip = 0.0001.</p><h3>Lot Sizes</h3><ul><li><strong>Standard Lot</strong> = 100,000 units → 1 pip = $10</li><li><strong>Mini Lot</strong> = 10,000 units → 1 pip = $1</li><li><strong>Micro Lot</strong> = 1,000 units → 1 pip = $0.10</li></ul><blockquote>💡 <strong>Key Takeaway:</strong> Master pip calculation before risking real money.</blockquote>',
-         3, 8),
+         '<p>See lesson content in locale files.</p>',
+         4, 8),
     ]
 
     # Course 2: Intermediate
