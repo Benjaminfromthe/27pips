@@ -447,44 +447,45 @@ def _ensure_read_chart_lesson(db):
     Migration: add 'How to Read a Chart' to the beginner course if it
     doesn't already exist. Safe to call on every startup — no-op if present.
     """
-    existing = db.execute(
-        "SELECT id FROM lessons WHERE title = 'How to Read a Chart' LIMIT 1"
-    ).fetchone()
-    if existing:
-        return
+    try:
+        existing = db.execute(
+            "SELECT id FROM lessons WHERE title = 'How to Read a Chart'"
+        ).fetchone()
+        if existing:
+            return
 
-    # Find the beginner course id
-    course = db.execute(
-        "SELECT id FROM courses WHERE slug = 'beginner' LIMIT 1"
-    ).fetchone()
-    if not course:
-        return
+        # Find the beginner course id
+        course = db.execute(
+            "SELECT id FROM courses WHERE slug = 'beginner'"
+        ).fetchone()
+        if not course:
+            return
 
-    course_id = course['id']
-    content   = '<p>See lesson content in locale files.</p>'
+        course_id = course['id']
+        content   = '<p>See lesson content in locale files.</p>'
 
-    if USE_POSTGRES:
-        db.execute(
-            'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) '
-            'VALUES (%s,%s,%s,%s,%s)',
-            (course_id, 'How to Read a Chart', content, 3, 12)
-        )
-        # Shift "What is a Pip?" to order 4 if it exists
-        db.execute(
-            "UPDATE lessons SET order_number = 4 "
-            "WHERE course_id = %s AND title = 'What is a Pip?'",
+        # Check current max order_number to avoid constraint violations
+        max_row = db.execute(
+            'SELECT MAX(order_number) FROM lessons WHERE course_id = ?',
             (course_id,)
-        )
-    else:
+        ).fetchone()
+        # Insert at order 3 only if it doesn't conflict; otherwise use max+1
+        existing_order3 = db.execute(
+            'SELECT id FROM lessons WHERE course_id = ? AND order_number = 3',
+            (course_id,)
+        ).fetchone()
+        new_order = 3 if not existing_order3 else ((max_row[0] or 3) + 1)
+
         db.execute(
             'INSERT INTO lessons (course_id, title, content, order_number, duration_minutes) '
             'VALUES (?,?,?,?,?)',
-            (course_id, 'How to Read a Chart', content, 3, 12)
+            (course_id, 'How to Read a Chart', content, new_order, 12)
         )
-        db.execute(
-            "UPDATE lessons SET order_number = 4 "
-            "WHERE course_id = ? AND title = 'What is a Pip?'",
-            (course_id,)
+
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(
+            '[MIGRATION] _ensure_read_chart_lesson: %s', e
         )
 
 
