@@ -442,5 +442,11 @@
   "upgrade_verify_pending": "Kwishyura Kwakiriwe",
   "upgrade_verify_pending_sub": "Turimo kwemeza kwishyura kwawe. Gahunda yawe izafungurwa mu minota mike.",
   "upgrade_go_dashboard": "Genda ahabanza",
-  "hero_stat_signals_sent": "Amakuru Yoherejwe"
+  "hero_stat_signals_sent": "Amakuru Yoherejwe",
+  "edu_free_lesson": "Ubuntu",
+  "edu_preview_free": "Isomo 1 Ryubuntu",
+  "edu_try_free_lesson": "Gerageza Isomo Ry'ubuntu",
+  "journal_preview_sub": "Andika ubucuruzi bwose, gukurikirana imikorere yawe, no gusuzuma ibikora. Tangira ubuntu.",
+  "tracker_preview_sub": "Kurikirana imihigo ya prop firm mu gihe nyacyo — umutungo, gutakaza, n'intego y'inyungu.",
+  "signals_guest_cta": "Fungura konti ubuntu kugira ngo ubone ingano z'injira, ikigongwe na intego"
 }

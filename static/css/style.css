@@ -1337,3 +1337,90 @@ html[data-theme="light"] .theme-toggle__icon--moon {
 @media (max-width: 600px) {
   .perf-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============================================================
+   GUEST PREVIEW MOCKUPS (journal, tracker, signals)
+============================================================ */
+
+/* Wrapper — positions the blurred mockup + overlay together */
+.preview-mockup-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* The blurred content behind the overlay */
+.preview-mockup {
+  filter: blur(3px);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Overlay that sits on top of the blurred mockup */
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-radius: 16px;
+  padding: 24px;
+  z-index: 10;
+}
+
+.preview-cta-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+.preview-cta-box h3 { color: var(--text-primary); margin-bottom: 8px; font-size: 1.05rem; }
+.preview-cta-box p  { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0; }
+
+/* Journal preview table layout */
+.preview-table-head,
+.preview-table-row {
+  display: grid;
+  grid-template-columns: 80px 60px 1fr 1fr 60px 64px;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+.preview-table-head {
+  background: var(--bg-input);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  border-radius: 12px 12px 0 0;
+}
+.preview-table-row {
+  background: var(--bg-card);
+  border-bottom: 1px solid rgba(51,65,85,0.4);
+  color: var(--text-secondary);
+}
+.preview-table-row:last-child { border-bottom: none; border-radius: 0 0 12px 12px; }
+.preview-win  { border-left: 3px solid var(--accent); }
+.preview-loss { border-left: 3px solid var(--accent-red); }
+
+/* Number blur for guest signal rows and preview tables */
+.preview-blur,
+.preview-blur-cell {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  color: var(--text-secondary);
+}
+
+/* Guest signal row styling */
+.signal-preview-row td { opacity: 0.8; }

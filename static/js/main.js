@@ -566,6 +566,8 @@ async function loadSignals() {
       return;
     }
 
+    const isGuest = data.is_guest || false;
+
     tbody.innerHTML = signals.map(s => {
       const actionBadge = s.action === 'BUY'
         ? '<span class="badge-buy">BUY</span>'
@@ -584,6 +586,21 @@ async function loadSignals() {
         : s.pair && (s.pair.includes('NAS') || s.pair.includes('US30'))
           ? 'asset-dot asset-blue'
           : 'asset-dot';
+
+      // Guest preview: blur numeric values, show a signup CTA cell
+      if (s.preview) {
+        return `
+          <tr class="signal-preview-row">
+            <td class="asset-cell"><span class="${dotClass}"></span>${s.pair}</td>
+            <td>${actionBadge}</td>
+            <td class="mono preview-blur-cell">1.0845</td>
+            <td class="mono preview-blur-cell">1.0800</td>
+            <td class="mono preview-blur-cell">1.0900</td>
+            <td class="mono preview-blur-cell">1.0940</td>
+            <td>${statusBadge}</td>
+          </tr>
+        `;
+      }
 
       const locked = '<span class="premium-lock">🔒 Premium</span>';
       const entry  = s.gated ? locked : (s.entry_price ?? '—');
@@ -604,6 +621,22 @@ async function loadSignals() {
         </tr>
       `;
     }).join('');
+
+    // If guest preview: append a full-width signup CTA row below the blurred signals
+    if (isGuest && signals.length > 0) {
+      const ctaText  = (window.I18N && window.I18N.signals_guest_cta)  || 'Sign up free to see Entry, Stop Loss & Take Profit levels';
+      const signupTx = (window.I18N && window.I18N.auth_create_free_account) || 'Create Free Account';
+      tbody.innerHTML += `
+        <tr>
+          <td colspan="7" style="padding:16px;text-align:center;background:rgba(16,185,129,0.04);border-top:1px solid var(--border)">
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:10px">🔒 ${ctaText}</p>
+            <button class="btn-primary" onclick="openModal('signup')" style="padding:9px 24px;font-size:0.88rem">
+              🚀 ${signupTx}
+            </button>
+          </td>
+        </tr>
+      `;
+    }
 
     // Reveal Load More button if there are more signals than shown
     try {

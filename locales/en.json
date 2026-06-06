@@ -442,5 +442,11 @@
   "upgrade_verify_pending": "Payment Received",
   "upgrade_verify_pending_sub": "We're verifying your payment. Your plan will activate within a few minutes.",
   "upgrade_go_dashboard": "Go to Dashboard",
-  "hero_stat_signals_sent": "Signals Sent"
+  "hero_stat_signals_sent": "Signals Sent",
+  "edu_free_lesson": "Free",
+  "edu_preview_free": "1 Free Preview",
+  "edu_try_free_lesson": "Try Free Lesson",
+  "journal_preview_sub": "Log every trade, track your performance, and review what works. Free to start.",
+  "tracker_preview_sub": "Track your prop firm challenge in real time — balance, drawdown, and profit target.",
+  "signals_guest_cta": "Sign up free to see Entry, Stop Loss & Take Profit levels"
 }

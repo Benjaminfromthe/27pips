@@ -148,20 +148,25 @@
             <h3 class="edu-module-title">{{ t('edu_module1_title') }}</h3>
             <p class="edu-module-sub">{{ t('edu_module1_sub') }}</p>
           </div>
-          <span class="edu-badge badge-locked">{{ t('edu_locked') }}</span>
+          <span class="edu-badge badge-active">{{ t('edu_preview_free') }}</span>
         </div>
         <div class="progress-bar-wrap">
           <div class="progress-bar" style="width:0%"></div>
         </div>
         <p class="progress-text">{{ t('edu_progress_lessons', done=0, total=5) }}</p>
         <ul class="lesson-list">
-          <li class="lesson-item locked">📖 {{ t('edu_lesson_what_is_forex') }}</li>
+          <!-- First lesson: publicly accessible — no login needed -->
+          <li class="lesson-item">
+            <a href="/education/lesson/1" style="color:var(--accent);text-decoration:none;font-weight:600">
+              📖 {{ t('edu_lesson_what_is_forex') }} <span style="font-size:0.72rem;background:rgba(16,185,129,0.12);padding:2px 7px;border-radius:10px;margin-left:4px">{{ t('edu_free_lesson') }}</span>
+            </a>
+          </li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_currency_pairs') }}</li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_read_chart') }}</li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_pips_lots') }}</li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_bid_ask') }}</li>
         </ul>
-        <button class="btn-primary full-width" onclick="window.location='/education/'">{{ t('edu_start_module') }}</button>
+        <a href="/education/lesson/1" class="btn-primary full-width" style="display:block;text-align:center">{{ t('edu_try_free_lesson') }}</a>
       </div>
 
       <!-- Module 2 — preview card -->
@@ -172,16 +177,21 @@
             <h3 class="edu-module-title">{{ t('edu_module2_title') }}</h3>
             <p class="edu-module-sub">{{ t('edu_module2_sub') }}</p>
           </div>
-          <span class="edu-badge badge-locked">{{ t('edu_lessons_count', count=3) }}</span>
+          <span class="edu-badge badge-active">{{ t('edu_preview_free') }}</span>
         </div>
         <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
         <p class="progress-text">{{ t('edu_module2_topics') }}</p>
         <ul class="lesson-list">
-          <li class="lesson-item locked">📖 {{ t('edu_lesson_support_resistance') }}</li>
+          <!-- First lesson of Elementary: publicly accessible -->
+          <li class="lesson-item">
+            <a href="/education/lesson/4" style="color:var(--accent);text-decoration:none;font-weight:600">
+              📖 {{ t('edu_lesson_support_resistance') }} <span style="font-size:0.72rem;background:rgba(16,185,129,0.12);padding:2px 7px;border-radius:10px;margin-left:4px">{{ t('edu_free_lesson') }}</span>
+            </a>
+          </li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_candlesticks') }}</li>
           <li class="lesson-item locked">📖 {{ t('edu_lesson_trend_lines') }}</li>
         </ul>
-        <a href="/education/" class="btn-outline full-width" style="display:block;text-align:center;text-decoration:none">{{ t('edu_view_curriculum') }}</a>
+        <a href="/education/lesson/4" class="btn-outline full-width" style="display:block;text-align:center;text-decoration:none">{{ t('edu_try_free_lesson') }}</a>
       </div>
 
       <!-- Module 3 — coming soon -->
@@ -371,14 +381,49 @@
     </div>
 
     {% else %}
-    <!-- GUEST: auth gate -->
-    <div class="auth-gate-static">
-      <div class="auth-gate-box">
-        <div style="font-size:3rem">🔒</div>
-        <h3>{{ t('journal_title') }}</h3>
-        <p>{{ t('journal_gate_sub') }}</p>
-        <button class="btn-primary" onclick="openModal('login')">{{ t('auth_sign_in_access') }}</button>
-        <p style="font-size:0.8rem;color:var(--muted);margin-top:8px">{{ t('auth_no_account') }} <a href="#" class="link-green" onclick="openModal('signup')">{{ t('auth_create_free_account') }}</a></p>
+    <!-- GUEST: rich preview mockup with overlay -->
+    <div class="preview-mockup-wrap">
+      <!-- Blurred sample journal rows -->
+      <div class="preview-mockup" aria-hidden="true">
+        <div class="preview-table-head">
+          <span>{{ t('journal_pair') }}</span><span>{{ t('journal_direction') }}</span>
+          <span>{{ t('journal_entry') }}</span><span>{{ t('journal_exit') }}</span>
+          <span>{{ t('journal_pips') }}</span><span>{{ t('journal_outcome') }}</span>
+        </div>
+        <div class="preview-table-row preview-win">
+          <span>EURUSD</span><span class="dir-buy">Buy</span>
+          <span class="preview-blur">1.0845</span><span class="preview-blur">1.0910</span>
+          <span class="text-green preview-blur">+65</span><span class="outcome-win">Win</span>
+        </div>
+        <div class="preview-table-row preview-loss">
+          <span>XAUUSD</span><span class="dir-sell">Sell</span>
+          <span class="preview-blur">2318.5</span><span class="preview-blur">2332.0</span>
+          <span class="text-red preview-blur">-13</span><span class="outcome-loss">Loss</span>
+        </div>
+        <div class="preview-table-row preview-win">
+          <span>GBPUSD</span><span class="dir-buy">Buy</span>
+          <span class="preview-blur">1.2680</span><span class="preview-blur">1.2750</span>
+          <span class="text-green preview-blur">+70</span><span class="outcome-win">Win</span>
+        </div>
+        <div class="preview-table-row preview-win">
+          <span>NAS100</span><span class="dir-buy">Buy</span>
+          <span class="preview-blur">17840</span><span class="preview-blur">18050</span>
+          <span class="text-green preview-blur">+210</span><span class="outcome-win">Win</span>
+        </div>
+      </div>
+      <!-- CTA overlay -->
+      <div class="preview-overlay">
+        <div class="preview-cta-box">
+          <div style="font-size:2rem;margin-bottom:10px">📓</div>
+          <h3>{{ t('journal_title') }}</h3>
+          <p>{{ t('journal_preview_sub') }}</p>
+          <button class="btn-primary" onclick="openModal('signup')" style="margin-top:14px;padding:11px 28px">
+            {{ t('auth_create_free_account') }}
+          </button>
+          <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:10px">
+            {{ t('auth_already_member') }} <a href="#" class="link-green" onclick="openModal('login')">{{ t('auth_sign_in_link') }}</a>
+          </p>
+        </div>
       </div>
     </div>
     {% endif %}
@@ -567,13 +612,52 @@
     </div>
 
     {% else %}
-    <!-- GUEST: auth gate -->
-    <div class="auth-gate-static">
-      <div class="auth-gate-box">
-        <div style="font-size:3rem">🔒</div>
-        <h3>{{ t('tracker_gate_title') }}</h3>
-        <p>{{ t('tracker_gate_sub') }}</p>
-        <button class="btn-primary" onclick="openModal('login')">{{ t('auth_sign_in_access') }}</button>
+    <!-- GUEST: rich tracker preview with overlay -->
+    <div class="preview-mockup-wrap">
+      <!-- Blurred sample tracker cards -->
+      <div class="tracker-grid preview-mockup" aria-hidden="true" style="pointer-events:none">
+        <div class="tracker-card tracker-card-main">
+          <p class="tracker-label">{{ t('tracker_balance') }}</p>
+          <p class="tracker-value text-green preview-blur">$10,620</p>
+          <p class="tracker-sub">{{ t('tracker_started_at') }} $10,000</p>
+          <div class="tracker-progress-wrap"><div class="tracker-progress-bar" style="width:62%"></div></div>
+          <p class="tracker-hint preview-blur">Profit Progress: 6.2% / 10% target</p>
+        </div>
+        <div class="tracker-card">
+          <div class="tracker-icon">📉</div>
+          <p class="tracker-label">{{ t('tracker_daily') }}</p>
+          <p class="tracker-value text-yellow preview-blur">-0.8%</p>
+          <p class="tracker-sub">Limit: 5%</p>
+          <div class="tracker-progress-wrap"><div class="tracker-progress-bar tracker-bar-yellow" style="width:16%"></div></div>
+        </div>
+        <div class="tracker-card">
+          <div class="tracker-icon">🛑</div>
+          <p class="tracker-label">{{ t('tracker_max') }}</p>
+          <p class="tracker-value text-green preview-blur">-1.2%</p>
+          <p class="tracker-sub">Limit: 10%</p>
+          <div class="tracker-progress-wrap"><div class="tracker-progress-bar" style="width:12%"></div></div>
+        </div>
+        <div class="tracker-card">
+          <div class="tracker-icon">🎯</div>
+          <p class="tracker-label">{{ t('tracker_target') }}</p>
+          <p class="tracker-value text-green preview-blur">+6.2%</p>
+          <p class="tracker-sub">Target: 10%</p>
+          <div class="tracker-progress-wrap"><div class="tracker-progress-bar tracker-bar-blue" style="width:62%"></div></div>
+        </div>
+      </div>
+      <!-- CTA overlay -->
+      <div class="preview-overlay">
+        <div class="preview-cta-box">
+          <div style="font-size:2rem;margin-bottom:10px">🏆</div>
+          <h3>{{ t('tracker_gate_title') }}</h3>
+          <p>{{ t('tracker_preview_sub') }}</p>
+          <button class="btn-primary" onclick="openModal('signup')" style="margin-top:14px;padding:11px 28px">
+            {{ t('auth_create_free_account') }}
+          </button>
+          <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:10px">
+            {{ t('auth_already_member') }} <a href="#" class="link-green" onclick="openModal('login')">{{ t('auth_sign_in_link') }}</a>
+          </p>
+        </div>
       </div>
     </div>
     {% endif %}
@@ -857,7 +941,8 @@
     perf_sortino_ok:   "{{ t('perf_sortino_ok') }}",
     perf_sortino_weak: "{{ t('perf_sortino_weak') }}",
     perf_recompute:    "{{ t('perf_recompute') }}",
-    verify_revoke_confirm: "{{ t('verify_revoke_confirm') }}"
+    verify_revoke_confirm: "{{ t('verify_revoke_confirm') }}",
+    signals_guest_cta:     "{{ t('signals_guest_cta') }}"
   };
 </script>
 <script src="/static/js/main.js"></script>

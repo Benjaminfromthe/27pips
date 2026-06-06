@@ -442,5 +442,11 @@
   "upgrade_verify_pending": "Paiement Reçu",
   "upgrade_verify_pending_sub": "Nous vérifions votre paiement. Votre plan s'activera dans quelques minutes.",
   "upgrade_go_dashboard": "Aller au tableau de bord",
-  "hero_stat_signals_sent": "Signaux Envoyés"
+  "hero_stat_signals_sent": "Signaux Envoyés",
+  "edu_free_lesson": "Gratuit",
+  "edu_preview_free": "1 Aperçu Gratuit",
+  "edu_try_free_lesson": "Essayer la leçon gratuite",
+  "journal_preview_sub": "Enregistrez chaque trade, suivez vos performances et analysez ce qui fonctionne. Gratuit pour commencer.",
+  "tracker_preview_sub": "Suivez votre challenge prop firm en temps réel — solde, drawdown et objectif de profit.",
+  "signals_guest_cta": "Créez un compte gratuit pour voir les niveaux d'entrée, Stop Loss et Take Profit"
 }
