@@ -11,6 +11,7 @@
       <a href="/education/" class="nav-link{% if active_nav == 'education' %} nav-link--active{% endif %}" {% if active_nav == 'education' %}style="color:var(--green)"{% endif %}>{{ t('nav_education') }}</a>
       <a href="/#signals" class="nav-link">{{ t('nav_signals') }}</a>
       <a href="/#funded" class="nav-link">{{ t('nav_tracker') }}</a>
+      <a href="/simulator/" class="nav-link{% if active_nav == 'simulator' %} nav-link--active{% endif %}">🎯 {{ t('nav_simulator') }}</a>
     </nav>
     {% endif %}
 
@@ -59,6 +60,7 @@
             {% else %}
             <a href="/#journal" class="user-menu-item">📓 {{ t('nav_journal') }}</a>
             <a href="/#funded"  class="user-menu-item">🏆 {{ t('nav_tracker') }}</a>
+            <a href="/simulator/" class="user-menu-item">🎯 {{ t('nav_simulator') }}</a>
             {% endif %}
             <hr class="user-menu-divider" />
             <button class="user-menu-item user-menu-logout" onclick="logoutUser()">🚪 {{ t('nav_logout') }}</button>

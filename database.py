@@ -240,6 +240,30 @@ def _schema_sql():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 confirmed_at TIMESTAMP
             )''',
+            '''CREATE TABLE IF NOT EXISTS sim_account (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                balance REAL NOT NULL DEFAULT 10000.0,
+                equity  REAL NOT NULL DEFAULT 10000.0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS sim_trades (
+                id SERIAL PRIMARY KEY,
+                user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                pair      TEXT NOT NULL,
+                direction TEXT NOT NULL CHECK(direction IN ('Buy','Sell')),
+                lot_size  REAL NOT NULL DEFAULT 0.1,
+                open_price REAL NOT NULL,
+                close_price REAL,
+                stop_loss   REAL,
+                take_profit REAL,
+                pnl         REAL,
+                status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','closed')),
+                opened_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                closed_at  TIMESTAMP
+            )''',
         ]
     else:
         # SQLite schema (original)
@@ -366,6 +390,30 @@ def _schema_sql():
                 status TEXT NOT NULL DEFAULT 'pending',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 confirmed_at DATETIME
+            )''',
+            '''CREATE TABLE IF NOT EXISTS sim_account (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                balance REAL NOT NULL DEFAULT 10000.0,
+                equity  REAL NOT NULL DEFAULT 10000.0,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id)
+            )''',
+            '''CREATE TABLE IF NOT EXISTS sim_trades (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                pair       TEXT NOT NULL,
+                direction  TEXT NOT NULL CHECK(direction IN ('Buy','Sell')),
+                lot_size   REAL NOT NULL DEFAULT 0.1,
+                open_price REAL NOT NULL,
+                close_price REAL,
+                stop_loss   REAL,
+                take_profit REAL,
+                pnl         REAL,
+                status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','closed')),
+                opened_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                closed_at DATETIME
             )''',
         ]
 

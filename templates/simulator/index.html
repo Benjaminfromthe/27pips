@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
+  <title>{{ t('sim_page_title') }}</title>
+  {% include 'partials/theme_head.html' %}
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Simulator layout ── */
+    .sim-hero { background:var(--hero-gradient);padding:52px 0 36px;text-align:center; }
+    .sim-hero h1 { font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:900;color:var(--text-primary);margin-bottom:8px }
+    .sim-hero p  { color:var(--text-secondary);max-width:520px;margin:0 auto }
+
+    .sim-grid { display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start }
+    @media(max-width:900px){ .sim-grid{grid-template-columns:1fr} }
+
+    /* Account card */
+    .sim-account-card {
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:16px;padding:24px;
+    }
+    .sim-balance { font-size:2rem;font-weight:900;color:var(--text-primary);margin:4px 0 2px }
+    .sim-equity  { font-size:1rem;color:var(--text-secondary) }
+    .sim-upnl.pos { color:var(--accent) }
+    .sim-upnl.neg { color:var(--accent-red) }
+
+    /* Trade form */
+    .sim-form { display:flex;flex-direction:column;gap:14px }
+    .sim-form label { font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:4px }
+    .sim-form select,
+    .sim-form input  { width:100%;background:var(--bg-input);border:1.5px solid var(--border);border-radius:8px;color:var(--text-primary);padding:10px 12px;font-size:0.9rem;font-family:inherit }
+    .sim-form select:focus,
+    .sim-form input:focus { outline:none;border-color:var(--accent) }
+    .sim-dir-row { display:grid;grid-template-columns:1fr 1fr;gap:10px }
+    .sim-btn-buy  { background:var(--accent);color:#fff;border:none;padding:13px;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;width:100% }
+    .sim-btn-sell { background:var(--accent-red);color:#fff;border:none;padding:13px;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;width:100% }
+    .sim-btn-buy:hover  { transform:translateY(-1px);box-shadow:0 6px 18px rgba(16,185,129,.3) }
+    .sim-btn-sell:hover { transform:translateY(-1px);box-shadow:0 6px 18px rgba(239,68,68,.3) }
+    .sim-btn-buy:disabled,
+    .sim-btn-sell:disabled { opacity:.5;cursor:not-allowed;transform:none }
+
+    /* Live price ticker */
+    .price-ticker { display:flex;align-items:center;gap:8px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:4px }
+    .price-ticker .pair-name { font-weight:700;color:var(--text-primary);font-size:0.95rem }
+    .price-ticker .live-price { font-size:1.2rem;font-weight:900;color:var(--accent);margin-left:auto }
+    .price-ticker .price-change.pos { color:var(--accent);font-size:0.78rem }
+    .price-ticker .price-change.neg { color:var(--accent-red);font-size:0.78rem }
+    .price-dot { width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulseDot 1.5s infinite }
+    @keyframes pulseDot { 0%,100%{opacity:1}50%{opacity:.3} }
+
+    /* Open trades table */
+    .sim-table-wrap { background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden }
+    .sim-table-wrap h3 { padding:18px 20px 14px;color:var(--text-primary);font-size:1rem;border-bottom:1px solid var(--border) }
+    .sim-table { width:100%;border-collapse:collapse;font-size:0.85rem }
+    .sim-table th { background:var(--bg-input);padding:10px 14px;text-align:left;font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em }
+    .sim-table td { padding:11px 14px;border-bottom:1px solid rgba(51,65,85,.4);color:var(--text-secondary) }
+    .sim-table tr:last-child td { border-bottom:none }
+    .sim-table tr:hover td { background:rgba(255,255,255,.02) }
+    .sim-table .pnl-pos { color:var(--accent);font-weight:700 }
+    .sim-table .pnl-neg { color:var(--accent-red);font-weight:700 }
+    .btn-close-trade { background:rgba(239,68,68,.12);color:var(--accent-red);border:1px solid rgba(239,68,68,.3);padding:4px 12px;border-radius:6px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit }
+    .btn-close-trade:hover { background:rgba(239,68,68,.22) }
+
+    /* Reset btn */
+    .btn-sim-reset { background:var(--bg-input);color:var(--text-secondary);border:1px solid var(--border);padding:8px 18px;border-radius:8px;font-size:0.82rem;cursor:pointer;font-family:inherit;transition:all .2s }
+    .btn-sim-reset:hover { border-color:var(--accent-red);color:var(--accent-red) }
+
+    /* Source badge */
+    .source-live { color:var(--accent);font-size:0.7rem;font-weight:700 }
+    .source-fallback { color:var(--accent-yellow);font-size:0.7rem;font-weight:700 }
+
+    /* Empty state */
+    .sim-empty { text-align:center;padding:36px 20px;color:var(--text-secondary) }
+    .sim-empty span { font-size:2rem;display:block;margin-bottom:8px }
+
+    /* History section */
+    .sim-history-scroll { max-height:300px;overflow-y:auto }
+
+    /* Guest gate */
+    .sim-gate { text-align:center;padding:60px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:20px }
+    .sim-gate h2 { color:var(--text-primary);margin-bottom:8px }
+  </style>
+</head>
+<body>
+
+{% with show_nav=true, active_nav='simulator' %}
+{% include 'partials/site_header.html' %}
+{% endwith %}
+{% include 'partials/auth_modal.html' %}
+
+<!-- HERO -->
+<div class="sim-hero">
+  <div class="container">
+    <h1>🎯 {{ t('sim_title') }}</h1>
+    <p>{{ t('sim_sub') }}</p>
+  </div>
+</div>
+
+<main style="background:var(--bg-primary);min-height:70vh;padding:40px 0 60px">
+  <div class="container">
+
+  {% if not user %}
+    <!-- Guest gate -->
+    <div class="sim-gate">
+      <div style="font-size:3rem;margin-bottom:16px">🎯</div>
+      <h2>{{ t('sim_gate_title') }}</h2>
+      <p style="color:var(--text-secondary);max-width:400px;margin:0 auto 24px">{{ t('sim_gate_sub') }}</p>
+      <button class="btn-primary" onclick="openModal('signup')" style="padding:12px 32px;margin-right:12px">
+        {{ t('auth_create_free_account') }}
+      </button>
+      <button class="btn-outline" onclick="openModal('login')" style="padding:12px 32px">
+        {{ t('auth_sign_in') }}
+      </button>
+    </div>
+
+  {% else %}
+
+    <!-- Account summary bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+      <div>
+        <p style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:2px">{{ t('sim_virtual_balance') }}</p>
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <span class="sim-balance" id="simBalance">${{ "%.2f"|format(account.balance) }}</span>
+          <span class="sim-equity" id="simEquityLabel">
+            {{ t('sim_equity') }}: <strong id="simEquity">${{ "%.2f"|format(account.equity) }}</strong>
+          </span>
+          <span id="simUpnlBadge" style="font-size:0.85rem;font-weight:700"></span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span id="priceSourceBadge" class="source-live" style="display:none">🟢 {{ t('sim_live_prices') }}</span>
+        <button class="btn-sim-reset" onclick="resetAccount()">🔄 {{ t('sim_reset_account') }}</button>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+
+      <!-- ── LEFT: Trade form ── -->
+      <div>
+        <!-- Live price ticker -->
+        <div class="price-ticker" id="priceTicker">
+          <span class="price-dot"></span>
+          <span class="pair-name" id="tickerPair">EURUSD</span>
+          <span style="color:var(--text-secondary);font-size:0.8rem;margin-left:4px">{{ t('sim_live') }}</span>
+          <span class="live-price" id="tickerPrice">—</span>
+          <span class="price-change" id="tickerChange"></span>
+        </div>
+
+        <!-- Trade entry form -->
+        <div class="sim-account-card" style="margin-top:12px">
+          <h3 style="color:var(--text-primary);margin-bottom:16px;font-size:1rem">{{ t('sim_open_trade') }}</h3>
+          <div class="sim-form">
+
+            <div>
+              <label>{{ t('signals_asset') }}</label>
+              <select id="simPair" onchange="onPairChange()">
+                {% for code, cfg in pairs.items() %}
+                <option value="{{ code }}">{{ cfg.label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div>
+              <label>{{ t('journal_lot') }}</label>
+              <input type="number" id="simLot" value="0.10" min="0.01" max="10" step="0.01"
+                     placeholder="0.10" />
+              <p style="font-size:0.72rem;color:var(--text-secondary);margin-top:4px">
+                {{ t('sim_lot_hint') }}
+              </p>
+            </div>
+
+            <div>
+              <label>{{ t('signals_sl') }} <span style="font-weight:400;opacity:.6">({{ t('sim_optional') }})</span></label>
+              <input type="number" id="simSL" step="any" placeholder="{{ t('sim_sl_placeholder') }}" />
+            </div>
+
+            <div>
+              <label>{{ t('signals_tp1') }} <span style="font-weight:400;opacity:.6">({{ t('sim_optional') }})</span></label>
+              <input type="number" id="simTP" step="any" placeholder="{{ t('sim_tp_placeholder') }}" />
+            </div>
+
+            <div id="simMsg" style="display:none;padding:10px;border-radius:8px;font-size:0.85rem;font-weight:600;text-align:center"></div>
+
+            <div class="sim-dir-row">
+              <button class="sim-btn-buy"  id="simBuyBtn"  onclick="openTrade('Buy')">📈 {{ t('journal_direction_buy') }}</button>
+              <button class="sim-btn-sell" id="simSellBtn" onclick="openTrade('Sell')">📉 {{ t('journal_direction_sell') }}</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RIGHT: Open trades + history ── -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- Open trades -->
+        <div class="sim-table-wrap">
+          <h3>📂 {{ t('sim_open_trades') }} <span id="openTradeCount" style="color:var(--text-secondary);font-size:0.8rem;font-weight:400"></span></h3>
+          <div id="openTradesBody">
+            {% if open_trades %}
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th>{{ t('signals_asset') }}</th>
+                  <th>{{ t('journal_direction') }}</th>
+                  <th>{{ t('signals_entry') }}</th>
+                  <th>{{ t('sim_current') }}</th>
+                  <th>{{ t('sim_pnl') }}</th>
+                  <th>{{ t('journal_lot') }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="openTradesTable">
+                {% for trade in open_trades %}
+                <tr id="trade-row-{{ trade.id }}" data-id="{{ trade.id }}"
+                    data-pair="{{ trade.pair }}" data-dir="{{ trade.direction }}"
+                    data-open="{{ trade.open_price }}" data-lot="{{ trade.lot_size }}">
+                  <td style="font-weight:700;color:var(--text-primary)">{{ trade.pair }}</td>
+                  <td class="{{ 'dir-buy' if trade.direction == 'Buy' else 'dir-sell' }}">{{ trade.direction }}</td>
+                  <td class="mono">{{ "%.5f"|format(trade.open_price) if trade.open_price < 999 else "%.2f"|format(trade.open_price) }}</td>
+                  <td class="mono" id="cur-{{ trade.id }}">—</td>
+                  <td id="pnl-{{ trade.id }}">—</td>
+                  <td>{{ trade.lot_size }}</td>
+                  <td><button class="btn-close-trade" onclick="closeTrade({{ trade.id }})">✕ {{ t('sim_close') }}</button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <div class="sim-empty" id="openTradesEmpty">
+              <span>📭</span>
+              <p>{{ t('sim_no_open_trades') }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Trade history -->
+        <div class="sim-table-wrap">
+          <h3>📋 {{ t('sim_history') }}</h3>
+          {% if closed_trades %}
+          <div class="sim-history-scroll">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th>{{ t('signals_asset') }}</th>
+                  <th>{{ t('journal_direction') }}</th>
+                  <th>{{ t('signals_entry') }}</th>
+                  <th>{{ t('journal_exit') }}</th>
+                  <th>{{ t('sim_pnl') }}</th>
+                  <th>{{ t('journal_lot') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for trade in closed_trades %}
+                <tr>
+                  <td style="font-weight:700;color:var(--text-primary)">{{ trade.pair }}</td>
+                  <td class="{{ 'dir-buy' if trade.direction == 'Buy' else 'dir-sell' }}">{{ trade.direction }}</td>
+                  <td class="mono">{{ "%.5f"|format(trade.open_price) if trade.open_price < 999 else "%.2f"|format(trade.open_price) }}</td>
+                  <td class="mono">{{ "%.5f"|format(trade.close_price) if trade.close_price and trade.close_price < 999 else ("%.2f"|format(trade.close_price) if trade.close_price else '—') }}</td>
+                  <td class="{{ 'pnl-pos' if (trade.pnl or 0) >= 0 else 'pnl-neg' }}">
+                    {{ ('+' if (trade.pnl or 0) >= 0 else '') + "%.2f"|format(trade.pnl or 0) }}
+                  </td>
+                  <td>{{ trade.lot_size }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="sim-empty"><span>📜</span><p>{{ t('sim_no_history') }}</p></div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  {% endif %}
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="logo-text">27<span class="logo-accent">pips</span></span>
+      <p>{{ t('footer_hub', tagline=t('footer_tagline')) }}</p>
+    </div>
+    <p class="footer-copy">{{ t('footer_copy') }}</p>
+  </div>
+</footer>
+
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/main.js"></script>
+<script>
+// ── Paper Trading Simulator JS ────────────────────────────
+const PIP_MULT = {{ pairs | tojson }};
+let _prices    = {};
+let _prevPrices = {};
+let _pollTimer = null;
+const POLL_MS  = 30000;   // 30-second price refresh
+
+// ── Price polling ─────────────────────────────────────────
+async function fetchPrice(pair) {
+  try {
+    const r = await fetch('/simulator/price/' + pair);
+    const d = await r.json();
+    if (d.success) {
+      _prevPrices[pair] = _prices[pair] || d.price;
+      _prices[pair]     = d.price;
+      if (d.source === 'live') {
+        const badge = document.getElementById('priceSourceBadge');
+        if (badge) badge.style.display = 'inline';
+      }
+      return d.price;
+    }
+  } catch(e) { /* silent */ }
+  return null;
+}
+
+async function pollAllPrices() {
+  const pair = document.getElementById('simPair')?.value || 'EURUSD';
+  const price = await fetchPrice(pair);
+  if (price) updateTicker(pair, price);
+  updateOpenTradePnls();
+}
+
+function updateTicker(pair, price) {
+  const el = document.getElementById('tickerPair');
+  const pr = document.getElementById('tickerPrice');
+  const ch = document.getElementById('tickerChange');
+  if (el) el.textContent = pair;
+  if (pr) pr.textContent = price < 999 ? price.toFixed(5) : price.toFixed(2);
+  if (ch) {
+    const prev = _prevPrices[pair];
+    if (prev && prev !== price) {
+      const diff = ((price - prev) / prev * 100).toFixed(3);
+      ch.textContent = (diff >= 0 ? '▲ ' : '▼ ') + Math.abs(diff) + '%';
+      ch.className   = 'price-change ' + (diff >= 0 ? 'pos' : 'neg');
+    } else {
+      ch.textContent = '';
+    }
+  }
+}
+
+function onPairChange() {
+  const pair = document.getElementById('simPair').value;
+  fetchPrice(pair).then(p => { if (p) updateTicker(pair, p); });
+}
+
+// ── P&L live update ───────────────────────────────────────
+function calcPnl(pair, dir, openPrice, currentPrice, lotSize) {
+  const cfg  = PIP_MULT[pair] || {pip_mult: 10};
+  const diff = dir === 'Buy' ? (currentPrice - openPrice) : (openPrice - currentPrice);
+  return Math.round(diff * lotSize * cfg.pip_mult * 100) / 100;
+}
+
+function updateOpenTradePnls() {
+  const rows = document.querySelectorAll('[data-pair][data-dir]');
+  let totalUpnl = 0;
+  rows.forEach(row => {
+    const pair      = row.dataset.pair;
+    const dir       = row.dataset.dir;
+    const openPrice = parseFloat(row.dataset.open);
+    const lot       = parseFloat(row.dataset.lot);
+    const cur       = _prices[pair];
+    if (!cur) { fetchPrice(pair); return; }
+
+    const pnl   = calcPnl(pair, dir, openPrice, cur, lot);
+    totalUpnl  += pnl;
+
+    const curEl = document.getElementById('cur-'  + row.dataset.id);
+    const pnlEl = document.getElementById('pnl-'  + row.dataset.id);
+    if (curEl) curEl.textContent = cur < 999 ? cur.toFixed(5) : cur.toFixed(2);
+    if (pnlEl) {
+      pnlEl.textContent  = (pnl >= 0 ? '+' : '') + pnl.toFixed(2);
+      pnlEl.className    = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+    }
+  });
+
+  // Update equity display
+  const balEl   = document.getElementById('simBalance');
+  const eqEl    = document.getElementById('simEquity');
+  const upnlEl  = document.getElementById('simUpnlBadge');
+  if (balEl) {
+    const bal = parseFloat(balEl.textContent.replace(/[$,]/g, '')) || 0;
+    if (eqEl)   eqEl.textContent   = '$' + (bal + totalUpnl).toFixed(2);
+    if (upnlEl) {
+      upnlEl.textContent = (totalUpnl >= 0 ? '▲ +$' : '▼ $') + totalUpnl.toFixed(2) + ' unrealised';
+      upnlEl.className   = 'sim-upnl ' + (totalUpnl >= 0 ? 'pos' : 'neg');
+    }
+  }
+}
+
+// ── Open a trade ──────────────────────────────────────────
+async function openTrade(direction) {
+  const pair = document.getElementById('simPair').value;
+  const lot  = parseFloat(document.getElementById('simLot').value) || 0.1;
+  const sl   = document.getElementById('simSL').value   || null;
+  const tp   = document.getElementById('simTP').value   || null;
+  const msg  = document.getElementById('simMsg');
+  const buyBtn  = document.getElementById('simBuyBtn');
+  const sellBtn = document.getElementById('simSellBtn');
+
+  buyBtn.disabled  = true;
+  sellBtn.disabled = true;
+  msg.style.display = 'none';
+
+  try {
+    const r = await fetch('/simulator/open', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({pair, direction, lot_size: lot, stop_loss: sl, take_profit: tp})
+    });
+    const d = await r.json();
+    if (d.success) {
+      showMsg('success', '✅ ' + direction + ' ' + lot + ' lot ' + pair + ' @ ' + d.open_price.toFixed(d.open_price < 999 ? 5 : 2));
+      setTimeout(() => location.reload(), 900);
+    } else {
+      showMsg('error', d.message || 'Failed to open trade.');
+    }
+  } catch(e) {
+    showMsg('error', 'Network error. Please try again.');
+  } finally {
+    buyBtn.disabled  = false;
+    sellBtn.disabled = false;
+  }
+}
+
+// ── Close a trade ─────────────────────────────────────────
+async function closeTrade(tradeId) {
+  const btn = document.querySelector('[onclick="closeTrade(' + tradeId + ')"]');
+  if (btn) btn.disabled = true;
+  try {
+    const r = await fetch('/simulator/close/' + tradeId, {method:'POST'});
+    const d = await r.json();
+    if (d.success) {
+      const pnl = d.pnl;
+      const row = document.getElementById('trade-row-' + tradeId);
+      if (row) row.remove();
+      const balEl = document.getElementById('simBalance');
+      if (balEl) balEl.textContent = '$' + d.balance.toFixed(2);
+      showMsg(pnl >= 0 ? 'success' : 'error',
+        (pnl >= 0 ? '✅ Closed +$' : '❌ Closed -$') + Math.abs(pnl).toFixed(2));
+      setTimeout(() => location.reload(), 1200);
+    }
+  } catch(e) {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ── Reset account ─────────────────────────────────────────
+async function resetAccount() {
+  if (!confirm('{{ t("sim_confirm_reset") }}')) return;
+  try {
+    const r = await fetch('/simulator/reset', {method:'POST'});
+    const d = await r.json();
+    if (d.success) location.reload();
+  } catch(e) { /* silent */ }
+}
+
+// ── Util ──────────────────────────────────────────────────
+function showMsg(type, text) {
+  const el = document.getElementById('simMsg');
+  if (!el) return;
+  el.textContent    = text;
+  el.style.display  = 'block';
+  el.style.background = type === 'success'
+    ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)';
+  el.style.color    = type === 'success' ? 'var(--accent)' : 'var(--accent-red)';
+  el.style.border   = '1px solid ' + (type === 'success' ? 'rgba(16,185,129,.3)' : 'rgba(239,68,68,.3)');
+}
+
+// ── Init ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.getElementById('simPair')) return;  // guest view
+  // Fetch initial price for selected pair
+  onPairChange();
+  // Kick off polling
+  _pollTimer = setInterval(pollAllPrices, POLL_MS);
+  // Update open trade count badge
+  const rows = document.querySelectorAll('[data-pair][data-dir]');
+  const cnt  = document.getElementById('openTradeCount');
+  if (cnt) cnt.textContent = rows.length > 0 ? '(' + rows.length + ')' : '';
+});
+</script>
+</body>
+</html>

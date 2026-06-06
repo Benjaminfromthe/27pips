@@ -16,6 +16,7 @@ from blueprints.upgrade.routes   import upgrade_bp
 from blueprints.search.routes    import search_bp
 from blueprints.content.routes   import content_bp
 from blueprints.verify.routes    import verify_bp
+from blueprints.simulator.routes import simulator_bp
 
 
 def create_app():
@@ -68,6 +69,7 @@ def create_app():
     app.register_blueprint(search_bp,     url_prefix='/search')
     app.register_blueprint(content_bp,    url_prefix='/api/content')
     app.register_blueprint(verify_bp,     url_prefix='/verify')
+    app.register_blueprint(simulator_bp,  url_prefix='/simulator')
 
     register_i18n(app)
 
