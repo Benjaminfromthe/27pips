@@ -165,7 +165,7 @@
             {% elif s.status == 'TP Hit' %}<span class="badge badge-tp">{{ t('admin_status_tp') }}</span>
             {% else %}<span class="badge badge-stopped">{{ t('admin_status_stopped') }}</span>{% endif %}
           </td>
-          <td style="color:var(--text-secondary,#94a3b8);font-size:0.78rem">{{ s.created_at[:10] if s.created_at else '—' }}</td>
+          <td style="color:var(--text-secondary,#94a3b8);font-size:0.78rem">{{ (s.created_at|string)[:10] if s.created_at else '—' }}</td>
           <td>
             <div class="actions">
               <form method="POST" action="/admin/signals/update/{{ s.id }}" class="status-form" style="display:flex;gap:6px;align-items:center">
