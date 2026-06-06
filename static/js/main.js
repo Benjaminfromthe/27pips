@@ -566,7 +566,7 @@ async function loadSignals() {
       return;
     }
 
-    const isGuest = data.is_guest || false;
+    const isGuest = json.is_guest || false;
 
     tbody.innerHTML = signals.map(s => {
       const actionBadge = s.action === 'BUY'
