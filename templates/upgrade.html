@@ -174,15 +174,18 @@
         {% if tier in ['pro', 'premium', 'elite'] %}
           <button class="btn-upgrade-pro" disabled>✅ {{ t('upgrade_current_plan') }}</button>
         {% elif user %}
-          <button class="btn-upgrade-pro" onclick="startPayment('pro')">
+          <a href="/upgrade" class="btn-upgrade-pro" onclick="startPayment('pro'); return false;">
             🚀 {{ t('plan_start_pro') }} — $29{{ t('plan_per_month') }}
-          </button>
+          </a>
           {% if is_test_mode %}
           <form method="POST" action="/upgrade/simulate" style="margin-top:8px">
-            <button type="submit" class="btn-outline full-width" style="font-size:0.8rem;padding:8px">
+            <button type="submit" class="btn-outline full-width" style="font-size:0.85rem;padding:10px;font-weight:700">
               🧪 {{ t('upgrade_test_simulate') }}
             </button>
           </form>
+          <p style="text-align:center;font-size:0.73rem;color:var(--text-secondary);margin-top:6px">
+            {{ t('upgrade_demo_note') }}
+          </p>
           {% endif %}
         {% else %}
           <button class="btn-upgrade-pro" onclick="openModal('signup')">

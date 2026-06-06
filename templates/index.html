@@ -593,7 +593,11 @@
           <li class="disabled">❌ {{ t('plan_starter_no2') }}</li>
           <li class="disabled">❌ {{ t('plan_starter_no3') }}</li>
         </ul>
-        <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_get_started') }}</button>
+        {% if user %}
+          <a href="/upgrade" class="btn-outline full-width" style="display:block;text-align:center">{{ t('plan_get_started') }}</a>
+        {% else %}
+          <button class="btn-outline full-width" onclick="openModal('signup')">{{ t('plan_get_started') }}</button>
+        {% endif %}
       </div>
 
       <div class="plan-card plan-featured">
@@ -609,7 +613,11 @@
           <li>✅ {{ t('plan_pro_feat6') }}</li>
           <li class="disabled">❌ {{ t('plan_pro_no1') }}</li>
         </ul>
-        <button class="btn-primary full-width" onclick="openModal()">{{ t('plan_start_pro') }}</button>
+        {% if user %}
+          <a href="/upgrade" class="btn-primary full-width" style="display:block;text-align:center">🚀 {{ t('plan_start_pro') }}</a>
+        {% else %}
+          <button class="btn-primary full-width" onclick="openModal('signup')">{{ t('plan_start_pro') }}</button>
+        {% endif %}
       </div>
 
       <div class="plan-card">
@@ -624,7 +632,11 @@
           <li>✅ {{ t('plan_elite_feat6') }}</li>
           <li>✅ {{ t('plan_elite_feat7') }}</li>
         </ul>
-        <button class="btn-outline full-width" onclick="openModal()">{{ t('plan_go_elite') }}</button>
+        {% if user %}
+          <a href="/upgrade" class="btn-outline full-width" style="display:block;text-align:center">{{ t('plan_go_elite') }}</a>
+        {% else %}
+          <button class="btn-outline full-width" onclick="openModal('signup')">{{ t('plan_go_elite') }}</button>
+        {% endif %}
       </div>
 
     </div>
