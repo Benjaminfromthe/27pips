@@ -108,10 +108,22 @@
       <a href="#signals" class="btn-outline">{{ t('hero_cta_signals') }}</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">{{ t('hero_stat_traders') }}</span></div>
-      <div class="stat"><span class="stat-num">89%</span><span class="stat-label">{{ t('hero_stat_accuracy') }}</span></div>
-      <div class="stat"><span class="stat-num">150+</span><span class="stat-label">{{ t('hero_stat_lessons') }}</span></div>
-      <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">{{ t('hero_stat_support') }}</span></div>
+      <div class="stat">
+        <span class="stat-num">{{ stat_traders }}{% if stat_traders >= 100 %}+{% endif %}</span>
+        <span class="stat-label">{{ t('hero_stat_traders') }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">{{ stat_signals }}{% if stat_signals >= 10 %}+{% endif %}</span>
+        <span class="stat-label">{{ t('hero_stat_signals_sent') }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">{{ stat_lessons }}{% if stat_lessons >= 10 %}+{% endif %}</span>
+        <span class="stat-label">{{ t('hero_stat_lessons') }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">24/7</span>
+        <span class="stat-label">{{ t('hero_stat_support') }}</span>
+      </div>
     </div>
   </div>
 </section>
@@ -729,7 +741,7 @@
         <p style="margin-top:1rem;">{{ t('about_body_2') }}</p>
         <div class="about-stats">
           <div class="about-stat"><span class="stat-num">3+</span><span class="stat-label">{{ t('about_stat_years') }}</span></div>
-          <div class="about-stat"><span class="stat-num">2,400+</span><span class="stat-label">{{ t('about_stat_students') }}</span></div>
+          <div class="about-stat"><span class="stat-num">{{ stat_traders }}{% if stat_traders >= 100 %}+{% endif %}</span><span class="stat-label">{{ t('about_stat_students') }}</span></div>
           <div class="about-stat"><span class="stat-num">12</span><span class="stat-label">{{ t('about_stat_countries') }}</span></div>
         </div>
       </div>

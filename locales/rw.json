@@ -441,5 +441,6 @@
   "upgrade_success_sub": "Murakaza neza kuri 27pips Pro. Ibigari byose bifunguwe ubu.",
   "upgrade_verify_pending": "Kwishyura Kwakiriwe",
   "upgrade_verify_pending_sub": "Turimo kwemeza kwishyura kwawe. Gahunda yawe izafungurwa mu minota mike.",
-  "upgrade_go_dashboard": "Genda ahabanza"
+  "upgrade_go_dashboard": "Genda ahabanza",
+  "hero_stat_signals_sent": "Amakuru Yoherejwe"
 }

@@ -91,17 +91,32 @@ def create_app():
 
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         db    = get_db()
-        row   = db.execute(
+
+        # Today's active/pending signals for the badge
+        row = db.execute(
             "SELECT COUNT(*) as cnt FROM signals "
             "WHERE DATE(created_at)=? AND status IN ('Active','Pending')",
             (today,)
         ).fetchone()
-        db.close()
         signal_count = row['cnt'] if row else 0
-        upgraded     = request.args.get('upgraded') == '1'
-        return render_template('index.html', user=user,
-                               signal_count=signal_count,
-                               user_tier=user_tier, upgraded=upgraded)
+
+        # Real stats for the hero section — pulled live from DB
+        user_count   = (db.execute('SELECT COUNT(*) FROM users').fetchone()  or [0])[0]
+        lesson_count = (db.execute('SELECT COUNT(*) FROM lessons').fetchone() or [0])[0]
+        signal_total = (db.execute('SELECT COUNT(*) FROM signals').fetchone() or [0])[0]
+
+        db.close()
+        upgraded = request.args.get('upgraded') == '1'
+        return render_template(
+            'index.html',
+            user=user,
+            signal_count=signal_count,
+            user_tier=user_tier,
+            upgraded=upgraded,
+            stat_traders=user_count,
+            stat_lessons=lesson_count,
+            stat_signals=signal_total,
+        )
 
     return app
 

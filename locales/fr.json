@@ -441,5 +441,6 @@
   "upgrade_success_sub": "Bienvenue sur 27pips Pro. Toutes les fonctionnalités sont maintenant débloquées.",
   "upgrade_verify_pending": "Paiement Reçu",
   "upgrade_verify_pending_sub": "Nous vérifions votre paiement. Votre plan s'activera dans quelques minutes.",
-  "upgrade_go_dashboard": "Aller au tableau de bord"
+  "upgrade_go_dashboard": "Aller au tableau de bord",
+  "hero_stat_signals_sent": "Signaux Envoyés"
 }
