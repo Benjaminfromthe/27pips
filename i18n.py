@@ -71,12 +71,14 @@ def register_i18n(app: Flask) -> None:
 
         def t(key: str, fallback: str | None = None, **kwargs) -> str:
             text = strings.get(key, fallback if fallback is not None else key)
+            if text is None:
+                text = key   # absolute safety net
             if kwargs:
                 try:
-                    return text.format(**kwargs)
-                except (KeyError, ValueError):
-                    return text
-            return text
+                    return str(text).format(**kwargs)
+                except (KeyError, ValueError, AttributeError):
+                    return str(text)
+            return str(text)
 
         # email_sandbox_mode removed — sandbox notices no longer shown to users.
         # Email failures are logged server-side only.
