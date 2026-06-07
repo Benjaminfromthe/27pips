@@ -473,5 +473,6 @@
   "sim_close": "Fermer",
   "sim_no_open_trades": "Aucune position ouverte. Placez un trade ci-dessus pour commencer.",
   "sim_history": "Historique des Trades",
-  "sim_no_history": "Aucun trade clôturé pour le moment."
+  "sim_no_history": "Aucun trade clôturé pour le moment.",
+  "hero_active_signals": "Signaux Actifs"
 }

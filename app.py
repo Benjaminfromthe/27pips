@@ -94,11 +94,11 @@ def create_app():
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         db    = get_db()
 
-        # Today's active/pending signals for the badge
+        # Active/pending signals count for the hero badge
+        # (Not filtered by date — seeded signals may have historical dates)
         row = db.execute(
             "SELECT COUNT(*) as cnt FROM signals "
-            "WHERE DATE(created_at)=? AND status IN ('Active','Pending')",
-            (today,)
+            "WHERE status IN ('Active','Pending')"
         ).fetchone()
         signal_count = row['cnt'] if row else 0
 

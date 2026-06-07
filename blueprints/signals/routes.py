@@ -3,7 +3,6 @@
 # ============================================================
 from flask import Blueprint, jsonify, session
 from database import get_db
-from datetime import datetime, timezone
 
 signals_bp = Blueprint('signals', __name__)
 
@@ -68,11 +67,9 @@ def get_signals():
 
 @signals_bp.route('/count')
 def signal_count():
-    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
-    db    = get_db()
-    row   = db.execute(
-        "SELECT COUNT(*) as cnt FROM signals WHERE DATE(created_at)=? AND status IN ('Active','Pending')",
-        (today,)
+    db  = get_db()
+    row = db.execute(
+        "SELECT COUNT(*) as cnt FROM signals WHERE status IN ('Active','Pending')"
     ).fetchone()
     db.close()
     return jsonify({'count': row['cnt'] if row else 0})

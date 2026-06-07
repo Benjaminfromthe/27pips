@@ -1,9 +1,9 @@
 {
   "nav_home": "Ahabanza",
   "nav_education": "Kwiga",
-  "nav_plans": "Gahunda zo Gucuruza",
-  "nav_signals": "Amakuru y'Ubucuruzi",
-  "nav_funded": "Konti Zifashijwe",
+  "nav_plans": "Gahunda",
+  "nav_signals": "Amakuru",
+  "nav_funded": "Zifashijwe",
   "nav_about": "Abo Turibo",
   "nav_login": "Injira",
   "nav_upgrade": "Iyongere Premium",
@@ -473,5 +473,6 @@
   "sim_close": "Funga",
   "sim_no_open_trades": "Nta bucuruzi bufunguye. Tangira ubucuruzi hejuru.",
   "sim_history": "Amateka y'Ubucuruzi",
-  "sim_no_history": "Nta bucuruzi bwafunzwe."
+  "sim_no_history": "Nta bucuruzi bwafunzwe.",
+  "hero_active_signals": "Amakuru Akora"
 }

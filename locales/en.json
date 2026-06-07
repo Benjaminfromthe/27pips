@@ -473,5 +473,6 @@
   "sim_close": "Close",
   "sim_no_open_trades": "No open positions. Place a trade above to start.",
   "sim_history": "Trade History",
-  "sim_no_history": "No closed trades yet."
+  "sim_no_history": "No closed trades yet.",
+  "hero_active_signals": "Active Signals"
 }
