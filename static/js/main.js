@@ -312,10 +312,8 @@ navStyle.textContent = '.nav-link.active{color:var(--green)!important;background
 document.head.appendChild(navStyle);
 
 // ── INIT ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  checkAuthGates();
-  console.log('27pips loaded');
-});
+// Single DOMContentLoaded — replaces all scattered listeners below.
+// All page-init logic runs here in controlled order.
 
 // ============================================================
 // PHASE 2 — Dynamic Journal & Tracker
@@ -524,14 +522,7 @@ async function setupTracker() {
 }
 
 // ── INIT DYNAMIC SECTIONS ──────────────────────────────────
-// Only run if user is logged in (Jinja injects this flag)
-document.addEventListener('DOMContentLoaded', () => {
-  // Check if journal form exists (means user is logged in)
-  if (document.getElementById('journalForm')) {
-    loadJournalEntries();
-    loadTrackerData();
-  }
-});
+// Removed — merged into the single DOMContentLoaded block below.
 
 // ============================================================
 // PHASE 3 — Dynamic Signals Feed
@@ -656,21 +647,7 @@ async function loadSignals() {
 }
 
 // Load signals on page load + refresh every 60s
-document.addEventListener('DOMContentLoaded', () => {
-  loadSignals();
-  setInterval(loadSignals, 60000);
-
-  // Check if courses has more than the 3 shown on homepage
-  fetch('/api/content/?type=courses&page=1')
-    .then(r => r.json())
-    .then(d => {
-      if (d.total > 3) {
-        const btn = document.getElementById('eduLoadMoreBtn');
-        if (btn) btn.style.display = 'inline-flex';
-      }
-    })
-    .catch(() => { /* silent */ });
-});
+// (Wired in the unified DOMContentLoaded block at bottom of file)
 
 // ============================================================
 // PHASE 4 — Education Progress Widget on Homepage
@@ -700,9 +677,7 @@ async function loadEducationProgress() {
   } catch { /* silent */ }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadEducationProgress();
-});
+// loadEducationProgress wired in unified DOMContentLoaded below
 
 // ============================================================
 // PHASE 5 — Equity Curve Chart (Chart.js)
@@ -823,10 +798,7 @@ async function loadEquityChart() {
   }
 }
 
-// Load chart on page load
-document.addEventListener('DOMContentLoaded', () => {
-  loadEquityChart();
-});
+// Load chart on page load — wired in unified DOMContentLoaded below
 
 // ============================================================
 // LANGUAGE — i18n (theme handled by theme.js)
@@ -1403,11 +1375,7 @@ async function recomputeMetrics() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('perfMetricsGrid')) {
-    loadPerformanceMetrics();
-  }
-});
+// loadPerformanceMetrics — wired in unified DOMContentLoaded below
 
 
 // ============================================================
@@ -1504,8 +1472,64 @@ async function revokeVerifyLink() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// _checkVerifyStatus — wired in unified DOMContentLoaded below
+
+
+// ============================================================
+// UNIFIED INIT — single DOMContentLoaded replaces all
+// scattered listeners that were added over multiple sessions.
+// Order matters: signals first so it renders before anything
+// else potentially touches the DOM.
+// ============================================================
+document.addEventListener('DOMContentLoaded', function _unifiedInit() {
+
+  // ── Signals (always run — page may have signalsBody) ───
+  if (document.getElementById('signalsBody')) {
+    loadSignals();
+    setInterval(loadSignals, 60000);
+  }
+
+  // ── Load More: check if courses need a button ──────────
+  if (document.getElementById('eduLoadMoreBtn')) {
+    fetch('/api/content/?type=courses&page=1')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.total > 3) {
+          var btn = document.getElementById('eduLoadMoreBtn');
+          if (btn) btn.style.display = 'inline-flex';
+        }
+      })
+      .catch(function(){ /* silent */ });
+  }
+
+  // ── Auth gates (guest users) ───────────────────────────
+  checkAuthGates();
+
+  // ── Journal + Tracker (logged-in only) ─────────────────
+  if (document.getElementById('journalForm')) {
+    loadJournalEntries();
+    loadTrackerData();
+  }
+
+  // ── Education progress widget ──────────────────────────
+  if (document.querySelector('.edu-grid')) {
+    loadEducationProgress();
+  }
+
+  // ── Equity curve chart ─────────────────────────────────
+  if (document.getElementById('equityChart')) {
+    loadEquityChart();
+  }
+
+  // ── Leaking Alpha performance metrics ──────────────────
+  if (document.getElementById('perfMetricsGrid')) {
+    loadPerformanceMetrics();
+  }
+
+  // ── Public verification link status ────────────────────
   if (document.getElementById('verifyLinkWrap')) {
     _checkVerifyStatus();
   }
+
+  console.log('27pips loaded');
 });
